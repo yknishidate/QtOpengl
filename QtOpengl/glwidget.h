@@ -33,6 +33,8 @@ public:
 
 
 private:
+    void setupVertexAttribs();
+
     QOpenGLBuffer m_vertex;
     QOpenGLVertexArrayObject m_object;
     QOpenGLShaderProgram *m_program;

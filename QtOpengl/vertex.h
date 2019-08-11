@@ -11,7 +11,7 @@ public:
 
     // Vertex classの先頭から m_position へのバイト数を返す
     static int positionOffset(){return offsetof(Vertex, m_position);}
-    // Vertex classのサイズを返す
+    // Vertex 1つ分のサイズを返す
     static int stride(){return sizeof(Vertex);}
 
 private:
