@@ -1,38 +1,16 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
-
 #include <QWidget>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QVector3D>
 #include <QtOpenGL>
 #include <QMainWindow>
-#include <QWheelEvent>
 #include "vertex.h"
+#include "geometryengine.h"
 
-/* Triangel */
-/*static const Vertex m_vertices[] = {
-    Vertex( QVector3D( 0.0f,  2.0f, 0.0f)),
-    Vertex( QVector3D( 2.0f,  0.0f, 0.0f)),
-    Vertex( QVector3D( 0.0f,  0.0f, 0.0f)),
-};
-*/
 
-/* Axis */
-/*static const Vertex m_vertices[] = {
-    Vertex( QVector3D( 2.0f,  0.0f, 0.0f)),
-    Vertex( QVector3D( 0.0f,  0.0f, 0.0f)),
-
-    Vertex( QVector3D( 0.0f,  2.0f, 0.0f)),
-    Vertex( QVector3D( 0.0f,  0.0f, 0.0f)),
-
-    Vertex( QVector3D( 0.0f,  0.0f, 2.0f)),
-    Vertex( QVector3D( 0.0f,  0.0f, 0.0f)),
-};
-*/
-
-static const Vertex m_vertices[] = {
-
+static const Vertex vertices[] = {
     Vertex( QVector3D( 0.0f,  0.0f, 0.0f)),
     Vertex( QVector3D( 2.0f,  0.0f, 0.0f)),
     Vertex( QVector3D( 0.0f,  2.0f, 0.0f)),
@@ -46,17 +24,22 @@ static const Vertex m_vertices[] = {
     Vertex( QVector3D( 0.0f,  0.0f, 2.0f)),
 };
 
+static const Vertex grids[] = {
+    Vertex( QVector3D( 10000.0f, 0.0f, 0.0f)),
+    Vertex( QVector3D( -10000.0f, 0.0f, 0.0f)),
 
-class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
-{
+    Vertex( QVector3D( 0.0f, 0.0f, -10000.0f)),
+    Vertex( QVector3D( 0.0f, 0.0f,  10000.0f)),
+};
+
+
+class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
     Q_OBJECT
 
 public:
-    GLWidget(QWidget *parent = 0);
-
+    GLWidget(QWidget *parent = nullptr);
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
-
     GLenum displayMode;
 
 protected:
@@ -65,16 +48,17 @@ protected:
     void paintGL() override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
-    //void wheelEvent(QWheelEvent *event) override;
-
+    void wheelEvent(QWheelEvent *event) override;
     //void initTextures();
-
 
 public slots:
     void setXRotation(int angle);
     void setYRotation(int angle);
     void setZRotation(int angle);
+
     void setDisplayMode(bool arg);
+    void setCullFace(bool arg);
+    void setDepthTest(bool arg);
 
 signals:
     void xRotationChanged(int angle);
@@ -82,26 +66,32 @@ signals:
     void zRotationChanged(int angle);
 
 private:
-    void setupVertexAttribs();
+    //void setupVertexAttribs();
 
-    int m_xRot;
-    int m_yRot;
-    int m_zRot;
-    QPoint m_lastPos;
+    int xRot;
+    int yRot;
+    int zRot;
+    QPoint lastPos;
 
-    QOpenGLBuffer m_vertex;
-    QOpenGLVertexArrayObject m_object;
-    QOpenGLShaderProgram *m_program;
+    QOpenGLBuffer vbo;
+    QOpenGLVertexArrayObject vao;
+    QOpenGLShaderProgram *shader_program;
 
-    int m_projMatrixLoc;
-    int m_mvMatrixLoc;
-    int m_normalMatrixLoc;
-    int m_lightPosLoc;
+    int projMatrixLoc;
+    int mvMatrixLoc;
+    int normalMatrixLoc;
+    int lightPosLoc;
 
-    QMatrix4x4 m_proj;
-    QMatrix4x4 m_camera;
-    QMatrix4x4 m_world;
+    QMatrix4x4 proj;
+    QMatrix4x4 camera;
+    QMatrix4x4 world;
 
+    QVector3D cameraPos;
+    QVector3D targetPos;
+    bool culling;
+    bool testing;
+    //////////////////////
+    GeometryEngine *geometries;
 };
 
 #endif // GLWIDGET_H

@@ -39,7 +39,11 @@ public:
     QVBoxLayout *verticalLayout;
     QTreeView *treeView;
     QGroupBox *groupBox;
+    QWidget *widget;
+    QVBoxLayout *verticalLayout_2;
     QCheckBox *checkBox;
+    QCheckBox *checkBox_2;
+    QCheckBox *checkBox_3;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QToolBar *mainToolBar;
@@ -92,9 +96,29 @@ public:
 
         groupBox = new QGroupBox(centralWidget);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        checkBox = new QCheckBox(groupBox);
+        widget = new QWidget(groupBox);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        widget->setGeometry(QRect(10, 20, 115, 77));
+        verticalLayout_2 = new QVBoxLayout(widget);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
+        checkBox = new QCheckBox(widget);
         checkBox->setObjectName(QString::fromUtf8("checkBox"));
-        checkBox->setGeometry(QRect(30, 40, 77, 18));
+
+        verticalLayout_2->addWidget(checkBox);
+
+        checkBox_2 = new QCheckBox(widget);
+        checkBox_2->setObjectName(QString::fromUtf8("checkBox_2"));
+
+        verticalLayout_2->addWidget(checkBox_2);
+
+        checkBox_3 = new QCheckBox(widget);
+        checkBox_3->setObjectName(QString::fromUtf8("checkBox_3"));
+
+        verticalLayout_2->addWidget(checkBox_3);
+
 
         verticalLayout->addWidget(groupBox);
 
@@ -129,8 +153,10 @@ public:
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "3DViewer", nullptr));
         actionOpen->setText(QCoreApplication::translate("MainWindow", "Open", nullptr));
         actionSave->setText(QCoreApplication::translate("MainWindow", "Save", nullptr));
-        groupBox->setTitle(QCoreApplication::translate("MainWindow", "GroupBox", nullptr));
+        groupBox->setTitle(QCoreApplication::translate("MainWindow", "Options", nullptr));
         checkBox->setText(QCoreApplication::translate("MainWindow", "Wireframe", nullptr));
+        checkBox_2->setText(QCoreApplication::translate("MainWindow", "Backface Culling", nullptr));
+        checkBox_3->setText(QCoreApplication::translate("MainWindow", "Depth Testing", nullptr));
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
     } // retranslateUi
 

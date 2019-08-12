@@ -7,5 +7,5 @@ out vec4 vColor;
 
 void main(){
   gl_Position = projMatrix * mvMatrix * vec4(position, 1.0);
-  vColor = vec4(position, 1.0);
+  vColor = vec4(position+vec3(0.25f), 1.0);
 }

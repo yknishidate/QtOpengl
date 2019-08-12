@@ -60,20 +60,40 @@
       <item>
        <widget class="QGroupBox" name="groupBox">
         <property name="title">
-         <string>GroupBox</string>
+         <string>Options</string>
         </property>
-        <widget class="QCheckBox" name="checkBox">
+        <widget class="QWidget" name="">
          <property name="geometry">
           <rect>
-           <x>30</x>
-           <y>40</y>
-           <width>77</width>
-           <height>18</height>
+           <x>10</x>
+           <y>20</y>
+           <width>115</width>
+           <height>77</height>
           </rect>
          </property>
-         <property name="text">
-          <string>Wireframe</string>
-         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QCheckBox" name="checkBox">
+            <property name="text">
+             <string>Wireframe</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBox_2">
+            <property name="text">
+             <string>Backface Culling</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBox_3">
+            <property name="text">
+             <string>Depth Testing</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </widget>
       </item>

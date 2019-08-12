@@ -17,17 +17,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        geometryengine.cpp \
         glwidget.cpp \
         main.cpp \
         mainwindow.cpp
 
 HEADERS += \
+        geometryengine.h \
         glwidget.h \
         mainwindow.h \
         vertex.h
 
 FORMS += \
         mainwindow.ui
+
+RC_ICONS = QtOpengl.ico
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
