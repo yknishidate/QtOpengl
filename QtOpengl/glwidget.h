@@ -9,27 +9,26 @@
 #include "vertex.h"
 #include "geometryengine.h"
 
-
 static const Vertex vertices[] = {
-    Vertex( QVector3D( 0.0f,  0.0f, 0.0f)),
-    Vertex( QVector3D( 2.0f,  0.0f, 0.0f)),
-    Vertex( QVector3D( 0.0f,  2.0f, 0.0f)),
+    Vertex( QVector3D( 0.0f,  0.0f, 0.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
+    Vertex( QVector3D( 2.0f,  0.0f, 0.0f), QVector3D( 1.0f,  0.0f, 0.0f)),
+    Vertex( QVector3D( 0.0f,  2.0f, 0.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
 
-    Vertex( QVector3D( 0.0f,  0.0f, 0.0f)),
-    Vertex( QVector3D( 0.0f,  0.0f, 2.0f)),
-    Vertex( QVector3D( 2.0f,  0.0f, 0.0f)),
+    Vertex( QVector3D( 0.0f,  0.0f, 0.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
+    Vertex( QVector3D( 0.0f,  0.0f, 2.0f), QVector3D( 0.0f,  1.0f, 0.0f)),
+    Vertex( QVector3D( 2.0f,  0.0f, 0.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
 
-    Vertex( QVector3D( 0.0f,  0.0f, 0.0f)),
-    Vertex( QVector3D( 0.0f,  2.0f, 0.0f)),
-    Vertex( QVector3D( 0.0f,  0.0f, 2.0f)),
+    Vertex( QVector3D( 0.0f,  0.0f, 0.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
+    Vertex( QVector3D( 0.0f,  2.0f, 0.0f), QVector3D( 0.0f,  0.0f, 1.0f)),
+    Vertex( QVector3D( 0.0f,  0.0f, 2.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
 };
 
 static const Vertex grids[] = {
-    Vertex( QVector3D( 10000.0f, 0.0f, 0.0f)),
-    Vertex( QVector3D( -10000.0f, 0.0f, 0.0f)),
+    Vertex( QVector3D(  10000.0f, 0.0f, 0.0f), QVector3D( 0.5f,  0.2f, 0.2f)),
+    Vertex( QVector3D( -10000.0f, 0.0f, 0.0f), QVector3D( 0.5f,  0.2f, 0.2f)),
 
-    Vertex( QVector3D( 0.0f, 0.0f, -10000.0f)),
-    Vertex( QVector3D( 0.0f, 0.0f,  10000.0f)),
+    Vertex( QVector3D( 0.0f, 0.0f, -10000.0f), QVector3D( 0.5f,  0.2f, 0.2f)),
+    Vertex( QVector3D( 0.0f, 0.0f,  10000.0f), QVector3D( 0.5f,  0.2f, 0.2f)),
 };
 
 
@@ -66,7 +65,8 @@ signals:
     void zRotationChanged(int angle);
 
 private:
-    //void setupVertexAttribs();
+    void initVBO();
+    void initShader();
 
     int xRot;
     int yRot;
@@ -74,6 +74,7 @@ private:
     QPoint lastPos;
 
     QOpenGLBuffer vbo;
+    QOpenGLBuffer vbo2;
     QOpenGLVertexArrayObject vao;
     QOpenGLShaderProgram *shader_program;
 
@@ -90,8 +91,6 @@ private:
     QVector3D targetPos;
     bool culling;
     bool testing;
-    //////////////////////
-    GeometryEngine *geometries;
 };
 
 #endif // GLWIDGET_H

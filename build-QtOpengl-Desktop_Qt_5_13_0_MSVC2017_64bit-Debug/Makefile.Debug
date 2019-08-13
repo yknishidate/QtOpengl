@@ -679,6 +679,9 @@ debug\moc_glwidget.cpp: ..\QtOpengl\glwidget.h \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtOpenGL\qtopenglversion.h \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtWidgets\QMainWindow \
 		..\QtOpengl\vertex.h \
+		..\QtOpengl\geometryengine.h \
+		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtGui\QOpenGLShaderProgram \
+		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtGui\QOpenGLBuffer \
 		debug\moc_predefs.h \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\bin\moc.exe
 	C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include E:/Documents/repos/QtOpengl/build-QtOpengl-Desktop_Qt_5_13_0_MSVC2017_64bit-Debug/debug/moc_predefs.h -IC:/Qt/Qt5.13.0/5.13.0/msvc2017_64/mkspecs/win32-msvc -IE:/Documents/repos/QtOpengl/QtOpengl -IC:/Qt/Qt5.13.0/5.13.0/msvc2017_64/include -IC:/Qt/Qt5.13.0/5.13.0/msvc2017_64/include/QtOpenGL -IC:/Qt/Qt5.13.0/5.13.0/msvc2017_64/include/QtWidgets -IC:/Qt/Qt5.13.0/5.13.0/msvc2017_64/include/QtGui -IC:/Qt/Qt5.13.0/5.13.0/msvc2017_64/include/QtANGLE -IC:/Qt/Qt5.13.0/5.13.0/msvc2017_64/include/QtCore -I. -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6.1\include\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" ..\QtOpengl\glwidget.h -o debug\moc_glwidget.cpp
@@ -1284,7 +1287,10 @@ ui_mainwindow.h: ..\QtOpengl\mainwindow.ui \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtOpenGL\qglshaderprogram.h \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtOpenGL\qtopenglversion.h \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtWidgets\QMainWindow \
-		..\QtOpengl\vertex.h
+		..\QtOpengl\vertex.h \
+		..\QtOpengl\geometryengine.h \
+		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtGui\QOpenGLShaderProgram \
+		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtGui\QOpenGLBuffer
 	C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\bin\uic.exe ..\QtOpengl\mainwindow.ui -o ui_mainwindow.h
 
 compiler_yacc_decl_make_all:
@@ -1881,6 +1887,9 @@ debug\glwidget.obj: ..\QtOpengl\glwidget.cpp ..\QtOpengl\glwidget.h \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtOpenGL\qtopenglversion.h \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtWidgets\QMainWindow \
 		..\QtOpengl\vertex.h \
+		..\QtOpengl\geometryengine.h \
+		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtGui\QOpenGLShaderProgram \
+		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtGui\QOpenGLBuffer \
 		..\QtOpengl\mainwindow.h \
 		ui_mainwindow.h \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtWidgets\QAction \
@@ -2511,6 +2520,9 @@ debug\mainwindow.obj: ..\QtOpengl\mainwindow.cpp ..\QtOpengl\mainwindow.h \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtOpenGL\qglshaderprogram.h \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtOpenGL\qtopenglversion.h \
 		..\QtOpengl\vertex.h \
+		..\QtOpengl\geometryengine.h \
+		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtGui\QOpenGLShaderProgram \
+		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtGui\QOpenGLBuffer \
 		C:\Qt\Qt5.13.0\5.13.0\msvc2017_64\include\QtCore\QtDebug
 
 debug\qrc_shaders.obj: debug\qrc_shaders.cpp 

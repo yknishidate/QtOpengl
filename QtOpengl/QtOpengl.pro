@@ -14,18 +14,18 @@ TEMPLATE = app
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
-CONFIG += c++11
+CONFIG += c++11 static
 
 SOURCES += \
-        geometryengine.cpp \
         glwidget.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        objloader.cpp
 
 HEADERS += \
-        geometryengine.h \
         glwidget.h \
         mainwindow.h \
+        objloader.h \
         vertex.h
 
 FORMS += \

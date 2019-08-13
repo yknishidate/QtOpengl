@@ -4,6 +4,7 @@
 #include <QtDebug>
 #include <QWheelEvent>
 
+#include "geometryengine.h"
 
 GLWidget::GLWidget(QWidget *parent)
     : QOpenGLWidget(parent),
@@ -50,44 +51,14 @@ void GLWidget::initializeGL(){
     initializeOpenGLFunctions();
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-    /* Shader */
-    shader_program = new QOpenGLShaderProgram();
-    shader_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vshader.glsl");
-    shader_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fshader.glsl");
-    shader_program->link();
-    shader_program->bind();
+    initShader();
 
-    /* Get Location from Shader */
-    projMatrixLoc = shader_program->uniformLocation("projMatrix");
-    mvMatrixLoc = shader_program->uniformLocation("mvMatrix");
-    //normalMatrixLoc = shader_program->uniformLocation("normalMatrix");
-    //lightPosLoc = shader_program->uniformLocation("lightPos");
-
-    /* VBO */
-    vbo.create();
-    vbo.bind();
-    vbo.allocate(vertices, sizeof(vertices));
-
-
-    /* VAO */
-    vao.create();
-    vao.bind();
-    shader_program->enableAttributeArray(0);                                                         /* positionを locarion = 0 にセット */
-    shader_program->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, Vertex::stride());  /* Location, Type, Offset, Stride  */
-
-    /* Camera */
-    camera.lookAt(cameraPos, targetPos, QVector3D(0, 1, 0));
+    initVBO();
 
     /* Light */
     //shader_program->setUniformValue(lightPosLoc, QVector3D(0, 0, 70));
 
-    vao.release();
-    vbo.release();
-    shader_program->release();
-
-
-    ///////////////////
-    geometries = new GeometryEngine;
+    glLineWidth(1.5f);
 }
 
 
@@ -106,36 +77,26 @@ void GLWidget::paintGL(){
 
     /* Camera Dolly */
     camera.setToIdentity();
-    camera.lookAt(cameraPos, targetPos, QVector3D(0, 1, 0));
+    camera.lookAt(cameraPos * world, targetPos, QVector3D(0, 1, 0));
+
+    /* Shader */
+    shader_program->bind();
+    shader_program->setUniformValue(projMatrixLoc, proj);
+    shader_program->setUniformValue(mvMatrixLoc, camera);
 
     vbo.bind();
     vbo.allocate(vertices, sizeof(vertices));
-    glLineWidth(1.0f);
+    glDrawArrays(displayMode, 0, sizeof(vertices) / sizeof(vertices[0]));
 
-    vao.bind();
-    shader_program->bind();
-    shader_program->setUniformValue(projMatrixLoc, proj);
-    shader_program->setUniformValue(mvMatrixLoc, camera * world);
     /* Normal */
     //QMatrix3x3 normalMatrix = world.normalMatrix();
     //shader_program->setUniformValue(normalMatrixLoc, normalMatrix);
-    glDrawArrays(displayMode, 0, sizeof(vertices) / sizeof(vertices[0]));
-
 
     /* Grid */
     vbo.bind();
     vbo.allocate(grids, sizeof(grids));
-    glLineWidth(1.5f);
-    shader_program->setUniformValue(mvMatrixLoc, camera);
     glDrawArrays(GL_LINES, 0, sizeof(grids) / sizeof(grids[0]));
 
-
-    ///////////////////
-    geometries->drawCubeGeometry(shader_program);
-    ///////////////////
-
-
-    vao.release();
     shader_program->release();
 }
 
@@ -146,8 +107,8 @@ void GLWidget::resizeGL(int w, int h){
 
 
 /* Window Size */
-QSize GLWidget::minimumSizeHint() const{return QSize(400, 400);}
-QSize GLWidget::sizeHint() const{return QSize(400, 400);}
+QSize GLWidget::minimumSizeHint() const{return QSize(600, 400);}
+QSize GLWidget::sizeHint() const{return QSize(600, 400);}
 
 
 /* Mouse */
@@ -159,13 +120,14 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
     int dy = event->y() - lastPos.y();
     if (event->buttons() & Qt::LeftButton) {
         setXRotation(xRot + 4 * dy);
-        setYRotation(yRot + 8 * dx);
+        setYRotation(yRot + 4 * dx);
     }
     lastPos = event->pos();
 }
 void GLWidget::wheelEvent(QWheelEvent *event){
     int degree = event->angleDelta().y() / 8;
     QVector3D relativeVec = targetPos - cameraPos;
+    //QVector3D cameraDir = relativeVec.normalized();
     QVector3D cameraDir = relativeVec.normalized();
     if(relativeVec.length() > 2 || degree < 0){
         cameraPos = cameraPos + cameraDir * degree/10;
@@ -189,15 +151,35 @@ void GLWidget::setDepthTest(bool arg){
     update();
 }
 
-
-/*
-void GLWidget::setupVertexAttribs(){
+/* VBO */
+void GLWidget::initVBO() {
+    vbo.create();
     vbo.bind();
-    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-    f->glEnableVertexAttribArray(0);
-    f->glEnableVertexAttribArray(1);
-    f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), nullptr);
-    f->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+    vbo.allocate(vertices, sizeof(vertices));
+
+    /* position */
+    shader_program->enableAttributeArray(0);
+    shader_program->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, Vertex::stride());
+
+    /* color */
+    shader_program->enableAttributeArray(1);
+    shader_program->setAttributeBuffer(1, GL_FLOAT, Vertex::colorOffset(), 3, Vertex::stride());
     vbo.release();
 }
-*/
+
+/* Shader */
+void GLWidget::initShader(){
+    shader_program = new QOpenGLShaderProgram();
+    shader_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vshader.glsl");
+    shader_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fshader.glsl");
+    shader_program->link();
+    shader_program->bind();
+
+    /* Get Location from Shader */
+    projMatrixLoc = shader_program->uniformLocation("projMatrix");
+    mvMatrixLoc = shader_program->uniformLocation("mvMatrix");
+    //normalMatrixLoc = shader_program->uniformLocation("normalMatrix");
+    //lightPosLoc = shader_program->uniformLocation("lightPos");
+
+    shader_program->release();
+}
