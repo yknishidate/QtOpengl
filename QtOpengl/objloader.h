@@ -1,5 +1,5 @@
-#ifndef OBJ_LOADER_H_INCLUDED
-#define OBJ_LOADER_H_INCLUDED
+#ifndef OBJLOADER_H_INCLUDED
+#define OBJLOADER_H_INCLUDED
 
 #include <string>
 #include <QVector2D>

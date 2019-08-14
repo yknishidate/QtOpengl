@@ -143,6 +143,7 @@ IndexedModel OBJModel::ToIndexedModel(){
         for(unsigned int i = 0; i < result.positions.size(); i++)
             result.normals[i] = normalModel.normals[indexMap[i]];
     }
+    std::cout << "Finished ToIndexedModel() "  << std::endl;
 
     return result;
 };

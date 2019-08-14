@@ -20,11 +20,13 @@ SOURCES += \
         glwidget.cpp \
         main.cpp \
         mainwindow.cpp \
+        mesh.cpp \
         objloader.cpp
 
 HEADERS += \
         glwidget.h \
         mainwindow.h \
+        mesh.h \
         objloader.h \
         vertex.h
 
@@ -39,4 +41,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    shaders.qrc
+    models.qrc \
+    shaders.qrc \
+    textures.qrc

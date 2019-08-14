@@ -1,18 +1,18 @@
 #include "glwidget.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QtDebug>
 #include <QWheelEvent>
 
-#include "geometryengine.h"
 
 GLWidget::GLWidget(QWidget *parent)
     : QOpenGLWidget(parent),
-      displayMode(GL_TRIANGLES),
+      displayMode(GL_TRIANGLE_STRIP),
       xRot(0), yRot(0), zRot(0),
       shader_program(nullptr),
       cameraPos(2, 2, 5), targetPos(0, 0.5f, 0),
-      culling(false), testing(true)
+      culling(false), testing(true),
+      mesh(0),
+      texture(0)
 {
 }
 
@@ -52,8 +52,10 @@ void GLWidget::initializeGL(){
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
     initShader();
+    initTextures();
 
-    initVBO();
+    mesh = new Mesh();
+    mesh->initCube();
 
     /* Light */
     //shader_program->setUniformValue(lightPosLoc, QVector3D(0, 0, 70));
@@ -64,6 +66,8 @@ void GLWidget::initializeGL(){
 
 void GLWidget::paintGL(){
     glClear(GL_COLOR_BUFFER_BIT);
+
+    texture->bind();
 
     if(culling) glEnable(GL_CULL_FACE);
     else        glDisable(GL_CULL_FACE);
@@ -84,20 +88,25 @@ void GLWidget::paintGL(){
     shader_program->setUniformValue(projMatrixLoc, proj);
     shader_program->setUniformValue(mvMatrixLoc, camera);
 
-    vbo.bind();
-    vbo.allocate(vertices, sizeof(vertices));
-    glDrawArrays(displayMode, 0, sizeof(vertices) / sizeof(vertices[0]));
+    shader_program->setUniformValue("texture", 0);
+
+    mesh->drawCube(shader_program, displayMode);
+
+    //vbo.bind();
+    //vbo.allocate(vertices, sizeof(vertices));
+    //glDrawArrays(displayMode, 0, sizeof(vertices) / sizeof(vertices[0]));
+
 
     /* Normal */
     //QMatrix3x3 normalMatrix = world.normalMatrix();
     //shader_program->setUniformValue(normalMatrixLoc, normalMatrix);
 
     /* Grid */
-    vbo.bind();
-    vbo.allocate(grids, sizeof(grids));
-    glDrawArrays(GL_LINES, 0, sizeof(grids) / sizeof(grids[0]));
+    //vbo.bind();
+    //vbo.allocate(grids, sizeof(grids));
+    //glDrawArrays(GL_LINES, 0, sizeof(grids) / sizeof(grids[0]));
 
-    shader_program->release();
+    //shader_program->release();
 }
 
 void GLWidget::resizeGL(int w, int h){
@@ -127,7 +136,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
 void GLWidget::wheelEvent(QWheelEvent *event){
     int degree = event->angleDelta().y() / 8;
     QVector3D relativeVec = targetPos - cameraPos;
-    //QVector3D cameraDir = relativeVec.normalized();
     QVector3D cameraDir = relativeVec.normalized();
     if(relativeVec.length() > 2 || degree < 0){
         cameraPos = cameraPos + cameraDir * degree/10;
@@ -139,7 +147,7 @@ void GLWidget::wheelEvent(QWheelEvent *event){
 /* Checkbox */
 void GLWidget::setDisplayMode(bool arg){
     if(arg){displayMode = GL_LINE_STRIP;}
-    else{displayMode = GL_TRIANGLES;}
+    else{displayMode = GL_TRIANGLE_STRIP;}
     update();
 }
 void GLWidget::setCullFace(bool arg){
@@ -155,15 +163,15 @@ void GLWidget::setDepthTest(bool arg){
 void GLWidget::initVBO() {
     vbo.create();
     vbo.bind();
-    vbo.allocate(vertices, sizeof(vertices));
+    //vbo.allocate(vertices, sizeof(vertices));
 
     /* position */
     shader_program->enableAttributeArray(0);
-    shader_program->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, Vertex::stride());
+    //shader_program->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, Vertex::stride());
 
     /* color */
     shader_program->enableAttributeArray(1);
-    shader_program->setAttributeBuffer(1, GL_FLOAT, Vertex::colorOffset(), 3, Vertex::stride());
+    //shader_program->setAttributeBuffer(1, GL_FLOAT, Vertex::colorOffset(), 3, Vertex::stride());
     vbo.release();
 }
 
@@ -181,5 +189,22 @@ void GLWidget::initShader(){
     //normalMatrixLoc = shader_program->uniformLocation("normalMatrix");
     //lightPosLoc = shader_program->uniformLocation("lightPos");
 
-    shader_program->release();
+    //shader_program->release();
+}
+
+
+void GLWidget::initTextures()
+{
+    // Load cube.png image
+    texture = new QOpenGLTexture(QImage(":/cube.png").mirrored());
+
+    // Set nearest filtering mode for texture minification
+    texture->setMinificationFilter(QOpenGLTexture::Nearest);
+
+    // Set bilinear filtering mode for texture magnification
+    texture->setMagnificationFilter(QOpenGLTexture::Linear);
+
+    // Wrap texture coordinates by repeating
+    // f.ex. texture coordinate (1.1, 1.2) is same as (0.1, 0.2)
+    texture->setWrapMode(QOpenGLTexture::Repeat);
 }

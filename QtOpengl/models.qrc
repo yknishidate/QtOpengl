@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>monkey3.obj</file>
+        <file>monkeyNoUV.obj</file>
+        <file>testBoxNoUV.obj</file>
+    </qresource>
+</RCC>
