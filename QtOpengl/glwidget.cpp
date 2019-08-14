@@ -62,6 +62,7 @@ void GLWidget::initializeGL(){
     //shader_program->setUniformValue(lightPosLoc, QVector3D(0, 0, 70));
 
     glLineWidth(1.5f);
+
 }
 
 
@@ -175,7 +176,7 @@ void GLWidget::initShader(){
 void GLWidget::initTextures()
 {
     // Load Texture
-    texture = new QOpenGLTexture(QImage(":/cube.png").mirrored());
+    texture = new QOpenGLTexture(QImage(":/resource/cube_blue.png").mirrored());
 
     // Minification -> Nearest
     texture->setMinificationFilter(QOpenGLTexture::Nearest);

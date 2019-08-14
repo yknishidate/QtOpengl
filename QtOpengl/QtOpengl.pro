@@ -21,15 +21,13 @@ SOURCES += \
         grid.cpp \
         main.cpp \
         mainwindow.cpp \
-        mesh.cpp \
-        objloader.cpp
+        mesh.cpp
 
 HEADERS += \
         glwidget.h \
         grid.h \
         mainwindow.h \
         mesh.h \
-        objloader.h \
         vertex.h
 
 FORMS += \

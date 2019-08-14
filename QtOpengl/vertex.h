@@ -4,25 +4,12 @@
 #include <QVector3D>
 
 class Vertex{
-/*
-public:
-    Vertex();
-    Vertex(const QVector3D &position): position(position){}
-    Vertex(const QVector3D &position, const QVector3D &color): position(position), color(color){}
-
-    // 先頭から attribute へのバイト数
-    static int positionOffset(){return offsetof(Vertex, position);}
-    static int colorOffset(){return offsetof(Vertex, color);}
-    // Vertex 1つ分のサイズ
-    static int stride(){return sizeof(Vertex);}
-
-private:
-    QVector3D position;
-    QVector3D color;
-*/
-
 // 2
 public:
+    Vertex(const QVector3D& position){
+        this->position = position;
+        this->texCoord = QVector2D(0.0f, 0.0f);
+    }
     Vertex(const QVector3D& position, const QVector2D& texCoord){
         this->position = position;
         this->texCoord = texCoord;
@@ -40,10 +27,18 @@ public:
 private:
     QVector3D position;
     QVector2D texCoord;
-
-// 3
 /*
 public:
+    Vertex(const QVector3D& position){
+        this->position = position;
+        this->texCoord = QVector2D(0.0f, 0.0f);
+        this->normal = position.normalized();
+    }
+    Vertex(const QVector3D& position, const QVector2D& texCoord){
+        this->position = position;
+        this->texCoord = texCoord;
+        this->normal = position.normalized();
+    }
     Vertex(const QVector3D& position, const QVector2D& texCoord, const QVector3D& normal){
         this->position = position;
         this->texCoord = texCoord;
