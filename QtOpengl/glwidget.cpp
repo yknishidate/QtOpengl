@@ -55,7 +55,7 @@ void GLWidget::initializeGL(){
     mesh = new Mesh();
     mesh->initCube();
 
-    grid = new Mesh();
+    grid = new Grid();
     grid->initGrid();
 
     /* Light */
@@ -75,22 +75,23 @@ void GLWidget::paintGL(){
     if(testing) glEnable(GL_DEPTH_TEST);
     else        glDisable(GL_DEPTH_TEST);
 
-    /* Rotate */
+    // Rotate
     world.setToIdentity();
     world.rotate(xRot / 16.0f, 1, 0, 0);
     world.rotate(yRot / 16.0f, 0, 1, 0);
 
-    /* Camera Dolly */
+    // Camera Dolly
     camera.setToIdentity();
     camera.lookAt(cameraPos * world, targetPos, QVector3D(0, 1, 0));
 
-    /* Shader */
+    // Shader
     shader_program->bind();
     shader_program->setUniformValue(projMatrixLoc, proj);
     shader_program->setUniformValue(mvMatrixLoc, camera);
 
     shader_program->setUniformValue("texture", 0);
 
+    // Draw
     mesh->drawCube(shader_program, displayMode);
     grid->drawGrid(shader_program);
 

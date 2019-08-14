@@ -18,6 +18,7 @@ CONFIG += c++11 static
 
 SOURCES += \
         glwidget.cpp \
+        grid.cpp \
         main.cpp \
         mainwindow.cpp \
         mesh.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 
 HEADERS += \
         glwidget.h \
+        grid.h \
         mainwindow.h \
         mesh.h \
         objloader.h \

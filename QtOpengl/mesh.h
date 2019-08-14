@@ -13,10 +13,8 @@ public:
     virtual ~Mesh();
 
     void drawCube(QOpenGLShaderProgram *shader_program, GLenum displayMode);
-    void drawGrid(QOpenGLShaderProgram *shader_program);
 
     void initCube();
-    void initGrid();
 
 private:
     QOpenGLBuffer vbo;

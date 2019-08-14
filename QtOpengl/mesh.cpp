@@ -2,19 +2,15 @@
 #include <QVector>
 #include <QVector2D>
 #include <QVector3D>
-#include <vector>
+
 
 Mesh::Mesh()
     : ibo(QOpenGLBuffer::IndexBuffer)
 {
     initializeOpenGLFunctions();
 
-    // Generate 2 VBOs
     vbo.create();
     ibo.create();
-
-    // Initializes cube geometry and transfers it to VBOs
-    //initCube();
 }
 
 Mesh::~Mesh()
@@ -26,7 +22,6 @@ Mesh::~Mesh()
 
 void Mesh::initCube()
 {
-
     Vertex vertices[] = {
         // Vertex data for face 0
         {QVector3D(-1.0f, -1.0f,  1.0f), QVector2D(0.0f, 0.0f)},  // v0
@@ -85,38 +80,20 @@ void Mesh::initCube()
 //! [1]
 }
 
-void Mesh::initGrid(){
-    QVector<Vertex> grids;
-    for (int i = 0;i <= 20; i++) {
-        grids.push_back(Vertex(QVector3D(  10.0f, 0.0f, i-10.0f), QVector2D(0.0f, 0.0f)));
-        grids.push_back(Vertex(QVector3D( -10.0f, 0.0f, i-10.0f), QVector2D(0.0f, 0.0f)));
-        grids.push_back(Vertex(QVector3D( i-10.0f, 0.0f,  10.0f), QVector2D(0.0f, 0.0f)));
-        grids.push_back(Vertex(QVector3D( i-10.0f, 0.0f, -10.0f), QVector2D(0.0f, 0.0f)));
-    }
-
-    vbo.bind();
-    vbo.allocate(&grids[0], grids.size() * sizeof(Vertex));
-}
-
 
 
 void Mesh::drawCube(QOpenGLShaderProgram *shader_program, GLenum displayMode)
 {
-    // Tell OpenGL which VBOs to use
     vbo.bind();
     ibo.bind();
 
-    // Offset for position
     quintptr offset = 0;
-
     // Tell OpenGL programmable pipeline how to locate vertex position data
     int vertexLocation = shader_program->attributeLocation("position");
     shader_program->enableAttributeArray(vertexLocation);
     shader_program->setAttributeBuffer(vertexLocation, GL_FLOAT, offset, 3, sizeof(Vertex));
 
-    // Offset for texture coordinate
     offset += sizeof(QVector3D);
-
     // Tell OpenGL programmable pipeline how to locate vertex texture coordinate data
     int texcoordLocation = shader_program->attributeLocation("texcoord");
     shader_program->enableAttributeArray(texcoordLocation);
@@ -124,15 +101,5 @@ void Mesh::drawCube(QOpenGLShaderProgram *shader_program, GLenum displayMode)
 
     // Draw cube geometry using indices from VBO 1
     glDrawElements(displayMode, 34, GL_UNSIGNED_SHORT, 0);
-}
-
-void Mesh::drawGrid(QOpenGLShaderProgram *shader_program){
-    vbo.bind();
-
-    int vertexLocation = shader_program->attributeLocation("position");
-    shader_program->enableAttributeArray(vertexLocation);
-    shader_program->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3, sizeof(Vertex));
-    glDrawArrays(GL_LINES, 0, 84);  //4*21
-
 }
 

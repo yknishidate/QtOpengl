@@ -7,6 +7,7 @@
 #include <QtOpenGL>
 #include <QMainWindow>
 #include "mesh.h"
+#include "grid.h"
 
 /*
 static const Vertex vertices[] = {
@@ -93,7 +94,7 @@ private:
     bool testing;
 
     Mesh *mesh;
-    Mesh *grid;
+    Grid *grid;
     QOpenGLTexture *texture;
 
 };
