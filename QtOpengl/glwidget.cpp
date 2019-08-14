@@ -9,10 +9,8 @@ GLWidget::GLWidget(QWidget *parent)
       displayMode(GL_TRIANGLE_STRIP),
       xRot(0), yRot(0), zRot(0),
       shader_program(nullptr),
-      cameraPos(2, 2, 5), targetPos(0, 0.5f, 0),
-      culling(false), testing(true),
-      mesh(0),
-      texture(0)
+      cameraPos(2, 2, 5), targetPos(0, 0, 0),
+      culling(false), testing(true)
 {
 }
 
@@ -57,6 +55,9 @@ void GLWidget::initializeGL(){
     mesh = new Mesh();
     mesh->initCube();
 
+    grid = new Mesh();
+    grid->initGrid();
+
     /* Light */
     //shader_program->setUniformValue(lightPosLoc, QVector3D(0, 0, 70));
 
@@ -91,11 +92,7 @@ void GLWidget::paintGL(){
     shader_program->setUniformValue("texture", 0);
 
     mesh->drawCube(shader_program, displayMode);
-
-    //vbo.bind();
-    //vbo.allocate(vertices, sizeof(vertices));
-    //glDrawArrays(displayMode, 0, sizeof(vertices) / sizeof(vertices[0]));
-
+    grid->drawGrid(shader_program);
 
     /* Normal */
     //QMatrix3x3 normalMatrix = world.normalMatrix();
@@ -105,8 +102,6 @@ void GLWidget::paintGL(){
     //vbo.bind();
     //vbo.allocate(grids, sizeof(grids));
     //glDrawArrays(GL_LINES, 0, sizeof(grids) / sizeof(grids[0]));
-
-    //shader_program->release();
 }
 
 void GLWidget::resizeGL(int w, int h){
@@ -159,21 +154,6 @@ void GLWidget::setDepthTest(bool arg){
     update();
 }
 
-/* VBO */
-void GLWidget::initVBO() {
-    vbo.create();
-    vbo.bind();
-    //vbo.allocate(vertices, sizeof(vertices));
-
-    /* position */
-    shader_program->enableAttributeArray(0);
-    //shader_program->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, Vertex::stride());
-
-    /* color */
-    shader_program->enableAttributeArray(1);
-    //shader_program->setAttributeBuffer(1, GL_FLOAT, Vertex::colorOffset(), 3, Vertex::stride());
-    vbo.release();
-}
 
 /* Shader */
 void GLWidget::initShader(){
@@ -188,23 +168,20 @@ void GLWidget::initShader(){
     mvMatrixLoc = shader_program->uniformLocation("mvMatrix");
     //normalMatrixLoc = shader_program->uniformLocation("normalMatrix");
     //lightPosLoc = shader_program->uniformLocation("lightPos");
-
-    //shader_program->release();
 }
 
 
 void GLWidget::initTextures()
 {
-    // Load cube.png image
+    // Load Texture
     texture = new QOpenGLTexture(QImage(":/cube.png").mirrored());
 
-    // Set nearest filtering mode for texture minification
+    // Minification -> Nearest
     texture->setMinificationFilter(QOpenGLTexture::Nearest);
 
-    // Set bilinear filtering mode for texture magnification
+    // Magnification -> Linear
     texture->setMagnificationFilter(QOpenGLTexture::Linear);
 
-    // Wrap texture coordinates by repeating
-    // f.ex. texture coordinate (1.1, 1.2) is same as (0.1, 0.2)
+    // Repeat
     texture->setWrapMode(QOpenGLTexture::Repeat);
 }

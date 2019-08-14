@@ -1,6 +1,8 @@
 #include "mesh.h"
+#include <QVector>
 #include <QVector2D>
 #include <QVector3D>
+#include <vector>
 
 Mesh::Mesh()
     : ibo(QOpenGLBuffer::IndexBuffer)
@@ -84,15 +86,16 @@ void Mesh::initCube()
 }
 
 void Mesh::initGrid(){
-    /*
-    const Vertex grids[] = {
-        {QVector3D(  10000.0f, 0.0f, 0.0f), QVector2D(0.0f, 0.0f)},
-        {QVector3D( -10000.0f, 0.0f, 0.0f), QVector2D(0.0f, 0.0f)},
+    QVector<Vertex> grids;
+    for (int i = 0;i <= 20; i++) {
+        grids.push_back(Vertex(QVector3D(  10.0f, 0.0f, i-10.0f), QVector2D(0.0f, 0.0f)));
+        grids.push_back(Vertex(QVector3D( -10.0f, 0.0f, i-10.0f), QVector2D(0.0f, 0.0f)));
+        grids.push_back(Vertex(QVector3D( i-10.0f, 0.0f,  10.0f), QVector2D(0.0f, 0.0f)));
+        grids.push_back(Vertex(QVector3D( i-10.0f, 0.0f, -10.0f), QVector2D(0.0f, 0.0f)));
+    }
 
-        {QVector3D( 0.0f, 0.0f, -10000.0f), QVector2D(0.0f, 0.0f)},
-        {QVector3D( 0.0f, 0.0f,  10000.0f), QVector2D(0.0f, 0.0f)},
-    };
-    */
+    vbo.bind();
+    vbo.allocate(&grids[0], grids.size() * sizeof(Vertex));
 }
 
 
@@ -124,13 +127,12 @@ void Mesh::drawCube(QOpenGLShaderProgram *shader_program, GLenum displayMode)
 }
 
 void Mesh::drawGrid(QOpenGLShaderProgram *shader_program){
-    /*
     vbo.bind();
 
     int vertexLocation = shader_program->attributeLocation("position");
     shader_program->enableAttributeArray(vertexLocation);
     shader_program->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3, sizeof(Vertex));
-    glDrawArrays(GL_LINES, 0, sizeof(grids) / sizeof(grids[0]));
-    */
+    glDrawArrays(GL_LINES, 0, 84);  //4*21
+
 }
 

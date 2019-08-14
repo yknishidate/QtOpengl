@@ -50,7 +50,6 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
-    //void initTextures();
 
 public slots:
     void setXRotation(int angle);
@@ -67,7 +66,6 @@ signals:
     void zRotationChanged(int angle);
 
 private:
-    void initVBO();
     void initShader();
     void initTextures();
 
@@ -95,6 +93,7 @@ private:
     bool testing;
 
     Mesh *mesh;
+    Mesh *grid;
     QOpenGLTexture *texture;
 
 };
