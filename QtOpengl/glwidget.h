@@ -69,6 +69,7 @@ private:
     bool testing;
 
     Mesh *mesh;
+    Mesh *cube;
     Grid *grid;
     QOpenGLTexture *texture;
 

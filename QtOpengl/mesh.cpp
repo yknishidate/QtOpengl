@@ -7,10 +7,30 @@
 Mesh::Mesh()
     : ibo(QOpenGLBuffer::IndexBuffer)
 {
-    initializeOpenGLFunctions();
+}
 
-    vbo.create();
-    ibo.create();
+
+Mesh::Mesh(Vertex* vertices, unsigned int numVertices, GLushort* indices, unsigned int numIndices)
+{
+    IndexedModel model;
+
+    // "model"のメンバ変数（配列）に頂点情報を分けて詰める
+    for(unsigned int i = 0; i < numVertices; i++)
+    {
+        model.positions.push_back(*vertices[i].GetPosition());
+        model.texCoords.push_back(*vertices[i].GetTexCoord());
+        model.normals.push_back(*vertices[i].GetNormal());
+    }
+
+    // "model"にIndex情報を詰める
+    for(unsigned int i = 0; i < numIndices; i++){
+        model.indices.push_back(indices[i]);
+    }
+
+    m_numIndices = numIndices;
+
+    // "model"を"initMesh"に渡す
+    initMesh(model);
 }
 
 Mesh::~Mesh()
@@ -18,6 +38,78 @@ Mesh::~Mesh()
     vbo.destroy();
     ibo.destroy();
 }
+
+
+void Mesh::initMesh(const IndexedModel& model)
+{
+    initializeOpenGLFunctions();
+
+    positionOffset = 0;
+    texCoordOffset = positionOffset + model.positions.size()*sizeof(model.positions[0]);
+    normalOffset   = texCoordOffset + model.texCoords.size()*sizeof(model.texCoords[0]);
+    vboTotalSize   = normalOffset   + model.normals.size()*sizeof(model.normals[0]);
+
+    qDebug() << positionOffset << texCoordOffset << normalOffset << vboTotalSize;
+
+    vbo.create();
+    vbo.bind();
+    vbo.allocate( &model.positions[0], vboTotalSize);        // "&qvec[0]" で渡す
+    vbo.write( texCoordOffset, //offset
+               &model.texCoords[0],                               //data
+               model.texCoords.size()*sizeof(model.texCoords[0]));//size
+    vbo.write( normalOffset, //offset
+               &model.normals[0],                               //data
+               model.normals.size()*sizeof(model.normals[0]));//size
+    vbo.release();
+
+    ibo.create();
+    ibo.bind();
+    ibo.allocate(&model.indices[0], model.indices.size() *sizeof(model.indices[0]));
+    qDebug() <<model.indices.size()<<sizeof(model.indices[0]);
+
+    //qDebug() << "model.positions.size()*sizeof(model.positions[0])" << model.positions.size()*sizeof(model.positions[0]);
+    //qDebug() << "model.texCoords.size()*sizeof(model.texCoords[0])" << model.texCoords.size()*sizeof(model.texCoords[0]);
+}
+
+
+void Mesh::drawMesh(QOpenGLShaderProgram *shader_program, GLenum displayMode)
+{
+    //shader_program->bind();
+    vao.bind();
+    ibo.bind();
+    vbo.bind();
+
+    shader_program->setAttributeBuffer(0, GL_FLOAT, positionOffset, 3);  //stride = 0(default)
+    shader_program->enableAttributeArray(0);
+    shader_program->setAttributeBuffer(1, GL_FLOAT, texCoordOffset, 2);
+    shader_program->enableAttributeArray(1);
+    vbo.release();
+    ibo.release();
+
+    //glDrawArrays(GL_TRIANGLES, 0, 24);
+    //mode count type indices
+    glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_SHORT, 0);
+    //qDebug() << m_numIndices;
+
+    //vao.release();
+    //shader_program->release();
+}
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 
 
 void Mesh::initCube()
@@ -64,15 +156,18 @@ void Mesh::initCube()
         20, 20, 21, 22, 23      // Face 5 - triangle strip (v20, v21, v22, v23)
     };
 
-//! [1]
-    // Transfer vertex data to VBO 0
+    initializeOpenGLFunctions();
+
+    vbo.create();
+    ibo.create();
+
     vbo.bind();
     vbo.allocate(vertices, sizeof(vertices));
 
-    // Transfer index data to VBO 1
     ibo.bind();
     ibo.allocate(indices, sizeof(indices));
-//! [1]
+
+    m_numIndices = sizeof(indices)/sizeof(indices[0]);
 }
 
 
@@ -82,17 +177,13 @@ void Mesh::drawCube(QOpenGLShaderProgram *shader_program, GLenum displayMode)
     vbo.bind();
     ibo.bind();
 
-    // Tell OpenGL programmable pipeline how to locate vertex position data
-    int vertexLocation = shader_program->attributeLocation("position");
-    shader_program->enableAttributeArray(vertexLocation);
-    shader_program->setAttributeBuffer(vertexLocation, GL_FLOAT, Vertex::positionOffset(), 3, sizeof(Vertex));
+    shader_program->enableAttributeArray(0);
+    shader_program->setAttributeBuffer(0, GL_FLOAT, Vertex::positionOffset(), 3, sizeof(Vertex));
 
-    // Tell OpenGL programmable pipeline how to locate vertex texture coordinate data
-    int texcoordLocation = shader_program->attributeLocation("texcoord");
-    shader_program->enableAttributeArray(texcoordLocation);
-    shader_program->setAttributeBuffer(texcoordLocation, GL_FLOAT, Vertex::texCoordOffset(), 2, sizeof(Vertex));
+    shader_program->enableAttributeArray(1);
+    shader_program->setAttributeBuffer(1, GL_FLOAT, Vertex::texCoordOffset(), 2, sizeof(Vertex));
 
-    // Draw cube geometry using indices from VBO 1
-    glDrawElements(displayMode, 34, GL_UNSIGNED_SHORT, 0);
+    // Draw using IBO
+    glDrawElements(displayMode, m_numIndices, GL_UNSIGNED_SHORT, 0);
 }
 
