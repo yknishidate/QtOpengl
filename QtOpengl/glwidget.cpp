@@ -52,7 +52,7 @@ void GLWidget::initializeGL(){
     initShader();
     initTextures();
 
-
+    /*
     Vertex vertices[] =    {
         Vertex(QVector3D(-1, -1, -1), QVector2D(1, 0), QVector3D(0, 0, -1)),
         Vertex(QVector3D(-1, 1, -1),  QVector2D(0, 0), QVector3D(0, 0, -1)),
@@ -88,7 +88,7 @@ void GLWidget::initializeGL(){
     GLushort indices[] = { 0,  1,  2,   0,  2,  3,      6,  5,  4,   7,  6,  4,
                           10,  9,  8,  11, 10,  8,     12, 13, 14,  12, 14, 15,
                           16, 17, 18,  16, 18, 19,     22, 21, 20,  23, 22, 20 };
-    /*
+    */
     Vertex vertices[] = {
         // Vertex data for face 0
         {QVector3D(-1.0f, -1.0f,  1.0f), QVector2D(0.0f, 0.0f)},  // v0
@@ -130,7 +130,7 @@ void GLWidget::initializeGL(){
         16, 16, 17, 18, 19, 19, // Face 4 - triangle strip (v16, v17, v18, v19)
         20, 20, 21, 22, 23      // Face 5 - triangle strip (v20, v21, v22, v23)
     };
-    */
+
 
     mesh = new Mesh(vertices, sizeof(vertices)/sizeof(vertices[0]), indices, sizeof(indices)/sizeof(indices[0]));
 
@@ -184,8 +184,6 @@ void GLWidget::paintGL(){
     //QMatrix3x3 normalMatrix = world.normalMatrix();
     //shader_program->setUniformValue(normalMatrixLoc, normalMatrix);
 }
-
-
 
 
 

@@ -2,6 +2,7 @@
 #include <QVector>
 #include <QVector2D>
 #include <QVector3D>
+#include <QOpenGLExtraFunctions>
 
 
 Mesh::Mesh()
@@ -87,8 +88,7 @@ void Mesh::drawMesh(QOpenGLShaderProgram *shader_program, GLenum displayMode)
     ibo.release();
 
     //glDrawArrays(GL_TRIANGLES, 0, 24);
-    //mode count type indices
-    glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_SHORT, 0);
+    glDrawElements(GL_TRIANGLE_STRIP, m_numIndices, GL_UNSIGNED_SHORT, nullptr);   //mode count type indices
     //qDebug() << m_numIndices;
 
     //vao.release();
