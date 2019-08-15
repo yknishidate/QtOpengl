@@ -35,7 +35,10 @@ void Grid::initGrid(){
 
     vbo.bind();
     vbo.allocate(&grids[0], grids.size() * sizeof(Vertex));
-    qDebug() << "Vertex Size:" <<  sizeof(Vertex);
+    qDebug() << "---Grids---";
+    qDebug() << "grids.size() , sizeof(Vertex):" <<  grids.size() << sizeof(Vertex);
+    qDebug() << "sizeof(grids):" <<  sizeof(grids);
+
 }
 
 

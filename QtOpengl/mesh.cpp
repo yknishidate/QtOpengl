@@ -72,11 +72,17 @@ void Mesh::initCube()
 //! [1]
     // Transfer vertex data to VBO 0
     vbo.bind();
-    vbo.allocate(vertices, sizeof(vertices) * sizeof(Vertex));
+    vbo.allocate(vertices, sizeof(vertices));
 
     // Transfer index data to VBO 1
     ibo.bind();
-    ibo.allocate(indices, sizeof(indices) * sizeof(GLushort));
+    ibo.allocate(indices, sizeof(indices));
+
+    qDebug() << "---Cube---";
+    qDebug() << "sizeof(vertices):" << sizeof(vertices);
+    qDebug() << "sizeof(indices):" << sizeof(indices);
+    qDebug() << "sizeof(Vertex):" << sizeof(Vertex);
+    qDebug() << "sizeof(GLushort):" << sizeof(GLushort);
 //! [1]
 }
 
@@ -87,17 +93,15 @@ void Mesh::drawCube(QOpenGLShaderProgram *shader_program, GLenum displayMode)
     vbo.bind();
     ibo.bind();
 
-    quintptr offset = 0;
     // Tell OpenGL programmable pipeline how to locate vertex position data
     int vertexLocation = shader_program->attributeLocation("position");
     shader_program->enableAttributeArray(vertexLocation);
-    shader_program->setAttributeBuffer(vertexLocation, GL_FLOAT, offset, 3, sizeof(Vertex));
+    shader_program->setAttributeBuffer(vertexLocation, GL_FLOAT, Vertex::positionOffset(), 3, sizeof(Vertex));
 
-    offset += sizeof(QVector3D);
     // Tell OpenGL programmable pipeline how to locate vertex texture coordinate data
     int texcoordLocation = shader_program->attributeLocation("texcoord");
     shader_program->enableAttributeArray(texcoordLocation);
-    shader_program->setAttributeBuffer(texcoordLocation, GL_FLOAT, offset, 2, sizeof(Vertex));
+    shader_program->setAttributeBuffer(texcoordLocation, GL_FLOAT, Vertex::texCoordOffset(), 2, sizeof(Vertex));
 
     // Draw cube geometry using indices from VBO 1
     glDrawElements(displayMode, 34, GL_UNSIGNED_SHORT, 0);
