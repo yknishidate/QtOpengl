@@ -14,18 +14,8 @@ Grid::~Grid()
     vbo.destroy();
 }
 
-
-
 void Grid::initGrid(){
     QVector<Vertex> grids;
-    /*
-    for (int i = 0;i <= 20; i++) {
-        grids.push_back(Vertex(QVector3D(  10.0f, 0.0f, i-10.0f), QVector2D(0.0f, 0.0f)));
-        grids.push_back(Vertex(QVector3D( -10.0f, 0.0f, i-10.0f), QVector2D(0.0f, 0.0f)));
-        grids.push_back(Vertex(QVector3D( i-10.0f, 0.0f,  10.0f), QVector2D(0.0f, 0.0f)));
-        grids.push_back(Vertex(QVector3D( i-10.0f, 0.0f, -10.0f), QVector2D(0.0f, 0.0f)));
-    }
-    */
     for (int i = 0;i <= 20; i++) {
         grids.push_back(Vertex(QVector3D(  10.0f, 0.0f, i-10.0f)));
         grids.push_back(Vertex(QVector3D( -10.0f, 0.0f, i-10.0f)));
@@ -35,10 +25,6 @@ void Grid::initGrid(){
 
     vbo.bind();
     vbo.allocate(&grids[0], grids.size() * sizeof(Vertex));
-    qDebug() << "---Grids---";
-    qDebug() << "grids.size() , sizeof(Vertex):" <<  grids.size() << sizeof(Vertex);
-    qDebug() << "sizeof(grids):" <<  sizeof(grids);
-
 }
 
 

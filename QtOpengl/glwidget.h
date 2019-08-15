@@ -9,31 +9,6 @@
 #include "mesh.h"
 #include "grid.h"
 
-/*
-static const Vertex vertices[] = {
-    Vertex( QVector3D( 0.0f,  0.0f, 0.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
-    Vertex( QVector3D( 2.0f,  0.0f, 0.0f), QVector3D( 1.0f,  0.0f, 0.0f)),
-    Vertex( QVector3D( 0.0f,  2.0f, 0.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
-
-    Vertex( QVector3D( 0.0f,  0.0f, 0.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
-    Vertex( QVector3D( 0.0f,  0.0f, 2.0f), QVector3D( 0.0f,  1.0f, 0.0f)),
-    Vertex( QVector3D( 2.0f,  0.0f, 0.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
-
-    Vertex( QVector3D( 0.0f,  0.0f, 0.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
-    Vertex( QVector3D( 0.0f,  2.0f, 0.0f), QVector3D( 0.0f,  0.0f, 1.0f)),
-    Vertex( QVector3D( 0.0f,  0.0f, 2.0f), QVector3D( 0.0f,  0.0f, 0.0f)),
-};
-
-static const Vertex grids[] = {
-    Vertex( QVector3D(  10000.0f, 0.0f, 0.0f), QVector3D( 0.5f,  0.2f, 0.2f)),
-    Vertex( QVector3D( -10000.0f, 0.0f, 0.0f), QVector3D( 0.5f,  0.2f, 0.2f)),
-
-    Vertex( QVector3D( 0.0f, 0.0f, -10000.0f), QVector3D( 0.5f,  0.2f, 0.2f)),
-    Vertex( QVector3D( 0.0f, 0.0f,  10000.0f), QVector3D( 0.5f,  0.2f, 0.2f)),
-};
-*/
-
-
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
     Q_OBJECT

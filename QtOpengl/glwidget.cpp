@@ -99,11 +99,6 @@ void GLWidget::paintGL(){
     /* Normal */
     //QMatrix3x3 normalMatrix = world.normalMatrix();
     //shader_program->setUniformValue(normalMatrixLoc, normalMatrix);
-
-    /* Grid */
-    //vbo.bind();
-    //vbo.allocate(grids, sizeof(grids));
-    //glDrawArrays(GL_LINES, 0, sizeof(grids) / sizeof(grids[0]));
 }
 
 void GLWidget::resizeGL(int w, int h){
@@ -177,13 +172,10 @@ void GLWidget::initTextures()
 {
     // Load Texture
     texture = new QOpenGLTexture(QImage(":/resource/cube_blue.png").mirrored());
-
     // Minification -> Nearest
     texture->setMinificationFilter(QOpenGLTexture::Nearest);
-
     // Magnification -> Linear
     texture->setMagnificationFilter(QOpenGLTexture::Linear);
-
     // Repeat
     texture->setWrapMode(QOpenGLTexture::Repeat);
 }
