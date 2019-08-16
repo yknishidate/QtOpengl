@@ -6,11 +6,12 @@
 
 GLWidget::GLWidget(QWidget *parent)
     : QOpenGLWidget(parent),
-      displayMode(GL_TRIANGLE_STRIP),
+      displayMode(GL_TRIANGLES),
       xRot(0), yRot(0), zRot(0),
       shader_program(nullptr),
-      cameraPos(2, 2, 5), targetPos(0, 0, 0),
+      cameraPos(2, 2, 5), targetPos(0, 1, 0),
       culling(false), testing(true)
+      //mesh()
 {
 }
 
@@ -52,44 +53,6 @@ void GLWidget::initializeGL(){
     initShader();
     initTextures();
 
-
-    Vertex vertices[] =    {
-        Vertex(QVector3D(-1, -1, -1), QVector2D(1, 0), QVector3D(0, 0, -1)),
-        Vertex(QVector3D(-1, 1, -1),  QVector2D(0, 0), QVector3D(0, 0, -1)),
-        Vertex(QVector3D(1, 1, -1),   QVector2D(0, 1), QVector3D(0, 0, -1)),
-        Vertex(QVector3D(1, -1, -1),  QVector2D(1, 1), QVector3D(0, 0, -1)),
-
-        Vertex(QVector3D(-1, -1, 1),  QVector2D(1, 0), QVector3D(0, 0, 1)),
-        Vertex(QVector3D(-1, 1, 1),   QVector2D(0, 0), QVector3D(0, 0, 1)),
-        Vertex(QVector3D(1, 1, 1),    QVector2D(0, 1), QVector3D(0, 0, 1)),
-        Vertex(QVector3D(1, -1, 1),   QVector2D(1, 1), QVector3D(0, 0, 1)),
-
-        Vertex(QVector3D(-1, -1, -1), QVector2D(0, 1), QVector3D(0, -1, 0)),
-        Vertex(QVector3D(-1, -1, 1),  QVector2D(1, 1), QVector3D(0, -1, 0)),
-        Vertex(QVector3D(1, -1, 1),   QVector2D(1, 0), QVector3D(0, -1, 0)),
-        Vertex(QVector3D(1, -1, -1),  QVector2D(0, 0), QVector3D(0, -1, 0)),
-
-        Vertex(QVector3D(-1, 1, -1),  QVector2D(0, 1), QVector3D(0, 1, 0)),
-        Vertex(QVector3D(-1, 1, 1),   QVector2D(1, 1), QVector3D(0, 1, 0)),
-        Vertex(QVector3D(1, 1, 1),    QVector2D(1, 0), QVector3D(0, 1, 0)),
-        Vertex(QVector3D(1, 1, -1),   QVector2D(0, 0), QVector3D(0, 1, 0)),
-
-        Vertex(QVector3D(-1, -1, -1), QVector2D(1, 1), QVector3D(-1, 0, 0)),
-        Vertex(QVector3D(-1, -1, 1),  QVector2D(1, 0), QVector3D(-1, 0, 0)),
-        Vertex(QVector3D(-1, 1, 1),   QVector2D(0, 0), QVector3D(-1, 0, 0)),
-        Vertex(QVector3D(-1, 1, -1),  QVector2D(0, 1), QVector3D(-1, 0, 0)),
-
-        Vertex(QVector3D(1, -1, -1),  QVector2D(1, 1), QVector3D(1, 0, 0)),
-        Vertex(QVector3D(1, -1, 1),   QVector2D(1, 0), QVector3D(1, 0, 0)),
-        Vertex(QVector3D(1, 1, 1),    QVector2D(0, 0), QVector3D(1, 0, 0)),
-        Vertex(QVector3D(1, 1, -1),   QVector2D(0, 1), QVector3D(1, 0, 0)),
-    };
-
-    GLuint indices[] = { 0,  1,  2,    0,  2,  3,     6,  5,  4,    7,  6,  4,
-                          10,  9,  8,   11, 10,  8,    12, 13, 14,   12, 14, 15,
-                          16, 17, 18,   16, 18, 19,    22, 21, 20,   23, 22, 20 };
-
-
     // Test mesh
     //mesh = new Mesh(vertices, sizeof(vertices)/sizeof(vertices[0]), indices, sizeof(indices)/sizeof(indices[0]));
 
@@ -102,8 +65,10 @@ void GLWidget::initializeGL(){
     grid->initGrid();
 
     //monkey
-    qDebug() << "---monkey---";
-    monkey = new Mesh("E:/Documents/repos/QtOpengl/QtOpengl/resource/monkey3.obj");
+    //monkey = new Mesh("E:/Documents/repos/QtOpengl/QtOpengl/resource/monkey3.obj");
+
+    //chest
+    //chest = new Mesh("C:/Qt/Qt5.13.0/Examples/Qt-5.13.0/qt3d/exampleresources/assets/chest/Chest.obj");
 
     // Light
     //shader_program->setUniformValue(lightPosLoc, QVector3D(0, 0, 70));
@@ -139,9 +104,16 @@ void GLWidget::paintGL(){
 
 
     // Draw
-    //mesh->drawMesh(shader_program, displayMode);
+    //if(mesh->isInitialized){
+        //mesh->drawMesh(shader_program, displayMode);
+        //qDebug("Mesh is initialized");
+    //}
     //cube->drawCube(shader_program, displayMode);
-    monkey->drawMesh(shader_program, displayMode);
+    //monkey->drawMesh(shader_program, displayMode);
+    //chest->drawMesh(shader_program, displayMode);
+    if(loaded){
+        mesh->drawMesh(shader_program, displayMode);
+    }
     grid->drawGrid(shader_program);
 
     // Normal
@@ -155,6 +127,15 @@ void GLWidget::paintGL(){
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
+
+// Open
+void GLWidget::open(){
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Obj Files (*.obj);"));
+    qDebug() << "fileName:" << fileName;
+    mesh = new Mesh(fileName);
+    loaded = true;
+}
+
 
 
 void GLWidget::resizeGL(int w, int h){
@@ -195,7 +176,7 @@ void GLWidget::wheelEvent(QWheelEvent *event){
 /* Checkbox */
 void GLWidget::setDisplayMode(bool arg){
     if(arg){displayMode = GL_LINE_STRIP;}
-    else{displayMode = GL_TRIANGLE_STRIP;}
+    else{displayMode = GL_TRIANGLES;}
     update();
 }
 void GLWidget::setCullFace(bool arg){
@@ -228,7 +209,7 @@ void GLWidget::initShader(){
 void GLWidget::initTextures()
 {
     // Load Texture
-    texture = new QOpenGLTexture(QImage(":/resource/cube_blue.png").mirrored());
+    texture = new QOpenGLTexture(QImage("C:/Qt/Qt5.13.0/Examples/Qt-5.13.0/qt3d/exampleresources/assets/chest/diffuse.webp").mirrored());
     // Minification -> Nearest
     texture->setMinificationFilter(QOpenGLTexture::Nearest);
     // Magnification -> Linear

@@ -36,6 +36,8 @@ public slots:
     void setCullFace(bool arg);
     void setDepthTest(bool arg);
 
+    void open();
+
 signals:
     void xRotationChanged(int angle);
     void yRotationChanged(int angle);
@@ -71,7 +73,12 @@ private:
     Mesh *mesh;
     Mesh *cube;
     Mesh *monkey;
+    Mesh *chest;
+    QVector<Mesh> *meshes;
+    int meshCount = 0;
     Grid *grid;
+
+    bool loaded = false;
 
     QOpenGLTexture *texture;
 

@@ -10,18 +10,20 @@ Mesh::Mesh()
 {
 }
 
-Mesh::Mesh(const std::string& fileName)
+Mesh::Mesh(const QString& fileName)
     : ibo(QOpenGLBuffer::IndexBuffer)
 {
-    initMesh(OBJModel(fileName).ToIndexedModel());
+    initMesh(OBJModel(fileName.toStdString()).ToIndexedModel());
 }
 
+void Mesh::loadMesh(const QString& fileName){
+    //initMesh(OBJModel(fileName.toStdString()).ToIndexedModel());
+}
 
 Mesh::Mesh(Vertex* vertices, unsigned int numVertices, GLuint* indices, unsigned int numIndices)
     : ibo(QOpenGLBuffer::IndexBuffer)
 {
     IndexedModel model;
-
     // "model"のメンバ変数（配列）に頂点情報を分けて詰める
     for(unsigned int i = 0; i < numVertices; i++)
     {
@@ -29,14 +31,11 @@ Mesh::Mesh(Vertex* vertices, unsigned int numVertices, GLuint* indices, unsigned
         model.texCoords.push_back(*vertices[i].GetTexCoord());
         model.normals.push_back(*vertices[i].GetNormal());
     }
-
     // "model"にIndex情報を詰める
     for(unsigned int i = 0; i < numIndices; i++){
         model.indices.push_back(indices[i]);
     }
-
     m_numIndices = numIndices;
-
     // "model"を"initMesh"に渡す
     initMesh(model);
 }
@@ -46,10 +45,20 @@ Mesh::~Mesh()
     vbo.destroy();
     ibo.destroy();
 }
+/*
+Mesh& Mesh::operator=(const Mesh& ms){
+    //this->vao = ms.vao;
+    this->vbo = ms.vbo;
+    this->ibo = ms.ibo;
+    this->m_numIndices = ms.m_numIndices;
+
+    return *this;
+}*/
 
 
 void Mesh::initMesh(const IndexedModel& model)
 {
+    qDebug() << "---initMesh()---";
     initializeOpenGLFunctions();
 
     positionOffset = 0;
@@ -57,39 +66,25 @@ void Mesh::initMesh(const IndexedModel& model)
     normalOffset   = texCoordOffset + model.texCoords.size()*sizeof(model.texCoords[0]);
     vboTotalSize   = normalOffset   + model.normals.size()*sizeof(model.normals[0]);
 
-    qDebug() << "Points :" << model.positions.size();
-
     vbo.create();
     vbo.bind();
-    vbo.allocate( &model.positions[0], vboTotalSize);        // "&qvec[0]" で渡す
-    vbo.write( texCoordOffset, //offset
-               &model.texCoords[0],                               //data
-               model.texCoords.size()*sizeof(model.texCoords[0]));//size
-    vbo.write( normalOffset, //offset
-               &model.normals[0],                               //data
-               model.normals.size()*sizeof(model.normals[0]));//size
-    vbo.release();
+    vbo.allocate( &model.positions[0], vboTotalSize);    // "&qvec[0]" で渡す
+    vbo.write( texCoordOffset, &model.texCoords[0],
+               model.texCoords.size()*sizeof(model.texCoords[0]));
+    vbo.write( normalOffset, &model.normals[0],
+               model.normals.size()*sizeof(model.normals[0]));
+    //vbo.release();
 
     ibo.create();
     ibo.bind();
     ibo.allocate(&model.indices[0], model.indices.size() *sizeof(model.indices[0]));
     m_numIndices = model.indices.size();
-    qDebug() << "model.indices.size():" << model.indices.size();
-    qDebug() << "sizeof(model.indices[0]):" << sizeof(model.indices[0]);
-    qDebug() << "model.indices.size() *sizeof(model.indices[0]):" << model.indices.size() *sizeof(model.indices[0]);
 
+    qDebug() << "Points :" << model.positions.size();
     qDebug() << "Indeces:" << model.indices.size();
-
-    qDebug() << "positionOffset:" << positionOffset;
-    qDebug() << "texCoordOffset:" << texCoordOffset;
-    qDebug() << "normalOffset  :" << normalOffset;
     qDebug() << "vboTotalSize  :" << vboTotalSize;
-
     qDebug() << "mesh's vbo ID:" << vbo.bufferId();
     qDebug() << "mesh's ibo ID:" << ibo.bufferId();
-
-    //qDebug() << "model.positions.size()*sizeof(model.positions[0])" << model.positions.size()*sizeof(model.positions[0]);
-    //qDebug() << "model.texCoords.size()*sizeof(model.texCoords[0])" << model.texCoords.size()*sizeof(model.texCoords[0]);
 }
 
 
@@ -104,9 +99,11 @@ void Mesh::drawMesh(QOpenGLShaderProgram *shader_program, GLenum displayMode)
     shader_program->enableAttributeArray(0);
     shader_program->setAttributeBuffer(1, GL_FLOAT, texCoordOffset, 2);
     shader_program->enableAttributeArray(1);
+    shader_program->setAttributeBuffer(2, GL_FLOAT, normalOffset, 3);
+    shader_program->enableAttributeArray(2);
 
 
-    glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0);   //mode count type indices
+    glDrawElements(displayMode, m_numIndices, GL_UNSIGNED_INT, 0);   //mode count type indices
     //vbo.release();
     //ibo.release();
     //vao.release();

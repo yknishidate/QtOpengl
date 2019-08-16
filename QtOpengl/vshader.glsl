@@ -15,5 +15,6 @@ void main(){
   gl_Position = projMatrix * mvMatrix * vec4(position, 1.0);
   //vColor = vec4(position+vec3(0.25f), 1.0);
   //vColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+  vColor = vec4(normal, 1.0);
   vTexcoord = texcoord;
 }
