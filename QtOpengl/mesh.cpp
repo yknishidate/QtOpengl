@@ -10,8 +10,15 @@ Mesh::Mesh()
 {
 }
 
+Mesh::Mesh(const std::string& fileName)
+    : ibo(QOpenGLBuffer::IndexBuffer)
+{
+    initMesh(OBJModel(fileName).ToIndexedModel());
+}
 
-Mesh::Mesh(Vertex* vertices, unsigned int numVertices, GLushort* indices, unsigned int numIndices)
+
+Mesh::Mesh(Vertex* vertices, unsigned int numVertices, GLuint* indices, unsigned int numIndices)
+    : ibo(QOpenGLBuffer::IndexBuffer)
 {
     IndexedModel model;
 
@@ -50,7 +57,7 @@ void Mesh::initMesh(const IndexedModel& model)
     normalOffset   = texCoordOffset + model.texCoords.size()*sizeof(model.texCoords[0]);
     vboTotalSize   = normalOffset   + model.normals.size()*sizeof(model.normals[0]);
 
-    qDebug() << positionOffset << texCoordOffset << normalOffset << vboTotalSize;
+    qDebug() << "Points :" << model.positions.size();
 
     vbo.create();
     vbo.bind();
@@ -66,7 +73,20 @@ void Mesh::initMesh(const IndexedModel& model)
     ibo.create();
     ibo.bind();
     ibo.allocate(&model.indices[0], model.indices.size() *sizeof(model.indices[0]));
-    qDebug() <<model.indices.size()<<sizeof(model.indices[0]);
+    m_numIndices = model.indices.size();
+    qDebug() << "model.indices.size():" << model.indices.size();
+    qDebug() << "sizeof(model.indices[0]):" << sizeof(model.indices[0]);
+    qDebug() << "model.indices.size() *sizeof(model.indices[0]):" << model.indices.size() *sizeof(model.indices[0]);
+
+    qDebug() << "Indeces:" << model.indices.size();
+
+    qDebug() << "positionOffset:" << positionOffset;
+    qDebug() << "texCoordOffset:" << texCoordOffset;
+    qDebug() << "normalOffset  :" << normalOffset;
+    qDebug() << "vboTotalSize  :" << vboTotalSize;
+
+    qDebug() << "mesh's vbo ID:" << vbo.bufferId();
+    qDebug() << "mesh's ibo ID:" << ibo.bufferId();
 
     //qDebug() << "model.positions.size()*sizeof(model.positions[0])" << model.positions.size()*sizeof(model.positions[0]);
     //qDebug() << "model.texCoords.size()*sizeof(model.texCoords[0])" << model.texCoords.size()*sizeof(model.texCoords[0]);
@@ -84,19 +104,14 @@ void Mesh::drawMesh(QOpenGLShaderProgram *shader_program, GLenum displayMode)
     shader_program->enableAttributeArray(0);
     shader_program->setAttributeBuffer(1, GL_FLOAT, texCoordOffset, 2);
     shader_program->enableAttributeArray(1);
-    vbo.release();
-    ibo.release();
 
-    //glDrawArrays(GL_TRIANGLES, 0, 24);
-    glDrawElements(GL_TRIANGLE_STRIP, m_numIndices, GL_UNSIGNED_SHORT, nullptr);   //mode count type indices
-    //qDebug() << m_numIndices;
 
+    glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0);   //mode count type indices
+    //vbo.release();
+    //ibo.release();
     //vao.release();
     //shader_program->release();
 }
-
-
-
 
 
 
@@ -158,16 +173,21 @@ void Mesh::initCube()
 
     initializeOpenGLFunctions();
 
-    vbo.create();
-    ibo.create();
 
+    vbo.create();
     vbo.bind();
     vbo.allocate(vertices, sizeof(vertices));
 
+    ibo.create();
     ibo.bind();
     ibo.allocate(indices, sizeof(indices));
 
     m_numIndices = sizeof(indices)/sizeof(indices[0]);
+
+    qDebug() << "cube's vbo ID:" << vbo.bufferId();
+    qDebug() << "cube's ibo ID:" << ibo.bufferId();
+    vbo.release();
+    ibo.release();
 }
 
 
@@ -182,8 +202,11 @@ void Mesh::drawCube(QOpenGLShaderProgram *shader_program, GLenum displayMode)
 
     shader_program->enableAttributeArray(1);
     shader_program->setAttributeBuffer(1, GL_FLOAT, Vertex::texCoordOffset(), 2, sizeof(Vertex));
+    vbo.release();
+    ibo.release();
 
     // Draw using IBO
     glDrawElements(displayMode, m_numIndices, GL_UNSIGNED_SHORT, 0);
+
 }
 

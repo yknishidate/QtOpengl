@@ -70,7 +70,9 @@ private:
 
     Mesh *mesh;
     Mesh *cube;
+    Mesh *monkey;
     Grid *grid;
+
     QOpenGLTexture *texture;
 
 };

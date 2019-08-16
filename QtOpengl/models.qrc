@@ -1,3 +1,7 @@
 <RCC>
-    <qresource prefix="/"/>
+    <qresource prefix="/">
+        <file>resource/monkey3.obj</file>
+        <file>resource/monkeyNoUV.obj</file>
+        <file>resource/testBoxNoUV.obj</file>
+    </qresource>
 </RCC>

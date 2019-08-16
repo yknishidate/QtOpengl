@@ -8,25 +8,18 @@
 #include <QOpenGLVertexArrayObject>
 #include <QVector>
 #include "vertex.h"
+#include "objloader.h"
 
 
 
-class IndexedModel
-{
-public:
-    QVector<QVector3D> positions;
-    QVector<QVector2D> texCoords;
-    QVector<QVector3D> normals;
-    QVector<GLushort> indices;
 
-    void calcNormals();
-};
 
 class Mesh : protected QOpenGLFunctions, public QOpenGLWidget
 {
 public:
     Mesh();
-    Mesh(Vertex* vertices, unsigned int numVertices, GLushort* indices, unsigned int numIndices);
+    Mesh(const std::string& fileName);
+    Mesh(Vertex* vertices, unsigned int numVertices, GLuint* indices, unsigned int numIndices);
     virtual ~Mesh();
     void initMesh(const IndexedModel& model);
     void drawMesh(QOpenGLShaderProgram *shader_program, GLenum displayMode);
@@ -38,8 +31,8 @@ private:
     QOpenGLVertexArrayObject vao;
     QOpenGLBuffer vbo;
     QOpenGLBuffer ibo;
-    unsigned int m_numVertices;
-    unsigned int m_numIndices;
+    GLuint m_numVertices;
+    GLuint m_numIndices;
 
     int positionOffset;
     int texCoordOffset;
