@@ -24,6 +24,7 @@ public:
     QVector<QVector2D> texCoords;
     QVector<QVector3D> normals;
     QVector<GLuint> indices;
+    std::string name;
 
     void CalcNormals();
 };
@@ -37,6 +38,7 @@ public:
     QVector<QVector3D> normals;
     bool hasUVs;
     bool hasNormals;
+    std::string name;
 
     OBJModel(const std::string& fileName);
 

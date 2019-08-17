@@ -11,6 +11,7 @@
 #include "camera.h"
 #include "shader.h"
 #include "texture.h"
+#include "treeview.h"
 
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
@@ -45,6 +46,8 @@ signals:
     void xRotationChanged(int angle);
     void yRotationChanged(int angle);
     void zRotationChanged(int angle);
+    void openedMesh(std::string name);
+
 
 private:
     void initTextures(QString fileName);

@@ -25,7 +25,8 @@ SOURCES += \
         mesh.cpp \
         objloader.cpp \
         shader.cpp \
-        texture.cpp
+        texture.cpp \
+        treeview.cpp
 
 HEADERS += \
         camera.h \
@@ -36,6 +37,7 @@ HEADERS += \
         objloader.h \
         shader.h \
         texture.h \
+        treeview.h \
         vertex.h
 
 FORMS += \

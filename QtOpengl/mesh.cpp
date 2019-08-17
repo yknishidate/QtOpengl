@@ -45,6 +45,9 @@ void Mesh::init(const IndexedModel& model)
     ibo.allocate(&model.indices[0], model.indices.size() *sizeof(model.indices[0]));
     m_numIndices = model.indices.size();
 
+
+    name = model.name;
+    qDebug() << "Name   :" << QString::fromStdString(model.name);
     qDebug() << "Points :" << model.positions.size();
     qDebug() << "Indeces:" << model.indices.size();
     qDebug() << "vboTotalSize  :" << vboTotalSize;

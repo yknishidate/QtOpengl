@@ -57,6 +57,9 @@ OBJModel::OBJModel(const std::string& fileName)
                 case 'f':
                     CreateOBJFace(line);
                 break;
+                case 'o':
+                    this->name = line.substr(2);
+                break;
                 //それ以外は無視
                 default: break;
             };
@@ -169,6 +172,7 @@ IndexedModel OBJModel::ToIndexedModel()
         for(unsigned int i = 0; i < result.positions.size(); i++)
             result.normals[i] = normalModel.normals[indexMap[i]];
     }
+    result.name = name;
 
     return result;
 };

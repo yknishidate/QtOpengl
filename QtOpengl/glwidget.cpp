@@ -16,9 +16,14 @@ GLWidget::GLWidget(QWidget *parent)
 void GLWidget::open(){
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Obj Files (*.obj);"));
     qDebug() << "---open()---";
-    qDebug() << "fileName:" << fileName;
-    mesh = new Mesh(fileName);
-    loaded = true;
+    if(fileName != ""){
+        qDebug() << "fileName:" << fileName;
+        mesh = new Mesh(fileName);
+        loaded = true;
+        emit openedMesh(mesh->name);
+    }else{
+        qDebug() << "Don't Open File";
+    }
 }
 
 void GLWidget::initializeGL(){
@@ -118,7 +123,7 @@ void GLWidget::setXRotation(int angle){
     qNormalizeAngle(angle);
     if (angle != xRot) {
         xRot = angle;
-        emit xRotationChanged(angle);
+        //emit xRotationChanged(angle);
         update();
     }
 }
@@ -126,7 +131,7 @@ void GLWidget::setYRotation(int angle){
     qNormalizeAngle(angle);
     if (angle != yRot) {
         yRot = angle;
-        emit yRotationChanged(angle);
+        //emit yRotationChanged(angle);
         update();
     }
 }
@@ -134,8 +139,7 @@ void GLWidget::setZRotation(int angle){
     qNormalizeAngle(angle);
     if (angle != zRot) {
         zRot = angle;
-        emit zRotationChanged(angle);
+        //emit zRotationChanged(angle);
         update();
     }
 }
-

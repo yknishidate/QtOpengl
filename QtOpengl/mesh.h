@@ -22,6 +22,8 @@ public:
     Mesh(const QString& fileName);
     virtual ~Mesh();
 
+    std::string name;
+
     void init(const IndexedModel& model);
     void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, Texture texture);
 
@@ -31,6 +33,7 @@ private:
     QOpenGLBuffer ibo;
     GLuint m_numVertices;
     GLuint m_numIndices;
+
 
     int positionOffset;
     int texCoordOffset;
