@@ -8,9 +8,9 @@ GLWidget::GLWidget(QWidget *parent)
     : QOpenGLWidget(parent),
       displayMode(GL_TRIANGLES),
       xRot(0), yRot(0), zRot(0),
-      shader_program(nullptr),
       camera(QVector3D(2,2,5), QVector3D(0,1,0)),
-      culling(false), testing(true)
+      culling(false), testing(true),
+      shader()
 {
 }
 
@@ -18,13 +18,10 @@ void GLWidget::initializeGL(){
     initializeOpenGLFunctions();
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-    initShader();
+    shader.init();
     initTextures();
 
     grid = new Grid();
-
-    // Light
-    //shader_program->setUniformValue(lightPosLoc, QVector3D(0, 0, 70));
 
     glLineWidth(1.5f);
 }
@@ -41,19 +38,13 @@ void GLWidget::paintGL(){
     else        glDisable(GL_DEPTH_TEST);
 
     camera.transform(xRot, yRot);
-
-    // Shader
-    shader_program->bind();
-    shader_program->setUniformValue(projMatrixLoc, proj);
-    shader_program->setUniformValue(mvMatrixLoc, camera.matrix);
-
+    shader.update(proj, camera.matrix);
 
     // Draw
-
     if(loaded){
-        mesh->drawMesh(shader_program, displayMode);
+        mesh->drawMesh(shader.program, displayMode);
     }
-    grid->drawGrid(shader_program);
+    grid->drawGrid(shader.program);
 
     // Normal
     //QMatrix3x3 normalMatrix = world.normalMatrix();
@@ -75,15 +66,13 @@ void GLWidget::open(){
     loaded = true;
 }
 
-
-
 void GLWidget::resizeGL(int w, int h){
     proj.setToIdentity();    //単位行列にする
     proj.perspective(45.0f, GLfloat(w)/h, 0.01f, 1000.0f);    //投影変換
 }
 
 
-/* Window Size */
+// Window Size
 QSize GLWidget::minimumSizeHint() const{return QSize(600, 400);}
 QSize GLWidget::sizeHint() const{return QSize(600, 400);}
 
@@ -121,23 +110,6 @@ void GLWidget::setCullFace(bool arg){
 void GLWidget::setDepthTest(bool arg){
     testing = arg;
     update();
-}
-
-
-/* Shader */
-void GLWidget::initShader(){
-    shader_program = new QOpenGLShaderProgram();
-    shader_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vshader.glsl");
-    shader_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fshader.glsl");
-    shader_program->link();
-    shader_program->bind();
-
-    /* Get Location from Shader */
-    projMatrixLoc = shader_program->uniformLocation("projMatrix");
-    mvMatrixLoc = shader_program->uniformLocation("mvMatrix");
-    shader_program->setUniformValue("texture", 0);
-    //normalMatrixLoc = shader_program->uniformLocation("normalMatrix");
-    //lightPosLoc = shader_program->uniformLocation("lightPos");
 }
 
 

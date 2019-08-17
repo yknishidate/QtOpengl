@@ -23,7 +23,8 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         mesh.cpp \
-        objloader.cpp
+        objloader.cpp \
+        shader.cpp
 
 HEADERS += \
         camera.h \
@@ -32,6 +33,7 @@ HEADERS += \
         mainwindow.h \
         mesh.h \
         objloader.h \
+        shader.h \
         vertex.h
 
 FORMS += \

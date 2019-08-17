@@ -9,6 +9,7 @@
 #include "mesh.h"
 #include "grid.h"
 #include "camera.h"
+#include "shader.h"
 
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
@@ -45,7 +46,6 @@ signals:
     void zRotationChanged(int angle);
 
 private:
-    void initShader();
     void initTextures();
 
     int xRot;
@@ -55,12 +55,8 @@ private:
 
     QOpenGLBuffer vbo;
     QOpenGLVertexArrayObject vao;
-    QOpenGLShaderProgram *shader_program;
 
-    int projMatrixLoc;
-    int mvMatrixLoc;
-    int normalMatrixLoc;
-    int lightPosLoc;
+    Shader shader;
 
     QMatrix4x4 proj;
 
