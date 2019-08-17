@@ -9,41 +9,9 @@ GLWidget::GLWidget(QWidget *parent)
       displayMode(GL_TRIANGLES),
       xRot(0), yRot(0), zRot(0),
       shader_program(nullptr),
-      cameraPos(2, 2, 5), targetPos(0, 1, 0),
+      camera(QVector3D(2,2,5), QVector3D(0,1,0)),
       culling(false), testing(true)
-      //mesh()
 {
-}
-
-static void qNormalizeAngle(int &angle){
-    while (angle < 0)
-        angle += 360 * 16;
-    while (angle > 360 * 16)
-        angle -= 360 * 16;
-}
-void GLWidget::setXRotation(int angle){
-    qNormalizeAngle(angle);
-    if (angle != xRot) {
-        xRot = angle;
-        emit xRotationChanged(angle);
-        update();
-    }
-}
-void GLWidget::setYRotation(int angle){
-    qNormalizeAngle(angle);
-    if (angle != yRot) {
-        yRot = angle;
-        emit yRotationChanged(angle);
-        update();
-    }
-}
-void GLWidget::setZRotation(int angle){
-    qNormalizeAngle(angle);
-    if (angle != zRot) {
-        zRot = angle;
-        emit zRotationChanged(angle);
-        update();
-    }
 }
 
 void GLWidget::initializeGL(){
@@ -53,28 +21,12 @@ void GLWidget::initializeGL(){
     initShader();
     initTextures();
 
-    // Test mesh
-    //mesh = new Mesh(vertices, sizeof(vertices)/sizeof(vertices[0]), indices, sizeof(indices)/sizeof(indices[0]));
-
-    // Cube
-    //cube = new Mesh();
-    //cube->initCube();
-
-    //Grid
     grid = new Grid();
-    grid->initGrid();
-
-    //monkey
-    //monkey = new Mesh("E:/Documents/repos/QtOpengl/QtOpengl/resource/monkey3.obj");
-
-    //chest
-    //chest = new Mesh("C:/Qt/Qt5.13.0/Examples/Qt-5.13.0/qt3d/exampleresources/assets/chest/Chest.obj");
 
     // Light
     //shader_program->setUniformValue(lightPosLoc, QVector3D(0, 0, 70));
 
     glLineWidth(1.5f);
-
 }
 
 
@@ -88,29 +40,16 @@ void GLWidget::paintGL(){
     if(testing) glEnable(GL_DEPTH_TEST);
     else        glDisable(GL_DEPTH_TEST);
 
-    // Rotate
-    world.setToIdentity();
-    world.rotate(xRot / 16.0f, 1, 0, 0);
-    world.rotate(yRot / 16.0f, 0, 1, 0);
-
-    // Camera Dolly
-    camera.setToIdentity();
-    camera.lookAt(cameraPos * world, targetPos, QVector3D(0, 1, 0));
+    camera.transform(xRot, yRot);
 
     // Shader
     shader_program->bind();
     shader_program->setUniformValue(projMatrixLoc, proj);
-    shader_program->setUniformValue(mvMatrixLoc, camera);
+    shader_program->setUniformValue(mvMatrixLoc, camera.matrix);
 
 
     // Draw
-    //if(mesh->isInitialized){
-        //mesh->drawMesh(shader_program, displayMode);
-        //qDebug("Mesh is initialized");
-    //}
-    //cube->drawCube(shader_program, displayMode);
-    //monkey->drawMesh(shader_program, displayMode);
-    //chest->drawMesh(shader_program, displayMode);
+
     if(loaded){
         mesh->drawMesh(shader_program, displayMode);
     }
@@ -164,11 +103,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
 }
 void GLWidget::wheelEvent(QWheelEvent *event){
     int degree = event->angleDelta().y() / 8;
-    QVector3D relativeVec = targetPos - cameraPos;
-    QVector3D cameraDir = relativeVec.normalized();
-    if(relativeVec.length() > 2 || degree < 0){
-        cameraPos = cameraPos + cameraDir * degree/10;
-    }
+    camera.dolly(degree);
     update();
 }
 
@@ -218,4 +153,35 @@ void GLWidget::initTextures()
     texture->setWrapMode(QOpenGLTexture::Repeat);
 }
 
+
+static void qNormalizeAngle(int &angle){
+    while (angle < 0)
+        angle += 360 * 16;
+    while (angle > 360 * 16)
+        angle -= 360 * 16;
+}
+void GLWidget::setXRotation(int angle){
+    qNormalizeAngle(angle);
+    if (angle != xRot) {
+        xRot = angle;
+        emit xRotationChanged(angle);
+        update();
+    }
+}
+void GLWidget::setYRotation(int angle){
+    qNormalizeAngle(angle);
+    if (angle != yRot) {
+        yRot = angle;
+        emit yRotationChanged(angle);
+        update();
+    }
+}
+void GLWidget::setZRotation(int angle){
+    qNormalizeAngle(angle);
+    if (angle != zRot) {
+        zRot = angle;
+        emit zRotationChanged(angle);
+        update();
+    }
+}
 

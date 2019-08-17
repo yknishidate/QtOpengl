@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11 static
 
 SOURCES += \
+        camera.cpp \
         glwidget.cpp \
         grid.cpp \
         main.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
         objloader.cpp
 
 HEADERS += \
+        camera.h \
         glwidget.h \
         grid.h \
         mainwindow.h \

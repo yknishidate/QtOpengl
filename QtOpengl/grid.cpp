@@ -7,6 +7,7 @@ Grid::Grid()
 {
     initializeOpenGLFunctions();
     vbo.create();
+    initGrid();
 }
 
 Grid::~Grid()

@@ -8,6 +8,7 @@
 #include <QMainWindow>
 #include "mesh.h"
 #include "grid.h"
+#include "camera.h"
 
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
@@ -62,23 +63,22 @@ private:
     int lightPosLoc;
 
     QMatrix4x4 proj;
-    QMatrix4x4 camera;
-    QMatrix4x4 world;
 
-    QVector3D cameraPos;
-    QVector3D targetPos;
-    bool culling;
-    bool testing;
+    Camera camera;
+    Grid *grid;
 
+
+    // Mesh
     Mesh *mesh;
     Mesh *cube;
     Mesh *monkey;
     Mesh *chest;
     QVector<Mesh> *meshes;
     int meshCount = 0;
-    Grid *grid;
-
     bool loaded = false;
+
+    bool culling;
+    bool testing;
 
     QOpenGLTexture *texture;
 
