@@ -10,6 +10,7 @@
 #include "grid.h"
 #include "camera.h"
 #include "shader.h"
+#include "texture.h"
 
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
@@ -46,7 +47,7 @@ signals:
     void zRotationChanged(int angle);
 
 private:
-    void initTextures();
+    void initTextures(QString fileName);
 
     int xRot;
     int yRot;
@@ -57,6 +58,8 @@ private:
     QOpenGLVertexArrayObject vao;
 
     Shader shader;
+    //QOpenGLTexture *texture;
+    Texture texture;
 
     QMatrix4x4 proj;
 
@@ -76,7 +79,6 @@ private:
     bool culling;
     bool testing;
 
-    QOpenGLTexture *texture;
 
 };
 

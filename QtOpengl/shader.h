@@ -12,7 +12,6 @@ public:
     QOpenGLShaderProgram *program;
 
 private:
-
     int projMatrixLoc;
     int mvMatrixLoc;
     int normalMatrixLoc;

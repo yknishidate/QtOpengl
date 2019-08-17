@@ -45,6 +45,7 @@ Mesh::~Mesh()
     vbo.destroy();
     ibo.destroy();
 }
+
 /*
 Mesh& Mesh::operator=(const Mesh& ms){
     //this->vao = ms.vao;
