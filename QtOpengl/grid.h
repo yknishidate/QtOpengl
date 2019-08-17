@@ -11,8 +11,8 @@ class Grid : protected QOpenGLFunctions
 public:
     Grid();
     virtual ~Grid();
-    void drawGrid(QOpenGLShaderProgram *shader_program);
-    void initGrid();
+    void draw(QOpenGLShaderProgram *shader_program);
+    void init();
 
 private:
     QOpenGLBuffer vbo;

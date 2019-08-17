@@ -5,9 +5,6 @@
 
 Grid::Grid()
 {
-    initializeOpenGLFunctions();
-    vbo.create();
-    initGrid();
 }
 
 Grid::~Grid()
@@ -15,7 +12,10 @@ Grid::~Grid()
     vbo.destroy();
 }
 
-void Grid::initGrid(){
+void Grid::init(){
+    initializeOpenGLFunctions();
+    vbo.create();
+
     QVector<Vertex> grids;
     for (int i = 0;i <= 20; i++) {
         grids.push_back(Vertex(QVector3D(  10.0f, 0.0f, i-10.0f)));
@@ -29,7 +29,7 @@ void Grid::initGrid(){
 }
 
 
-void Grid::drawGrid(QOpenGLShaderProgram *shader_program){
+void Grid::draw(QOpenGLShaderProgram *shader_program){
     vbo.bind();
 
     int vertexLocation = shader_program->attributeLocation("position");

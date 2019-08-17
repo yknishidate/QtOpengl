@@ -26,9 +26,11 @@ void GLWidget::initializeGL(){
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
     shader.init();
-    texture.init(QString("E:/3D Objects/assets/chest/diffuse.webp"));
+    textures[0].init(QString("E:/3D Objects/assets/chest/diffuse.webp"));
+    textures[1].init(QString("E:/3D Objects/assets/chest/cube.png"));
+    textures[2].init(QString("E:/3D Objects/assets/chest/cube_blue.png"));
 
-    grid = new Grid();
+    grid.init();
     glLineWidth(1.5f);
 }
 
@@ -44,13 +46,13 @@ void GLWidget::paintGL(){
     camera.transform(xRot, yRot);
     shader.update(proj, camera.matrix);
 
-    grid->drawGrid(shader.program);
+    grid.draw(shader.program);
 
     // Draw Mesh
     if(loaded){
-        texture.bind();
+        textures[0].bind();
         mesh->drawMesh(shader.program, displayMode);
-        texture.release();
+        textures[0].release();
     }
 }
 
@@ -58,10 +60,6 @@ void GLWidget::paintGL(){
 
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-
-
 
 
 void GLWidget::resizeGL(int w, int h){
@@ -97,8 +95,6 @@ void GLWidget::wheelEvent(QWheelEvent *event){
 
 
 /*----------Slots----------*/
-
-// Checkbox
 void GLWidget::setDisplayMode(bool arg){
     if(arg){displayMode = GL_LINE_STRIP;}
     else{displayMode = GL_TRIANGLES;}

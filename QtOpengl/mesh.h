@@ -22,7 +22,6 @@ public:
     Mesh(Vertex* vertices, unsigned int numVertices, GLuint* indices, unsigned int numIndices);
     virtual ~Mesh();
 
-    //Mesh& operator=(const Mesh& ms);
 
     void initMesh(const IndexedModel& model);
     void drawMesh(QOpenGLShaderProgram *shader_program, GLenum displayMode);
@@ -31,8 +30,6 @@ public:
     void initCube();
 
     void loadMesh(const QString& fileName);
-
-    //bool isInitialized = false;
 
 private:
     QOpenGLVertexArrayObject vao;

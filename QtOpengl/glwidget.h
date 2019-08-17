@@ -60,11 +60,12 @@ private:
     Shader shader;
     //QOpenGLTexture *texture;
     Texture texture;
+    Texture textures[10];
 
     QMatrix4x4 proj;
 
     Camera camera;
-    Grid *grid;
+    Grid grid;
 
 
     // Mesh

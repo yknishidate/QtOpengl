@@ -16,46 +16,11 @@ Mesh::Mesh(const QString& fileName)
     initMesh(OBJModel(fileName.toStdString()).ToIndexedModel());
 }
 
-void Mesh::loadMesh(const QString& fileName){
-    //initMesh(OBJModel(fileName.toStdString()).ToIndexedModel());
-}
-
-Mesh::Mesh(Vertex* vertices, unsigned int numVertices, GLuint* indices, unsigned int numIndices)
-    : ibo(QOpenGLBuffer::IndexBuffer)
-{
-    IndexedModel model;
-    // "model"のメンバ変数（配列）に頂点情報を分けて詰める
-    for(unsigned int i = 0; i < numVertices; i++)
-    {
-        model.positions.push_back(*vertices[i].GetPosition());
-        model.texCoords.push_back(*vertices[i].GetTexCoord());
-        model.normals.push_back(*vertices[i].GetNormal());
-    }
-    // "model"にIndex情報を詰める
-    for(unsigned int i = 0; i < numIndices; i++){
-        model.indices.push_back(indices[i]);
-    }
-    m_numIndices = numIndices;
-    // "model"を"initMesh"に渡す
-    initMesh(model);
-}
-
 Mesh::~Mesh()
 {
     vbo.destroy();
     ibo.destroy();
 }
-
-/*
-Mesh& Mesh::operator=(const Mesh& ms){
-    //this->vao = ms.vao;
-    this->vbo = ms.vbo;
-    this->ibo = ms.ibo;
-    this->m_numIndices = ms.m_numIndices;
-
-    return *this;
-}*/
-
 
 void Mesh::initMesh(const IndexedModel& model)
 {
