@@ -73,7 +73,7 @@ private:
     Mesh *cube;
     Mesh *monkey;
     Mesh *chest;
-    QVector<Mesh> *meshes;
+    //std::list<Mesh> meshes;
     int meshCount = 0;
     bool loaded = false;
 

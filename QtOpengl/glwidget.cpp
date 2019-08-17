@@ -31,7 +31,6 @@ void GLWidget::initializeGL(){
     textures[2].init(QString("E:/3D Objects/assets/chest/cube_blue.png"));
 
     grid.init();
-    glLineWidth(1.5f);
 }
 
 
@@ -46,13 +45,12 @@ void GLWidget::paintGL(){
     camera.transform(xRot, yRot);
     shader.update(proj, camera.matrix);
 
+    //Draw Grid
     grid.draw(shader.program);
 
     // Draw Mesh
     if(loaded){
-        textures[0].bind();
-        mesh->drawMesh(shader.program, displayMode);
-        textures[0].release();
+        mesh->draw(shader.program, displayMode, textures[0]);
     }
 }
 

@@ -30,6 +30,7 @@ void Grid::init(){
 
 
 void Grid::draw(QOpenGLShaderProgram *shader_program){
+    glLineWidth(0.6f);
     vbo.bind();
 
     int vertexLocation = shader_program->attributeLocation("position");

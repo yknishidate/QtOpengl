@@ -9,6 +9,7 @@
 #include <QVector>
 #include "vertex.h"
 #include "objloader.h"
+#include "texture.h"
 
 
 
@@ -19,17 +20,10 @@ class Mesh : protected QOpenGLFunctions, public QOpenGLWidget
 public:
     Mesh();
     Mesh(const QString& fileName);
-    Mesh(Vertex* vertices, unsigned int numVertices, GLuint* indices, unsigned int numIndices);
     virtual ~Mesh();
 
-
-    void initMesh(const IndexedModel& model);
-    void drawMesh(QOpenGLShaderProgram *shader_program, GLenum displayMode);
-
-    void drawCube(QOpenGLShaderProgram *shader_program, GLenum displayMode);
-    void initCube();
-
-    void loadMesh(const QString& fileName);
+    void init(const IndexedModel& model);
+    void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, Texture texture);
 
 private:
     QOpenGLVertexArrayObject vao;
