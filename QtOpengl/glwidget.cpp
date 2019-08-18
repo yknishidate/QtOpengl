@@ -17,10 +17,12 @@ void GLWidget::open(){
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Obj Files (*.obj);"));
     qDebug() << "---open()---";
     if(fileName != ""){
-        qDebug() << "fileName:" << fileName;
-        mesh = new Mesh(fileName);
+        qDebug() << "fileName  :" << fileName;
+        meshesPtr.push_back(new Mesh(fileName));
         loaded = true;
-        emit openedMesh(mesh->name);
+        emit openedMesh(meshesPtr[meshCount]->name);
+        meshCount++;
+        qDebug() << "Mesh Count:" << meshCount;
     }else{
         qDebug() << "Don't Open File";
     }
@@ -53,9 +55,9 @@ void GLWidget::paintGL(){
     //Draw Grid
     grid.draw(shader.program);
 
-    // Draw Mesh
-    if(loaded){
-        mesh->draw(shader.program, displayMode, textures[0]);
+    //Draw Meshes
+    for(int i = 0; i < meshCount; i++){
+        meshesPtr[i]->draw(shader.program, displayMode, textures[0]);
     }
 }
 

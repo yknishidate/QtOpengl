@@ -72,11 +72,7 @@ private:
 
 
     // Mesh
-    Mesh *mesh;
-    Mesh *cube;
-    Mesh *monkey;
-    Mesh *chest;
-    //std::list<Mesh> meshes;
+    std::vector<Mesh *> meshesPtr;
     int meshCount = 0;
     bool loaded = false;
 
