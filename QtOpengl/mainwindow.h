@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QStandardItem>
-#include "scene.h"
 
 namespace Ui {
 class MainWindow;

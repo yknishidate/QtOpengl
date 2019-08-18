@@ -20,10 +20,9 @@ void GLWidget::open(){
     if(fileName != ""){
         models.push_back(new Model(fileName));
         models[modelCount]->setTexture(QString("E:/3D Objects/assets/chest/diffuse.webp"));
+        emit loadedMesh(models[modelCount]->getName());
         modelCount++;
         update();
-    }else{
-        qDebug() << "Don't Open File";
     }
 }
 
@@ -58,16 +57,16 @@ void GLWidget::paintGL(){
 
     //Model Draw
     for(int i = 0; i < modelCount; i++){
-        //modelMatrix.translate(QVector3D(frame/50.0f, 0, 0));
-        //modelMatrix.rotate(frame, QVector3D(0, 1, 0));
+        modelMatrix.scale(models[i]->getScale());
+        modelMatrix.translate(models[i]->getPosition());
+        modelMatrix.rotate(QQuaternion::fromEulerAngles(models[i]->getRotation()));
+
         shader.update(proj, camera.matrix, modelMatrix);
         models[i]->draw(shader.program, displayMode);
-
-        frame++;
-        qDebug() << "rendered:" << frame;
-        //update();
+        update();
     }
 
+    frame++;
 }
 
 
@@ -121,6 +120,42 @@ void GLWidget::setCullFace(bool arg){
 void GLWidget::setDepthTest(bool arg){
     testing = arg;
     update();
+}
+
+void GLWidget::changeModelPositionX(double x){
+    models[0]->setPositionX(x);
+}
+
+void GLWidget::changeModelPositionY(double y){
+    models[0]->setPositionY(y);
+}
+
+void GLWidget::changeModelPositionZ(double z){
+    models[0]->setPositionZ(z);
+}
+
+void GLWidget::changeModelScaleX(double x){
+    models[0]->setScaleX(x);
+}
+
+void GLWidget::changeModelScaleY(double y){
+    models[0]->setScaleY(y);
+}
+
+void GLWidget::changeModelScaleZ(double z){
+    models[0]->setScaleZ(z);
+}
+
+void GLWidget::changeModelRotationX(double x){
+    models[0]->setRotationX(x);
+}
+
+void GLWidget::changeModelRotationY(double y){
+    models[0]->setRotationY(y);
+}
+
+void GLWidget::changeModelRotationZ(double z){
+    models[0]->setRotationZ(z);
 }
 
 

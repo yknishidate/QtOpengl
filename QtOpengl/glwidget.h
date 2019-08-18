@@ -10,7 +10,6 @@
 #include "grid.h"
 #include "camera.h"
 #include "shader.h"
-#include "texture.h"
 #include "treeview.h"
 #include "model.h"
 
@@ -41,13 +40,23 @@ public slots:
     void setCullFace(bool arg);
     void setDepthTest(bool arg);
 
+    void changeModelPositionX(double x);
+    void changeModelPositionY(double y);
+    void changeModelPositionZ(double z);
+    void changeModelScaleX(double x);
+    void changeModelScaleY(double y);
+    void changeModelScaleZ(double z);
+    void changeModelRotationX(double x);
+    void changeModelRotationY(double y);
+    void changeModelRotationZ(double z);
+
     void open();
 
 signals:
     void xRotationChanged(int angle);
     void yRotationChanged(int angle);
     void zRotationChanged(int angle);
-    void openedMesh(std::string name);
+    void loadedMesh(std::string name);
 
 
 private:
@@ -66,11 +75,6 @@ private:
 
     Camera camera;
     Grid grid;
-
-
-    // Mesh
-    std::vector<Mesh *> meshesPtr;
-    int meshCount = 0;
 
     std::vector<Model *> models;
     int modelCount = 0;

@@ -55,8 +55,6 @@ void Mesh::init(const IndexedModel& model)
 }
 
 
-//void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, Texture texture)
-
 void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture)
 {
     if(displayMode == GL_TRIANGLES){
