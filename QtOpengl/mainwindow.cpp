@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "glwidget.h"
 #include <QtDebug>
+#include <QPalette>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->openGLWidget, SIGNAL(openedMesh(std::string)), ui->treeView, SLOT(addMesh(std::string)));
     ui->checkBox_3->setChecked(true);
+
 
 }
 
