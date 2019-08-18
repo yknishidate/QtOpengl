@@ -39,7 +39,6 @@ void GLWidget::initializeGL(){
     textures[2].init(QString("E:/3D Objects/assets/chest/cube_blue.png"));
 
     grid.init();
-    qDebug() << "Finished initializeGL()";
 }
 
 
@@ -61,7 +60,6 @@ void GLWidget::paintGL(){
     for(int i = 0; i < meshCount; i++){
         meshesPtr[i]->draw(shader.program, displayMode, textures[0]);
     }
-    qDebug() << "paintGL()";
 }
 
 

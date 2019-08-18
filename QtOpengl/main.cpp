@@ -18,14 +18,13 @@ int main(int argc, char *argv[])
 
     MainWindow w;
 
-
     qApp->setStyle(QStyleFactory::create("Fusion"));
     QPalette darkPalette;
     QColor darkColor = QColor(77,77,77);    //Base
     QColor disabledColor = QColor(127,127,127);
     darkPalette.setColor(QPalette::Window, darkColor);
     darkPalette.setColor(QPalette::WindowText, Qt::white);
-    darkPalette.setColor(QPalette::Base, QColor(66,66,66));    //Field
+    darkPalette.setColor(QPalette::Base, QColor(70,70,70));    //Field
     darkPalette.setColor(QPalette::AlternateBase, darkColor);
     darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
     darkPalette.setColor(QPalette::ToolTipText, Qt::white);
