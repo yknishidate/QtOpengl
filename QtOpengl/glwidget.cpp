@@ -16,13 +16,11 @@ GLWidget::GLWidget(QWidget *parent)
 void GLWidget::open(){
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Obj Files (*.obj);"));
     qDebug() << "---open()---";
+
     if(fileName != ""){
-        qDebug() << "fileName  :" << fileName;
-        meshesPtr.push_back(new Mesh(fileName));
-        loaded = true;
-        emit openedMesh(meshesPtr[meshCount]->name);
-        meshCount++;
-        qDebug() << "Mesh Count:" << meshCount;
+        models.push_back(new Model(fileName));
+        models[modelCount]->setTexture(QString("E:/3D Objects/assets/chest/diffuse.webp"));
+        modelCount++;
         update();
     }else{
         qDebug() << "Don't Open File";
@@ -34,11 +32,10 @@ void GLWidget::initializeGL(){
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
     shader.init();
-    textures[0].init(QString("E:/3D Objects/assets/chest/diffuse.webp"));
-    textures[1].init(QString("E:/3D Objects/assets/chest/cube.png"));
-    textures[2].init(QString("E:/3D Objects/assets/chest/cube_blue.png"));
 
     grid.init();
+    modelMatrix.setToIdentity();
+    frame = 0;
 }
 
 
@@ -50,16 +47,27 @@ void GLWidget::paintGL(){
     if(testing) glEnable(GL_DEPTH_TEST);
     else        glDisable(GL_DEPTH_TEST);
 
+
     camera.transform(xRot, yRot);
-    shader.update(proj, camera.matrix);
+
+    modelMatrix.setToIdentity();
+    shader.update(proj, camera.matrix, modelMatrix);
 
     //Draw Grid
     grid.draw(shader.program);
 
-    //Draw Meshes
-    for(int i = 0; i < meshCount; i++){
-        meshesPtr[i]->draw(shader.program, displayMode, textures[0]);
+    //Model Draw
+    for(int i = 0; i < modelCount; i++){
+        //modelMatrix.translate(QVector3D(frame/50.0f, 0, 0));
+        //modelMatrix.rotate(frame, QVector3D(0, 1, 0));
+        shader.update(proj, camera.matrix, modelMatrix);
+        models[i]->draw(shader.program, displayMode);
+
+        frame++;
+        qDebug() << "rendered:" << frame;
+        //update();
     }
+
 }
 
 

@@ -12,10 +12,7 @@
 #include "texture.h"
 
 
-
-
-
-class Mesh : protected QOpenGLFunctions, public QOpenGLWidget
+class Mesh : protected QOpenGLFunctions
 {
 public:
     Mesh();
@@ -25,7 +22,8 @@ public:
     std::string name;
 
     void init(const IndexedModel& model);
-    void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, Texture texture);
+    void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture);
+    //void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, Texture texture);
 
 private:
     QOpenGLVertexArrayObject vao;
@@ -34,8 +32,6 @@ private:
     GLuint m_numVertices;
     GLuint m_numIndices;
 
-
-    int positionOffset;
     int texCoordOffset;
     int normalOffset;
     int vboTotalSize;

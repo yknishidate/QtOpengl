@@ -23,9 +23,9 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         mesh.cpp \
+        model.cpp \
         objloader.cpp \
         shader.cpp \
-        texture.cpp \
         treeview.cpp
 
 HEADERS += \
@@ -34,9 +34,9 @@ HEADERS += \
         grid.h \
         mainwindow.h \
         mesh.h \
+        model.h \
         objloader.h \
         shader.h \
-        texture.h \
         treeview.h \
         vertex.h
 

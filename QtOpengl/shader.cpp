@@ -23,8 +23,8 @@ void Shader::init(){
 }
 
 
-void Shader::update(QMatrix4x4 proj, QMatrix4x4 camera){
+void Shader::update(QMatrix4x4 projMatrix, QMatrix4x4 viewMatrix, QMatrix4x4 modelMatrix){
     program->bind();
-    program->setUniformValue(projMatrixLoc, proj);
-    program->setUniformValue(mvMatrixLoc, camera);
+    program->setUniformValue(projMatrixLoc, projMatrix);
+    program->setUniformValue(mvMatrixLoc, viewMatrix * modelMatrix);
 }

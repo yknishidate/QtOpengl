@@ -12,6 +12,7 @@
 #include "shader.h"
 #include "texture.h"
 #include "treeview.h"
+#include "model.h"
 
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
@@ -50,8 +51,6 @@ signals:
 
 
 private:
-    void initTextures(QString fileName);
-
     int xRot;
     int yRot;
     int zRot;
@@ -61,10 +60,8 @@ private:
     QOpenGLVertexArrayObject vao;
 
     Shader shader;
-    //QOpenGLTexture *texture;
-    Texture texture;
-    Texture textures[10];
 
+    QMatrix4x4 modelMatrix;
     QMatrix4x4 proj;
 
     Camera camera;
@@ -74,11 +71,14 @@ private:
     // Mesh
     std::vector<Mesh *> meshesPtr;
     int meshCount = 0;
-    bool loaded = false;
+
+    std::vector<Model *> models;
+    int modelCount = 0;
 
     bool culling;
     bool testing;
 
+    int frame;
 
 };
 

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QStandardItem>
+#include "scene.h"
 
 namespace Ui {
 class MainWindow;
@@ -13,6 +14,7 @@ class MainWindow : public QMainWindow {
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
 
 private:
     Ui::MainWindow *ui;

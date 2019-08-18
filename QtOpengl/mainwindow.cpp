@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->openGLWidget, SIGNAL(openedMesh(std::string)), ui->treeView, SLOT(addMesh(std::string)));
     ui->checkBox_3->setChecked(true);
 
-
 }
 
 MainWindow::~MainWindow()

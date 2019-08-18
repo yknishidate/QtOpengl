@@ -26,8 +26,7 @@ void Mesh::init(const IndexedModel& model)
     qDebug() << "---initMesh()---";
     initializeOpenGLFunctions();
 
-    positionOffset = 0;
-    texCoordOffset = positionOffset + model.positions.size()*sizeof(model.positions[0]);
+    texCoordOffset = model.positions.size()*sizeof(model.positions[0]);
     normalOffset   = texCoordOffset + model.texCoords.size()*sizeof(model.texCoords[0]);
     vboTotalSize   = normalOffset   + model.normals.size()*sizeof(model.normals[0]);
 
@@ -56,10 +55,12 @@ void Mesh::init(const IndexedModel& model)
 }
 
 
-void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, Texture texture)
+//void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, Texture texture)
+
+void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture)
 {
     if(displayMode == GL_TRIANGLES){
-        texture.bind();
+        texture->bind();
     }else{
         glLineWidth(0.8f);
     }
@@ -68,7 +69,7 @@ void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, Textur
     ibo.bind();
     vbo.bind();
 
-    shader_program->setAttributeBuffer(0, GL_FLOAT, positionOffset, 3);  //stride = 0(default)
+    shader_program->setAttributeBuffer(0, GL_FLOAT, 0, 3);  //stride = 0(default)
     shader_program->enableAttributeArray(0);
     shader_program->setAttributeBuffer(1, GL_FLOAT, texCoordOffset, 2);
     shader_program->enableAttributeArray(1);
@@ -82,6 +83,6 @@ void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, Textur
     //vao.release();
     //shader_program->release();
     if(displayMode == GL_TRIANGLES){
-        texture.release();
+        texture->release();
     }
 }

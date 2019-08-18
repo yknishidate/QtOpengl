@@ -8,7 +8,7 @@ class Shader
 public:
     Shader();
     void init();
-    void update(QMatrix4x4 proj, QMatrix4x4 camera);
+    void update(QMatrix4x4 projMatrix, QMatrix4x4 viewMatrix, QMatrix4x4 modelMatrix);
     QOpenGLShaderProgram *program;
 
 private:
