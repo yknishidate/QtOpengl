@@ -74,6 +74,12 @@
         <property name="title">
          <string>Coordinates</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
         <layout class="QGridLayout" name="gridLayout_5">
          <item row="0" column="0">
           <layout class="QGridLayout" name="gridLayout_4">
@@ -399,6 +405,21 @@
    <header location="global">treeview.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>doubleSpinBox_px</tabstop>
+  <tabstop>doubleSpinBox_py</tabstop>
+  <tabstop>doubleSpinBox_pz</tabstop>
+  <tabstop>doubleSpinBox_sx</tabstop>
+  <tabstop>doubleSpinBox_sy</tabstop>
+  <tabstop>doubleSpinBox_sz</tabstop>
+  <tabstop>doubleSpinBox_rx</tabstop>
+  <tabstop>doubleSpinBox_ry</tabstop>
+  <tabstop>doubleSpinBox_rz</tabstop>
+  <tabstop>checkBox</tabstop>
+  <tabstop>checkBox_2</tabstop>
+  <tabstop>checkBox_3</tabstop>
+  <tabstop>treeView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

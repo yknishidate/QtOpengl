@@ -21,3 +21,9 @@ void TreeView::addMesh(std::string name){
     root->appendRow( newMesh );
     qDebug() << "Added New Mesh:" << QString::fromStdString(name);
 }
+
+void TreeView::addModel(Model* model){
+    //QStandardItem * newModel(new QStandardItem(QString::fromStdString(model->getName())));
+    root->appendRow(new QStandardItem(QString::fromStdString(model->getName())));
+    qDebug() << "Added New Model:" << QString::fromStdString(model->getName());
+}

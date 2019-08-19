@@ -4,6 +4,7 @@
 #include <QTreeView>
 #include <QStandardItem>
 #include <QVBoxLayout>
+#include "model.h"
 
 class TreeView : public QTreeView
 {
@@ -14,6 +15,7 @@ public:
 
 public slots:
     void addMesh(std::string name);
+    void addModel(Model *);
 
 private:
     QStandardItem * root;

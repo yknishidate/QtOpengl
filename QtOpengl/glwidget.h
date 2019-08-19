@@ -51,13 +51,24 @@ public slots:
     void changeModelRotationZ(double z);
 
     void open();
+    void selectedModel(QModelIndex modelIndex);
 
 signals:
     void xRotationChanged(int angle);
     void yRotationChanged(int angle);
     void zRotationChanged(int angle);
     void loadedMesh(std::string name);
+    void loadedModel(Model*);
 
+    void setSpinboxPositionX(double n);
+    void setSpinboxPositionY(double n);
+    void setSpinboxPositionZ(double n);
+    void setSpinboxScaleX(double n);
+    void setSpinboxScaleY(double n);
+    void setSpinboxScaleZ(double n);
+    void setSpinboxRotationX(double n);
+    void setSpinboxRotationY(double n);
+    void setSpinboxRotationZ(double n);
 
 private:
     int xRot;
@@ -83,6 +94,7 @@ private:
     bool testing;
 
     int frame;
+    int selectedModelIndex = -1;
 
 };
 

@@ -21,9 +21,28 @@ void GLWidget::open(){
         models.push_back(new Model(fileName));
         models[modelCount]->setTexture(QString("E:/3D Objects/assets/chest/diffuse.webp"));
         emit loadedMesh(models[modelCount]->getName());
+        emit loadedModel(models[modelCount]);
+
         modelCount++;
         update();
     }
+}
+
+void GLWidget::selectedModel(QModelIndex modelIndex){
+    //qDebug() << "Select:" << modelIndex.column() << "," << modelIndex.data().toString() <<  "," << modelIndex.internalId();
+
+    selectedModelIndex = modelIndex.row();
+    qDebug() << "Select:" << selectedModelIndex;
+
+    emit setSpinboxPositionX(models[selectedModelIndex]->getPosition().x());
+    emit setSpinboxPositionY(models[selectedModelIndex]->getPosition().y());
+    emit setSpinboxPositionZ(models[selectedModelIndex]->getPosition().z());
+    emit setSpinboxScaleX(models[selectedModelIndex]->getScale().x());
+    emit setSpinboxScaleY(models[selectedModelIndex]->getScale().y());
+    emit setSpinboxScaleZ(models[selectedModelIndex]->getScale().z());
+    emit setSpinboxRotationX(models[selectedModelIndex]->getRotation().x());
+    emit setSpinboxRotationY(models[selectedModelIndex]->getRotation().y());
+    emit setSpinboxRotationZ(models[selectedModelIndex]->getRotation().z());
 }
 
 void GLWidget::initializeGL(){
@@ -52,21 +71,21 @@ void GLWidget::paintGL(){
     modelMatrix.setToIdentity();
     shader.update(proj, camera.matrix, modelMatrix);
 
-    //Draw Grid
+    // Draw Grid
     grid.draw(shader.program);
 
-    //Model Draw
+    // Draw Models
     for(int i = 0; i < modelCount; i++){
-        modelMatrix.scale(models[i]->getScale());
+        modelMatrix.setToIdentity();
         modelMatrix.translate(models[i]->getPosition());
         modelMatrix.rotate(QQuaternion::fromEulerAngles(models[i]->getRotation()));
+        modelMatrix.scale(models[i]->getScale());
 
         shader.update(proj, camera.matrix, modelMatrix);
         models[i]->draw(shader.program, displayMode);
-        update();
     }
 
-    frame++;
+    qDebug() << ++frame;
 }
 
 
@@ -122,41 +141,15 @@ void GLWidget::setDepthTest(bool arg){
     update();
 }
 
-void GLWidget::changeModelPositionX(double x){
-    models[0]->setPositionX(x);
-}
-
-void GLWidget::changeModelPositionY(double y){
-    models[0]->setPositionY(y);
-}
-
-void GLWidget::changeModelPositionZ(double z){
-    models[0]->setPositionZ(z);
-}
-
-void GLWidget::changeModelScaleX(double x){
-    models[0]->setScaleX(x);
-}
-
-void GLWidget::changeModelScaleY(double y){
-    models[0]->setScaleY(y);
-}
-
-void GLWidget::changeModelScaleZ(double z){
-    models[0]->setScaleZ(z);
-}
-
-void GLWidget::changeModelRotationX(double x){
-    models[0]->setRotationX(x);
-}
-
-void GLWidget::changeModelRotationY(double y){
-    models[0]->setRotationY(y);
-}
-
-void GLWidget::changeModelRotationZ(double z){
-    models[0]->setRotationZ(z);
-}
+void GLWidget::changeModelPositionX(double x){models[selectedModelIndex]->setPositionX(x);update();}
+void GLWidget::changeModelPositionY(double y){models[selectedModelIndex]->setPositionY(y);update();}
+void GLWidget::changeModelPositionZ(double z){models[selectedModelIndex]->setPositionZ(z);update();}
+void GLWidget::changeModelScaleX(double x){models[selectedModelIndex]->setScaleX(x);update();}
+void GLWidget::changeModelScaleY(double y){models[selectedModelIndex]->setScaleY(y);update();}
+void GLWidget::changeModelScaleZ(double z){models[selectedModelIndex]->setScaleZ(z);update();}
+void GLWidget::changeModelRotationX(double x){models[selectedModelIndex]->setRotationX(x);update();}
+void GLWidget::changeModelRotationY(double y){models[selectedModelIndex]->setRotationY(y);update();}
+void GLWidget::changeModelRotationZ(double z){models[selectedModelIndex]->setRotationZ(z);update();}
 
 
 static void qNormalizeAngle(int &angle){
