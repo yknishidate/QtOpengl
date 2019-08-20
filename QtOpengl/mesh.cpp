@@ -57,10 +57,19 @@ void Mesh::init(const IndexedModel& model)
 
 void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture)
 {
-    if(displayMode == GL_TRIANGLES && texture != nullptr){
-        texture->bind();
-    }else{
+    if(displayMode == GL_TRIANGLES){
+        shader_program->setUniformValue("wire", 0);
+        if( texture != nullptr){
+            texture->bind();
+            shader_program->setUniformValue("textureSample", 1);
+        }else{
+            shader_program->setUniformValue("textureSample", 0);
+        }
+    }
+    else{
         glLineWidth(0.8f);
+        shader_program->setUniformValue("textureSample", 0);
+        shader_program->setUniformValue("wire", 1);
     }
     //shader_program->bind();
     vao.bind();

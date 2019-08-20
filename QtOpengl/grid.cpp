@@ -30,6 +30,8 @@ void Grid::init(){
 
 
 void Grid::draw(QOpenGLShaderProgram *shader_program){
+    shader_program->setUniformValue("textureSample", 0);
+    shader_program->setUniformValue("wire", 1);
     glLineWidth(0.6f);
     vbo.bind();
 
@@ -37,4 +39,5 @@ void Grid::draw(QOpenGLShaderProgram *shader_program){
     shader_program->enableAttributeArray(vertexLocation);
     shader_program->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3, sizeof(Vertex));
     glDrawArrays(GL_LINES, 0, 84);  //4*21
+
 }

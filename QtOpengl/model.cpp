@@ -11,6 +11,11 @@ Model::Model(const QString& fileName)
 
     texture = nullptr;
     textureName = "";
+
+    material.ambient = QVector3D(1.0f, 1.0f, 1.0f);
+    material.diffuse = QVector3D(0.7f, 0.7f, 0.7f);
+    material.specular = QVector3D(0.7f, 0.7f, 0.7f);
+    material.shininess = 10;
 }
 
 void Model::setTexture(QString fileName){
@@ -23,6 +28,10 @@ void Model::setTexture(QString fileName){
 
 void Model::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode)
 {
+    shader_program->setUniformValue("Kamb", material.ambient);
+    shader_program->setUniformValue("Kdiff", material.diffuse);
+    shader_program->setUniformValue("Kspec", material.specular);
+    shader_program->setUniformValue("Kshi", material.shininess);
     mesh->draw(shader_program, displayMode, texture);
 }
 

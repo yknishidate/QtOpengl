@@ -35,6 +35,7 @@ HEADERS += \
         grid.h \
         groupbox.h \
         mainwindow.h \
+        material.h \
         mesh.h \
         model.h \
         objloader.h \

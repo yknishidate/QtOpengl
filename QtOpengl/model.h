@@ -2,6 +2,7 @@
 #define MODEL_H
 
 #include "mesh.h"
+#include "material.h"
 
 class Model
 {
@@ -37,6 +38,7 @@ private:
     QVector3D position;
     QVector3D scale;
     QVector3D rotation;
+    Material material;
 };
 
 #endif // MODEL_H

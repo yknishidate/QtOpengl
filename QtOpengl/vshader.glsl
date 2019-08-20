@@ -7,11 +7,13 @@ uniform mat4 mvMatrix;
 //uniform mat4 normalMatrix;
 
 out vec4 vColor;
+out vec3 N;
 out vec4 gridColor;
 out vec2 vTexcoord;
 
 void main(){
   gl_Position = projMatrix * mvMatrix * vec4(position, 1.0);
+  N = normal;
   gridColor = vec4(0.8f);
   vTexcoord = texcoord;
 }
