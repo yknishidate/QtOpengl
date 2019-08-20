@@ -57,7 +57,7 @@ void Mesh::init(const IndexedModel& model)
 
 void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture)
 {
-    if(displayMode == GL_TRIANGLES){
+    if(displayMode == GL_TRIANGLES && texture != nullptr){
         texture->bind();
     }else{
         glLineWidth(0.8f);
@@ -74,13 +74,12 @@ void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenG
     shader_program->setAttributeBuffer(2, GL_FLOAT, normalOffset, 3);
     shader_program->enableAttributeArray(2);
 
-
     glDrawElements(displayMode, m_numIndices, GL_UNSIGNED_INT, 0);   //mode count type indices
     //vbo.release();
     //ibo.release();
     //vao.release();
     //shader_program->release();
-    if(displayMode == GL_TRIANGLES){
+    if(displayMode == GL_TRIANGLES && texture != nullptr){
         texture->release();
     }
 }

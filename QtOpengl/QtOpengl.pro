@@ -20,6 +20,7 @@ SOURCES += \
         camera.cpp \
         glwidget.cpp \
         grid.cpp \
+        groupbox.cpp \
         main.cpp \
         mainwindow.cpp \
         mesh.cpp \
@@ -32,6 +33,7 @@ HEADERS += \
         camera.h \
         glwidget.h \
         grid.h \
+        groupbox.h \
         mainwindow.h \
         mesh.h \
         model.h \

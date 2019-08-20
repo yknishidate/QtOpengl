@@ -8,6 +8,8 @@ Model::Model(const QString& fileName)
     position = QVector3D(0.0f, 0.0f, 0.0f);
     scale    = QVector3D(1.0f, 1.0f, 1.0f);
     rotation = QVector3D(0.0f, 0.0f, 0.0f);
+
+    texture = nullptr;
 }
 
 void Model::setTexture(QString fileName){

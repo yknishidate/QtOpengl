@@ -9,12 +9,26 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(ui->checkBox, SIGNAL(toggled(bool)), ui->openGLWidget, SLOT(setDisplayMode(bool)));
+
+    // Options
+    connect(ui->checkBox,   SIGNAL(toggled(bool)), ui->openGLWidget, SLOT(setDisplayMode(bool)));
     connect(ui->checkBox_2, SIGNAL(toggled(bool)), ui->openGLWidget, SLOT(setCullFace(bool)));
     connect(ui->checkBox_3, SIGNAL(toggled(bool)), ui->openGLWidget, SLOT(setDepthTest(bool)));
+    ui->checkBox_3->setChecked(true);
+
+    // Menu Bar
     connect(ui->actionOpen, SIGNAL(triggered()), ui->openGLWidget, SLOT(open()));
 
-    //Spinbox -> Model
+    // Tree View
+    connect(ui->treeView, SIGNAL(clicked(QModelIndex)), ui->openGLWidget, SLOT(selectedModel(QModelIndex)));
+    connect(ui->openGLWidget, SIGNAL(loadedModel(Model*)), ui->treeView, SLOT(addModel(Model*)));
+
+    // Attibute Group
+    ui->attributesGroup->setVisible(false);
+    connect(ui->treeView, SIGNAL(clicked(QModelIndex)), ui->attributesGroup, SLOT(setVisibleTrue(QModelIndex)));
+
+    // Coordinates
+    // Spinbox -> Model
     connect(ui->doubleSpinBox_px, SIGNAL(valueChanged(double)), ui->openGLWidget, SLOT(changeModelPositionX(double)));
     connect(ui->doubleSpinBox_py, SIGNAL(valueChanged(double)), ui->openGLWidget, SLOT(changeModelPositionY(double)));
     connect(ui->doubleSpinBox_pz, SIGNAL(valueChanged(double)), ui->openGLWidget, SLOT(changeModelPositionZ(double)));
@@ -24,8 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->doubleSpinBox_rx, SIGNAL(valueChanged(double)), ui->openGLWidget, SLOT(changeModelRotationX(double)));
     connect(ui->doubleSpinBox_ry, SIGNAL(valueChanged(double)), ui->openGLWidget, SLOT(changeModelRotationY(double)));
     connect(ui->doubleSpinBox_rz, SIGNAL(valueChanged(double)), ui->openGLWidget, SLOT(changeModelRotationZ(double)));
-
-    //Model -> Spinbox
+    // Model -> Spinbox
     connect(ui->openGLWidget, SIGNAL(setSpinboxPositionX(double)), ui->doubleSpinBox_px, SLOT(setValue(double)));
     connect(ui->openGLWidget, SIGNAL(setSpinboxPositionY(double)), ui->doubleSpinBox_py, SLOT(setValue(double)));
     connect(ui->openGLWidget, SIGNAL(setSpinboxPositionZ(double)), ui->doubleSpinBox_pz, SLOT(setValue(double)));
@@ -36,15 +49,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->openGLWidget, SIGNAL(setSpinboxRotationY(double)), ui->doubleSpinBox_ry, SLOT(setValue(double)));
     connect(ui->openGLWidget, SIGNAL(setSpinboxRotationZ(double)), ui->doubleSpinBox_rz, SLOT(setValue(double)));
 
-
-
-    connect(ui->treeView, SIGNAL(clicked(QModelIndex)), ui->openGLWidget, SLOT(selectedModel(QModelIndex)));
-
-
-    //connect(ui->openGLWidget, SIGNAL(loadedMesh(std::string)), ui->treeView, SLOT(addMesh(std::string)));
-    connect(ui->openGLWidget, SIGNAL(loadedModel(Model*)), ui->treeView, SLOT(addModel(Model*)));
-
-    ui->checkBox_3->setChecked(true);
+    // Texture
+    connect(ui->toolButton, SIGNAL(clicked()), ui->openGLWidget, SLOT(openTexture()));
+    ui->lineEdit->setReadOnly(true);
 }
 
 MainWindow::~MainWindow()

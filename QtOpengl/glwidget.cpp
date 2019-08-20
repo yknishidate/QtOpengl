@@ -19,8 +19,8 @@ void GLWidget::open(){
 
     if(fileName != ""){
         models.push_back(new Model(fileName));
-        models[modelCount]->setTexture(QString("E:/3D Objects/assets/chest/diffuse.webp"));
-        emit loadedMesh(models[modelCount]->getName());
+        //models[modelCount]->setTexture(QString("E:/3D Objects/assets/chest/diffuse.webp"));
+        //emit loadedMesh(models[modelCount]->getName());
         emit loadedModel(models[modelCount]);
 
         modelCount++;
@@ -28,9 +28,21 @@ void GLWidget::open(){
     }
 }
 
-void GLWidget::selectedModel(QModelIndex modelIndex){
-    //qDebug() << "Select:" << modelIndex.column() << "," << modelIndex.data().toString() <<  "," << modelIndex.internalId();
+void GLWidget::openTexture(){
+    QString fileName = QFileDialog::getOpenFileName(this);
+    qDebug() << "---openTexture()---";
 
+    if(fileName != ""){
+        if(selectedModelIndex != -1)
+        {
+            models[selectedModelIndex]->setTexture(fileName);
+            //emit loadedTexture(fileName);
+            update();
+        }
+    }
+}
+
+void GLWidget::selectedModel(QModelIndex modelIndex){
     selectedModelIndex = modelIndex.row();
     qDebug() << "Select:" << selectedModelIndex;
 
@@ -65,7 +77,6 @@ void GLWidget::paintGL(){
     if(testing) glEnable(GL_DEPTH_TEST);
     else        glDisable(GL_DEPTH_TEST);
 
-
     camera.transform(xRot, yRot);
 
     modelMatrix.setToIdentity();
@@ -89,7 +100,6 @@ void GLWidget::paintGL(){
 }
 
 
-
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -99,11 +109,9 @@ void GLWidget::resizeGL(int w, int h){
     proj.perspective(45.0f, GLfloat(w)/h, 0.01f, 1000.0f);
 }
 
-
 // Window Size
 QSize GLWidget::minimumSizeHint() const{return QSize(600, 400);}
 QSize GLWidget::sizeHint() const{return QSize(600, 400);}
-
 
 // Mouse Event
 void GLWidget::mousePressEvent(QMouseEvent *event){
@@ -126,7 +134,7 @@ void GLWidget::wheelEvent(QWheelEvent *event){
 
 
 
-/*----------Slots----------*/
+// Slots
 void GLWidget::setDisplayMode(bool arg){
     if(arg){displayMode = GL_LINE_STRIP;}
     else{displayMode = GL_TRIANGLES;}

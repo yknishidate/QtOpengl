@@ -47,6 +47,9 @@
     </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>6</number>
+      </property>
       <item>
        <widget class="TreeView" name="treeView">
         <property name="sizePolicy">
@@ -64,7 +67,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_2">
+       <widget class="GroupBox" name="attributesGroup">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -72,7 +75,7 @@
          </sizepolicy>
         </property>
         <property name="title">
-         <string>Coordinates</string>
+         <string>Attributes</string>
         </property>
         <property name="checkable">
          <bool>false</bool>
@@ -81,7 +84,28 @@
          <bool>false</bool>
         </property>
         <layout class="QGridLayout" name="gridLayout_5">
-         <item row="0" column="0">
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel { background-color : #333333; }</string>
+           </property>
+           <property name="text">
+            <string>Material</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
           <layout class="QGridLayout" name="gridLayout_4">
            <property name="sizeConstraint">
             <enum>QLayout::SetMaximumSize</enum>
@@ -286,6 +310,64 @@
            </item>
           </layout>
          </item>
+         <item row="5" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="label_6">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Texture</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="toolButton">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">QLabel { background-color : #333333;; }</string>
+           </property>
+           <property name="text">
+            <string>Coordinates</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
@@ -298,7 +380,7 @@
          </sizepolicy>
         </property>
         <property name="title">
-         <string>Options</string>
+         <string>View Options</string>
         </property>
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="0">
@@ -325,22 +407,6 @@
             </widget>
            </item>
           </layout>
-         </item>
-         <item row="1" column="0">
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Preferred</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
          </item>
         </layout>
        </widget>
@@ -402,7 +468,13 @@
   <customwidget>
    <class>TreeView</class>
    <extends>QTreeView</extends>
-   <header location="global">treeview.h</header>
+   <header>treeview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GroupBox</class>
+   <extends>QGroupBox</extends>
+   <header>groupbox.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>

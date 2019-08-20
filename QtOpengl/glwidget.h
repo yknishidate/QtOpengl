@@ -51,6 +51,7 @@ public slots:
     void changeModelRotationZ(double z);
 
     void open();
+    void openTexture();
     void selectedModel(QModelIndex modelIndex);
 
 signals:
@@ -59,6 +60,7 @@ signals:
     void zRotationChanged(int angle);
     void loadedMesh(std::string name);
     void loadedModel(Model*);
+    void loadedTexture(QString);
 
     void setSpinboxPositionX(double n);
     void setSpinboxPositionY(double n);
