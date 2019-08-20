@@ -25,6 +25,7 @@ public:
     QVector3D getRotation(){return rotation;}
 
     void setTexture(QString fileName);
+    QString getTextureName();
     void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode);
 
     Mesh *mesh;
@@ -32,6 +33,7 @@ public:
 private:
     std::string name;
     QOpenGLTexture *texture;
+    QString textureName;
     QVector3D position;
     QVector3D scale;
     QVector3D rotation;

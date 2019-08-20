@@ -10,9 +10,11 @@ Model::Model(const QString& fileName)
     rotation = QVector3D(0.0f, 0.0f, 0.0f);
 
     texture = nullptr;
+    textureName = "";
 }
 
 void Model::setTexture(QString fileName){
+    textureName = fileName;
     texture = new QOpenGLTexture(QImage(fileName).mirrored());
     texture->setMinificationFilter(QOpenGLTexture::Nearest);
     texture->setMagnificationFilter(QOpenGLTexture::Linear);
@@ -22,4 +24,8 @@ void Model::setTexture(QString fileName){
 void Model::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode)
 {
     mesh->draw(shader_program, displayMode, texture);
+}
+
+QString Model::getTextureName(){
+    return textureName;
 }

@@ -53,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->toolButton, SIGNAL(clicked()), ui->openGLWidget, SLOT(openTexture()));
     connect(ui->openGLWidget, SIGNAL(loadedTexture(QString)), ui->lineEdit, SLOT(setText(QString)));
     ui->lineEdit->setReadOnly(true);
+    connect(ui->openGLWidget, SIGNAL(setTextureName(QString)), ui->lineEdit, SLOT(setText(QString)));
+
 }
 
 MainWindow::~MainWindow()

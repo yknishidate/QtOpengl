@@ -55,6 +55,8 @@ void GLWidget::selectedModel(QModelIndex modelIndex){
     emit setSpinboxRotationX(models[selectedModelIndex]->getRotation().x());
     emit setSpinboxRotationY(models[selectedModelIndex]->getRotation().y());
     emit setSpinboxRotationZ(models[selectedModelIndex]->getRotation().z());
+
+    emit setTextureName(models[selectedModelIndex]->getTextureName());
 }
 
 void GLWidget::initializeGL(){

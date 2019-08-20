@@ -72,6 +72,8 @@ signals:
     void setSpinboxRotationY(double n);
     void setSpinboxRotationZ(double n);
 
+    void setTextureName(QString s);
+
 private:
     int xRot;
     int yRot;
