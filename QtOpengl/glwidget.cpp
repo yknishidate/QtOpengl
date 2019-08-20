@@ -36,7 +36,7 @@ void GLWidget::openTexture(){
         if(selectedModelIndex != -1)
         {
             models[selectedModelIndex]->setTexture(fileName);
-            //emit loadedTexture(fileName);
+            emit loadedTexture(fileName);
             update();
         }
     }

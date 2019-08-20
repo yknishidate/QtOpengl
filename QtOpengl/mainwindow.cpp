@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Texture
     connect(ui->toolButton, SIGNAL(clicked()), ui->openGLWidget, SLOT(openTexture()));
+    connect(ui->openGLWidget, SIGNAL(loadedTexture(QString)), ui->lineEdit, SLOT(setText(QString)));
     ui->lineEdit->setReadOnly(true);
 }
 

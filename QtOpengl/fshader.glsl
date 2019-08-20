@@ -6,5 +6,6 @@ out vec4 fColor;
 
 void main(){
     //fColor = vColor;
-    fColor = texture2D(texture, vTexcoord);;
+    //vec4 diffColor = texture2D(texture, vTexcoord);
+    fColor = texture2D(texture, vTexcoord);
 }
