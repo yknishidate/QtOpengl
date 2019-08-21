@@ -20,10 +20,13 @@ Mesh::Mesh(const int type)
     : ibo(QOpenGLBuffer::IndexBuffer)
 {
     IndexedModel indexModel;
-    int size;
+    float size = 5.0f;
+    float radius = 5.0f;
+    int stacks = 8;
+    int slices = 16;
+
     switch(type){
     case 1: // Cube
-        size = 5;
         indexModel.name = "Cube";
 
         // position
@@ -170,11 +173,49 @@ Mesh::Mesh(const int type)
         break;
 
     case 2:
+        indexModel.name = "Sphere";
+        // Position, TexCoord, Normal
+        for (int j = 0; j <= stacks; ++j)
+        {
+            const float t(static_cast<float>(j) / static_cast<float>(stacks));
+            const float y(cos(M_PI * t) * radius), r(sin(M_PI * t) * radius);
+            for (int i = 0; i <= slices; ++i)
+            {
+                const float s(static_cast<float>(i) / static_cast<float>(slices));
+                const float z(r * cos(M_PI * 2 * s)), x(r * sin(M_PI * 2 * s));
+                indexModel.positions.push_back(QVector3D(x, y, z));
+                indexModel.texCoords.push_back(QVector2D(1.0f/slices * i, 1.0f/stacks * j));
+                indexModel.normals.push_back(QVector3D(x, y, z).normalized());
+            }
+        }
+        // Index
+        for (int j = 0; j < stacks; ++j)
+        {
+            const int k((slices + 1) * j);
+            for (int i = 0; i < slices; ++i)
+            {
+                // 頂点のインデックス
+                const GLuint k0(k + i);
+                const GLuint k1(k0 + 1);
+                const GLuint k2(k1 + slices);
+                const GLuint k3(k2 + 1);
+                // 左下の三角形
+                indexModel.indices.push_back(k0);
+                indexModel.indices.push_back(k2);
+                indexModel.indices.push_back(k3);
+                // 右上の三角形
+                indexModel.indices.push_back(k0);
+                indexModel.indices.push_back(k3);
+                indexModel.indices.push_back(k1);
+            }
+        }
         break;
     }
 
     init(indexModel);
 }
+
+
 
 Mesh::~Mesh()
 {

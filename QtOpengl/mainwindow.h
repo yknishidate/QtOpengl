@@ -20,6 +20,8 @@ private slots:
 
     void on_actionCube_triggered();
 
+    void on_actionSphere_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

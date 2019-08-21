@@ -17,7 +17,6 @@ public:
     Mesh();
     Mesh(const QString& fileName);
     Mesh(const int type);
-
     virtual ~Mesh();
 
     std::string getName(){return name;}

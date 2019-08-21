@@ -86,3 +86,8 @@ void MainWindow::on_actionCube_triggered()
     ui->openGLWidget->createPrimitive(1);
 }
 
+
+void MainWindow::on_actionSphere_triggered()
+{
+    ui->openGLWidget->createPrimitive(2);
+}

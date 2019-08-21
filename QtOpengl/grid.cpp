@@ -18,10 +18,10 @@ void Grid::init(){
 
     QVector<Vertex> grids;
     for (int i = 0;i <= 100; i++) {
-        grids.push_back(Vertex(QVector3D(  500.0f, 0.0f, i*10-500.0f)));
-        grids.push_back(Vertex(QVector3D( -500.0f, 0.0f, i*10-500.0f)));
-        grids.push_back(Vertex(QVector3D( i*10-500.0f, 0.0f,  500.0f)));
-        grids.push_back(Vertex(QVector3D( i*10-500.0f, 0.0f, -500.0f)));
+        grids.push_back(Vertex(QVector3D(      500.0f, 0.0f, i*10-500.0f)));
+        grids.push_back(Vertex(QVector3D(     -500.0f, 0.0f, i*10-500.0f)));
+        grids.push_back(Vertex(QVector3D( i*10-500.0f, 0.0f,      500.0f)));
+        grids.push_back(Vertex(QVector3D( i*10-500.0f, 0.0f,     -500.0f)));
     }
 
     vbo.bind();
