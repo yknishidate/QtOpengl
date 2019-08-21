@@ -15,6 +15,9 @@ public:
     ~MainWindow();
 
 
+private slots:
+    void on_colorButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

@@ -38,3 +38,11 @@ void Model::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode)
 QString Model::getTextureName(){
     return textureName;
 }
+
+void Model::setMaterialColor(QColor color){
+   material.diffuse[0] = material.ambient[0] = color.red()/255.0f;
+   material.diffuse[1] = material.ambient[1] = color.green()/255.0f;
+   material.diffuse[2] = material.ambient[2] = color.blue()/255.0f;
+   qDebug() << "setMaterialColor";
+}
+

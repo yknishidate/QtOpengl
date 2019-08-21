@@ -22,11 +22,12 @@ void Shader::init(){
     //shader_program->setUniformValue(lightPosLoc, QVector3D(0, 0, 70));
 }
 
-void Shader::update(QMatrix4x4 projMatrix, QMatrix4x4 viewMatrix, QMatrix4x4 modelMatrix ){
+void Shader::update(QMatrix4x4 projMatrix, QMatrix4x4 viewMatrix){
     program->bind();
     program->setUniformValue(projMatrixLoc, projMatrix);
-    program->setUniformValue(mvMatrixLoc, viewMatrix * modelMatrix);
+    program->setUniformValue(mvMatrixLoc, viewMatrix);
 }
+
 
 void Shader::update(QMatrix4x4 projMatrix, QMatrix4x4 viewMatrix, QMatrix4x4 modelMatrix, QMatrix3x3 normalMatrix){
     program->bind();

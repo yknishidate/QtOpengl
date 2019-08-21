@@ -55,9 +55,28 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lineEdit->setReadOnly(true);
     connect(ui->openGLWidget, SIGNAL(setTextureName(QString)), ui->lineEdit, SLOT(setText(QString)));
 
+    // Color
+    QPalette pal = ui->colorButton->palette();
+    pal.setColor(QPalette::Button, QColor(178.5f, 178.5f, 178.5f));
+    ui->colorButton->setPalette(pal);
+    connect(ui->openGLWidget, SIGNAL(setColorButton(QColor)), ui->colorButton, SLOT(setColor(QColor)));
+
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_colorButton_clicked()
+{
+    QColor chosenColor = QColorDialog::getColor();
+    if(chosenColor.isValid()){
+        QPalette pal = ui->colorButton->palette();
+        pal.setColor(QPalette::Button, chosenColor);
+        ui->colorButton->setPalette(pal);
+        ui->colorButton->update();
+        ui->openGLWidget->setMaterialColor(chosenColor);
+    }
 }

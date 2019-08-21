@@ -17,7 +17,7 @@ uniform float Kshi;
 vec4 diffColor;
 
 vec3 Lpos = vec3(5.0f, 10.0f, 5.0f);
-vec3 Lamb = vec3(0.5f, 0.5f, 0.5f);
+vec3 Lamb = vec3(0.2f, 0.2f, 0.2f);
 
 void main(){
     if(wire == 0){

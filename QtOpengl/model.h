@@ -25,6 +25,11 @@ public:
     QVector3D getScale(){return scale;}
     QVector3D getRotation(){return rotation;}
 
+    void setMaterialColor(QColor color);
+    QColor getMaterialColor(){return QColor(material.diffuse[0]*255.0f,
+                                              material.diffuse[1]*255.0f,
+                                              material.diffuse[2]*255.0f);}
+
     void setTexture(QString fileName);
     QString getTextureName();
     void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode);

@@ -53,6 +53,7 @@ public slots:
     void open();
     void openTexture();
     void selectedModel(QModelIndex modelIndex);
+    void setMaterialColor(QColor color);
 
 signals:
     void xRotationChanged(int angle);
@@ -72,6 +73,8 @@ signals:
     void setSpinboxRotationY(double n);
     void setSpinboxRotationZ(double n);
 
+    void setColorButton(QColor color);
+
     void setTextureName(QString s);
 
 private:
@@ -86,7 +89,7 @@ private:
     Shader shader;
 
     QMatrix4x4 modelMatrix;
-    QMatrix3x3 norMatr;
+    QMatrix3x3 normalMatrix;
     QMatrix4x4 proj;
 
     Camera camera;

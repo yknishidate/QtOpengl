@@ -55,6 +55,8 @@ void GLWidget::selectedModel(QModelIndex modelIndex){
     emit setSpinboxRotationZ(models[selectedModelIndex]->getRotation().z());
 
     emit setTextureName(models[selectedModelIndex]->getTextureName());
+    emit setColorButton(models[selectedModelIndex]->getMaterialColor());
+
 }
 
 void GLWidget::initializeGL(){
@@ -80,7 +82,7 @@ void GLWidget::paintGL(){
     camera.transform(xRot, yRot);
 
     modelMatrix.setToIdentity();
-    shader.update(proj, camera.matrix, modelMatrix);
+    shader.update(proj, camera.matrix);
 
     // Draw Grid
     grid.draw(shader.program);
@@ -91,9 +93,9 @@ void GLWidget::paintGL(){
         modelMatrix.translate(models[i]->getPosition());
         modelMatrix.rotate(QQuaternion::fromEulerAngles(models[i]->getRotation()));
         modelMatrix.scale(models[i]->getScale());
-        norMatr = modelMatrix.normalMatrix();
+        normalMatrix = modelMatrix.normalMatrix();
 
-        shader.update(proj, camera.matrix, modelMatrix, norMatr);
+        shader.update(proj, camera.matrix, modelMatrix, normalMatrix);
         models[i]->draw(shader.program, displayMode);
     }
 
@@ -147,6 +149,10 @@ void GLWidget::setCullFace(bool arg){
 }
 void GLWidget::setDepthTest(bool arg){
     testing = arg;
+    update();
+}
+void GLWidget::setMaterialColor(QColor color){
+    models[selectedModelIndex]->setMaterialColor(color);
     update();
 }
 

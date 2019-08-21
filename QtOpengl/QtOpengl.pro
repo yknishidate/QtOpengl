@@ -18,6 +18,7 @@ CONFIG += c++11 static
 
 SOURCES += \
         camera.cpp \
+        colorbutton.cpp \
         glwidget.cpp \
         grid.cpp \
         groupbox.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
 
 HEADERS += \
         camera.h \
+        colorbutton.h \
         glwidget.h \
         grid.h \
         groupbox.h \
