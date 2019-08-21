@@ -18,6 +18,24 @@ Model::Model(const QString& fileName)
     material.shininess = 10;
 }
 
+// Primitives
+Model::Model(const int type){
+    mesh = new Mesh(type);
+    name = mesh->getName();
+
+    position = QVector3D(0.0f, 0.0f, 0.0f);
+    scale    = QVector3D(1.0f, 1.0f, 1.0f);
+    rotation = QVector3D(0.0f, 0.0f, 0.0f);
+
+    texture = nullptr;
+    textureName = "";
+
+    material.ambient = QVector3D(1.0f, 1.0f, 1.0f);
+    material.diffuse = QVector3D(0.7f, 0.7f, 0.7f);
+    material.specular = QVector3D(0.7f, 0.7f, 0.7f);
+    material.shininess = 10;
+}
+
 void Model::setTexture(QString fileName){
     textureName = fileName;
     texture = new QOpenGLTexture(QImage(fileName).mirrored());

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resource/Ocube.png</file>
+        <file>resource/Ocylinder.png</file>
+        <file>resource/Osphere.png</file>
+        <file>resource/Otorus.png</file>
+    </qresource>
+</RCC>

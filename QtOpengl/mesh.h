@@ -16,6 +16,8 @@ class Mesh : protected QOpenGLFunctions
 public:
     Mesh();
     Mesh(const QString& fileName);
+    Mesh(const int type);
+
     virtual ~Mesh();
 
     std::string getName(){return name;}

@@ -18,6 +18,8 @@ public:
 private slots:
     void on_colorButton_clicked();
 
+    void on_actionCube_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

@@ -16,7 +16,7 @@ uniform float Kshi;
 
 vec4 diffColor;
 
-vec3 Lpos = vec3(5.0f, 10.0f, 5.0f);
+vec3 Lpos = vec3(50.0f, 100.0f, 80.0f);
 vec3 Lamb = vec3(0.2f, 0.2f, 0.2f);
 
 void main(){
@@ -29,7 +29,7 @@ void main(){
         }
         fColor = diffColor;
     }else{
-        fColor = vec4(0.1f, 0.1f, 0.1f, 1.0f);
+        fColor = vec4(0.2f, 0.2f, 0.2f, 1.0f);
     }
 
 }

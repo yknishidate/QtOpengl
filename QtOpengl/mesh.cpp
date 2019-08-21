@@ -15,6 +15,167 @@ Mesh::Mesh(const QString& fileName)
     init(OBJModel(fileName.toStdString()).ToIndexedModel());
 }
 
+// Primitives
+Mesh::Mesh(const int type)
+    : ibo(QOpenGLBuffer::IndexBuffer)
+{
+    IndexedModel indexModel;
+    int size;
+    switch(type){
+    case 1: // Cube
+        size = 5;
+        indexModel.name = "Cube";
+
+        // position
+        indexModel.positions.push_back(QVector3D(-1.0f, -1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f, -1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f,  1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f, -1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f,  1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f,  1.0f, -1.0f)*size);
+
+        indexModel.positions.push_back(QVector3D( 1.0f, -1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f, -1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f,  1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f, -1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f,  1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f,  1.0f, -1.0f)*size);
+
+        indexModel.positions.push_back(QVector3D(-1.0f, -1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f, -1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f, -1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f, -1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f, -1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f, -1.0f,  1.0f)*size);
+
+        indexModel.positions.push_back(QVector3D( 1.0f, -1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f, -1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f,  1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f, -1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f,  1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f,  1.0f,  1.0f)*size);
+
+        indexModel.positions.push_back(QVector3D(-1.0f,  1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f,  1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f,  1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f,  1.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f,  1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f,  1.0f, -1.0f)*size);
+
+        indexModel.positions.push_back(QVector3D(-1.0f, -1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f, -1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f,  1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f, -1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f,  1.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f,  1.0f,  1.0f)*size);
+
+        // Tex Coord
+        indexModel.texCoords.push_back(QVector2D(0.0f, 0.0f));
+        indexModel.texCoords.push_back(QVector2D(0.33f, 0.0f));
+        indexModel.texCoords.push_back(QVector2D(0.0f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(0.33f, 0.5f));
+
+        indexModel.texCoords.push_back(QVector2D(0.0f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(0.33f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(0.0f, 1.0f));
+        indexModel.texCoords.push_back(QVector2D(0.33f, 1.0f));
+
+        indexModel.texCoords.push_back(QVector2D(0.66f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(1.0f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(0.66f, 1.0f));
+        indexModel.texCoords.push_back(QVector2D(1.0f, 1.0f));
+
+        indexModel.texCoords.push_back(QVector2D(0.66f, 0.0f));
+        indexModel.texCoords.push_back(QVector2D(1.0f, 0.0f));
+        indexModel.texCoords.push_back(QVector2D(0.66f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(1.0f, 0.5f));
+
+        indexModel.texCoords.push_back(QVector2D(0.33f, 0.0f));
+        indexModel.texCoords.push_back(QVector2D(0.66f, 0.0f));
+        indexModel.texCoords.push_back(QVector2D(0.33f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(0.66f, 0.5f));
+
+        indexModel.texCoords.push_back(QVector2D(0.33f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(0.66f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(0.33f, 1.0f));
+        indexModel.texCoords.push_back(QVector2D(0.66f, 1.0f));
+
+        indexModel.texCoords.push_back(QVector2D(0.66f, 0.0f));
+        indexModel.texCoords.push_back(QVector2D(1.0f, 0.0f));
+        indexModel.texCoords.push_back(QVector2D(0.66f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(1.0f, 0.5f));
+
+        indexModel.texCoords.push_back(QVector2D(0.33f, 0.0f));
+        indexModel.texCoords.push_back(QVector2D(0.66f, 0.0f));
+        indexModel.texCoords.push_back(QVector2D(0.33f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(0.66f, 0.5f));
+
+        indexModel.texCoords.push_back(QVector2D(0.33f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(0.66f, 0.5f));
+        indexModel.texCoords.push_back(QVector2D(0.33f, 1.0f));
+        indexModel.texCoords.push_back(QVector2D(0.66f, 1.0f));
+
+        // Normal
+        indexModel.normals.push_back(QVector3D(-1.0f, 0.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(-1.0f, 0.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(-1.0f, 0.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(-1.0f, 0.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(-1.0f, 0.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(-1.0f, 0.0f, 0.0f));
+
+        indexModel.normals.push_back(QVector3D(0.0f, 0.0f, -1.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, 0.0f, -1.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, 0.0f, -1.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, 0.0f, -1.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, 0.0f, -1.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, 0.0f, -1.0f));
+
+        indexModel.normals.push_back(QVector3D(0.0f, -1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, -1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, -1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, -1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, -1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, -1.0f, 0.0f));
+
+        indexModel.normals.push_back(QVector3D( 1.0f, 0.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D( 1.0f, 0.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D( 1.0f, 0.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D( 1.0f, 0.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D( 1.0f, 0.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D( 1.0f, 0.0f, 0.0f));
+
+        indexModel.normals.push_back(QVector3D( 0.0f, 1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D( 0.0f, 1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D( 0.0f, 1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D( 0.0f, 1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D( 0.0f, 1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D( 0.0f, 1.0f, 0.0f));
+
+        indexModel.normals.push_back(QVector3D( 0.0f, 0.0f, 1.0f));
+        indexModel.normals.push_back(QVector3D( 0.0f, 0.0f, 1.0f));
+        indexModel.normals.push_back(QVector3D( 0.0f, 0.0f, 1.0f));
+        indexModel.normals.push_back(QVector3D( 0.0f, 0.0f, 1.0f));
+        indexModel.normals.push_back(QVector3D( 0.0f, 0.0f, 1.0f));
+        indexModel.normals.push_back(QVector3D( 0.0f, 0.0f, 1.0f));
+
+        indexModel.indices = {
+            0,  1,  2,  3,  4,  5, // 左
+            6,  7,  8,  9, 10, 11, // 裏
+           12, 13, 14, 15, 16, 17, // 下
+           18, 19, 20, 21, 22, 23, // 右
+           24, 25, 26, 27, 28, 29, // 上
+           30, 31, 32, 33, 34, 35  // 前
+        };
+
+        break;
+
+    case 2:
+        break;
+    }
+
+    init(indexModel);
+}
+
 Mesh::~Mesh()
 {
     vbo.destroy();
@@ -53,6 +214,7 @@ void Mesh::init(const IndexedModel& model)
     qDebug() << "vbo ID        :" << vbo.bufferId();
     qDebug() << "ibo ID        :" << ibo.bufferId();
 }
+
 
 
 void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture)

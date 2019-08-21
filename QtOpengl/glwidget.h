@@ -51,6 +51,7 @@ public slots:
     void changeModelRotationZ(double z);
 
     void open();
+    void createPrimitive(int type);
     void openTexture();
     void selectedModel(QModelIndex modelIndex);
     void setMaterialColor(QColor color);

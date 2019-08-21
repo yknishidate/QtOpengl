@@ -80,3 +80,9 @@ void MainWindow::on_colorButton_clicked()
         ui->openGLWidget->setMaterialColor(chosenColor);
     }
 }
+
+void MainWindow::on_actionCube_triggered()
+{
+    ui->openGLWidget->createPrimitive(1);
+}
+
