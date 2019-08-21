@@ -19,8 +19,6 @@ void GLWidget::open(){
 
     if(fileName != ""){
         models.push_back(new Model(fileName));
-        //models[modelCount]->setTexture(QString("E:/3D Objects/assets/chest/diffuse.webp"));
-        //emit loadedMesh(models[modelCount]->getName());
         emit loadedModel(models[modelCount]);
 
         modelCount++;
@@ -93,8 +91,9 @@ void GLWidget::paintGL(){
         modelMatrix.translate(models[i]->getPosition());
         modelMatrix.rotate(QQuaternion::fromEulerAngles(models[i]->getRotation()));
         modelMatrix.scale(models[i]->getScale());
+        norMatr = modelMatrix.normalMatrix();
 
-        shader.update(proj, camera.matrix, modelMatrix);
+        shader.update(proj, camera.matrix, modelMatrix, norMatr);
         models[i]->draw(shader.program, displayMode);
     }
 

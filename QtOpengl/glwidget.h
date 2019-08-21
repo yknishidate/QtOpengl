@@ -86,6 +86,7 @@ private:
     Shader shader;
 
     QMatrix4x4 modelMatrix;
+    QMatrix3x3 norMatr;
     QMatrix4x4 proj;
 
     Camera camera;

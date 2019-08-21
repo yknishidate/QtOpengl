@@ -4,7 +4,7 @@ layout(location = 1)in vec2 texcoord;
 layout(location = 2)in vec3 normal;
 uniform mat4 projMatrix;
 uniform mat4 mvMatrix;
-//uniform mat4 normalMatrix;
+uniform mat3 normalMatrix;
 
 out vec4 vColor;
 out vec3 N;
@@ -13,7 +13,7 @@ out vec2 vTexcoord;
 
 void main(){
   gl_Position = projMatrix * mvMatrix * vec4(position, 1.0);
-  N = normal;
+  N = normalize(normalMatrix * normal);
   gridColor = vec4(0.8f);
   vTexcoord = texcoord;
 }

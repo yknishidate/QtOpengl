@@ -9,6 +9,7 @@ public:
     Shader();
     void init();
     void update(QMatrix4x4 projMatrix, QMatrix4x4 viewMatrix, QMatrix4x4 modelMatrix);
+    void update(QMatrix4x4 projMatrix, QMatrix4x4 viewMatrix, QMatrix4x4 modelMatrix, QMatrix3x3 normalMatrix);
     QOpenGLShaderProgram *program;
 
 private:
