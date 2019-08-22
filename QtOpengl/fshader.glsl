@@ -29,7 +29,7 @@ void main(){
         vec3 V = -normalize(P.xyz);
         vec3 L = normalize(Lpos-P.xyz);
         vec3 H = normalize(L + V);
-        //float norFac = ((Kshi+2.0f)*(Kshi+4.0f))/(8*M_PI*(pow(2, -Kshi/2)) + Kshi);
+        float norFac = ((Kshi+2.0f)*(Kshi+4.0f))/(8*M_PI*(pow(2, -Kshi/2)) + Kshi);
 
         if(textureSample == 0){
             // Sun Light
@@ -37,11 +37,11 @@ void main(){
 
             // Point Light
             diffuse  =  max(dot(N, L), 0)               * Kdiff * Ldiff + Kamb * Lamb ;
-            specular =  pow(max(dot(N, H), 0.0), Kshi)  * Kspec * Lspec;
+            specular =  pow(max(dot(N, H), 0.0), Kshi)  * Kspec * Lspec * norFac/10.0f;
         }else{
             vec3 texColor = texture2D(texture, vTexcoord).xyz;
             diffuse = texColor * Ldiff * max(dot(N, L), 0) + texColor*Lamb;
-            specular =  pow(max(dot(N, H), 0.0), Kshi)  * Kspec * Lspec;
+            specular =  pow(max(dot(N, H), 0.0), Kshi)  * Kspec * Lspec * norFac/10.0f;
         }
         fColor = vec4(diffuse + specular, 1.0f);
     }else{
