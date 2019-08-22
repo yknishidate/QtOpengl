@@ -15,17 +15,20 @@ void Shader::init(){
     projMatrixLoc = program->uniformLocation("projMatrix");
     mvMatrixLoc = program->uniformLocation("mvMatrix");
     normalMatrixLoc = program->uniformLocation("normalMatrix");
+    //viewMatrixLoc = program->uniformLocation("viewMatrix");
     program->setUniformValue("texture", 0);
-    //lightPosLoc = shader_program->uniformLocation("lightPos");
 
     // Light
-    //shader_program->setUniformValue(lightPosLoc, QVector3D(0, 0, 70));
+    lightPosLoc = program->uniformLocation("Lpos");
 }
 
 void Shader::update(QMatrix4x4 projMatrix, QMatrix4x4 viewMatrix){
     program->bind();
     program->setUniformValue(projMatrixLoc, projMatrix);
     program->setUniformValue(mvMatrixLoc, viewMatrix);
+    //program->setUniformValue(lightPosLoc,  QVector3D(100.0f, 0.0f, 0.0f));
+
+    //program->setUniformValue(viewMatrixLoc, viewMatrix);
 }
 
 
@@ -34,4 +37,6 @@ void Shader::update(QMatrix4x4 projMatrix, QMatrix4x4 viewMatrix, QMatrix4x4 mod
     program->setUniformValue(projMatrixLoc, projMatrix);
     program->setUniformValue(mvMatrixLoc, viewMatrix * modelMatrix);
     program->setUniformValue(normalMatrixLoc, normalMatrix);
+
+    //program->setUniformValue(viewMatrixLoc, viewMatrix);
 }

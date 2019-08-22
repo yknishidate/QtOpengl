@@ -75,6 +75,7 @@ void GLWidget::initializeGL(){
 
     grid.init();
     modelMatrix.setToIdentity();
+
     frame = 0;
 }
 
@@ -91,6 +92,7 @@ void GLWidget::paintGL(){
 
     modelMatrix.setToIdentity();
     shader.update(proj, camera.matrix);
+
 
     // Draw Grid
     grid.draw(shader.program);

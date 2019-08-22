@@ -6,14 +6,14 @@ uniform mat4 projMatrix;
 uniform mat4 mvMatrix;
 uniform mat3 normalMatrix;
 
-out vec4 vColor;
+out vec4 P;
 out vec3 N;
-out vec4 gridColor;
 out vec2 vTexcoord;
 
 void main(){
-  gl_Position = projMatrix * mvMatrix * vec4(position, 1.0);
-  N = normalize(normalMatrix * normal);
-  gridColor = vec4(0.8f);
+  P = mvMatrix * vec4(position, 1.0);   //カメラ座標のPosition
+  N = normalize(normalMatrix * normal); //ワールド座標のNormal
   vTexcoord = texcoord;
+
+  gl_Position = projMatrix * P;         //スクリーン座標
 }

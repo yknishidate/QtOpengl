@@ -10,6 +10,7 @@ public:
     Model(const QString& fileName);
     Model(const int type);
     std::string getName(){return name;}
+    int getType(){return type;}
 
     // Coordinates
     void  setPositionX(double x){position.setX(x);}
@@ -37,6 +38,7 @@ public:
 
 private:
     std::string name;
+    int type;
     Mesh *mesh;
 
     // Coordinates

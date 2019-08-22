@@ -22,8 +22,8 @@ Mesh::Mesh(const int type)
     IndexedModel indexModel;
     float size = 5.0f;
     float radius = 5.0f;
-    int stacks = 8;
-    int slices = 16;
+    int stacks = 32;
+    int slices = 64;
 
     switch(type){
     case 1: // Cube
@@ -184,7 +184,7 @@ Mesh::Mesh(const int type)
                 const float s(static_cast<float>(i) / static_cast<float>(slices));
                 const float z(r * cos(M_PI * 2 * s)), x(r * sin(M_PI * 2 * s));
                 indexModel.positions.push_back(QVector3D(x, y, z));
-                indexModel.texCoords.push_back(QVector2D(1.0f/slices * i, 1.0f/stacks * j));
+                indexModel.texCoords.push_back(QVector2D(1.0f/slices * i, 1.0f-(1.0f/stacks * j)));
                 indexModel.normals.push_back(QVector3D(x, y, z).normalized());
             }
         }

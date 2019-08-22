@@ -4,6 +4,7 @@ Model::Model(const QString& fileName)
 {
     mesh = new Mesh(fileName);
     name = mesh->getName();
+    type = 0;
 
     position = QVector3D(0.0f, 0.0f, 0.0f);
     scale    = QVector3D(1.0f, 1.0f, 1.0f);
@@ -12,10 +13,10 @@ Model::Model(const QString& fileName)
     texture = nullptr;
     textureName = "";
 
-    material.ambient = QVector3D(1.0f, 1.0f, 1.0f);
+    material.ambient = QVector3D(0.7f, 0.7f, 0.7f);
     material.diffuse = QVector3D(0.7f, 0.7f, 0.7f);
     material.specular = QVector3D(0.7f, 0.7f, 0.7f);
-    material.shininess = 10;
+    material.shininess = 90.0f;
 }
 
 // Primitives
@@ -30,10 +31,10 @@ Model::Model(const int type){
     texture = nullptr;
     textureName = "";
 
-    material.ambient = QVector3D(1.0f, 1.0f, 1.0f);
+    material.ambient = QVector3D(0.7f, 0.7f, 0.7f);
     material.diffuse = QVector3D(0.7f, 0.7f, 0.7f);
     material.specular = QVector3D(0.7f, 0.7f, 0.7f);
-    material.shininess = 10;
+    material.shininess = 90.0f;
 }
 
 void Model::setTexture(QString fileName){
