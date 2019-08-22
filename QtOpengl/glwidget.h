@@ -54,7 +54,10 @@ public slots:
     void createPrimitive(int type);
     void openTexture();
     void selectedModel(QModelIndex modelIndex);
-    void setMaterialColor(QColor color);
+    void setMaterialDiffColor(QColor color);
+    void setMaterialSpecColor(QColor color);
+
+    void setShininess(int shine);
 
 signals:
     void xRotationChanged(int angle);
@@ -75,6 +78,8 @@ signals:
     void setSpinboxRotationZ(double n);
 
     void setColorButton(QColor color);
+    void setColorButton_2(QColor color);
+    void setShininessSlider(int shine);
 
     void setTextureName(QString s);
 

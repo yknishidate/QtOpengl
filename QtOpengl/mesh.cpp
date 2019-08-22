@@ -22,8 +22,8 @@ Mesh::Mesh(const int type)
     IndexedModel indexModel;
     float size = 5.0f;
     float radius = 5.0f;
-    int stacks = 32;
-    int slices = 64;
+    int stacks = 32*4;
+    int slices = 64*4;
 
     switch(type){
     case 1: // Cube

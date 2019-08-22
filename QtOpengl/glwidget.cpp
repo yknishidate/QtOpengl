@@ -64,7 +64,10 @@ void GLWidget::selectedModel(QModelIndex modelIndex){
     emit setSpinboxRotationZ(models[selectedModelIndex]->getRotation().z());
 
     emit setTextureName(models[selectedModelIndex]->getTextureName());
-    emit setColorButton(models[selectedModelIndex]->getMaterialColor());
+    emit setColorButton(models[selectedModelIndex]->getMaterialDiffColor());
+    emit setColorButton_2(models[selectedModelIndex]->getMaterialSpecColor());
+
+    emit setShininessSlider(models[selectedModelIndex]->getShininess());
 }
 
 void GLWidget::initializeGL(){
@@ -161,8 +164,16 @@ void GLWidget::setDepthTest(bool arg){
     testing = arg;
     update();
 }
-void GLWidget::setMaterialColor(QColor color){
-    models[selectedModelIndex]->setMaterialColor(color);
+void GLWidget::setMaterialDiffColor(QColor color){
+    models[selectedModelIndex]->setMaterialDiffColor(color);
+    update();
+}
+void GLWidget::setMaterialSpecColor(QColor color){
+    models[selectedModelIndex]->setMaterialSpecColor(color);
+    update();
+}
+void GLWidget::setShininess(int shine){
+    models[selectedModelIndex]->setShininess(shine);
     update();
 }
 

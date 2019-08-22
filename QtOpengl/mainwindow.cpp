@@ -60,7 +60,12 @@ MainWindow::MainWindow(QWidget *parent) :
     pal.setColor(QPalette::Button, QColor(178.5f, 178.5f, 178.5f));
     ui->colorButton->setPalette(pal);
     connect(ui->openGLWidget, SIGNAL(setColorButton(QColor)), ui->colorButton, SLOT(setColor(QColor)));
+    ui->colorButton_2->setPalette(pal);
+    connect(ui->openGLWidget, SIGNAL(setColorButton_2(QColor)), ui->colorButton_2, SLOT(setColor(QColor)));
 
+    // Shine Slider
+    connect(ui->shineSlider, SIGNAL(valueChanged(int)), ui->openGLWidget, SLOT(setShininess(int)));
+    connect(ui->openGLWidget, SIGNAL(setShininessSlider(int)), ui->shineSlider, SLOT(setValue(int)));
 
 }
 
@@ -77,7 +82,18 @@ void MainWindow::on_colorButton_clicked()
         pal.setColor(QPalette::Button, chosenColor);
         ui->colorButton->setPalette(pal);
         ui->colorButton->update();
-        ui->openGLWidget->setMaterialColor(chosenColor);
+        ui->openGLWidget->setMaterialDiffColor(chosenColor);
+    }
+}
+void MainWindow::on_colorButton_2_clicked()
+{
+    QColor chosenColor = QColorDialog::getColor();
+    if(chosenColor.isValid()){
+        QPalette pal = ui->colorButton_2->palette();
+        pal.setColor(QPalette::Button, chosenColor);
+        ui->colorButton_2->setPalette(pal);
+        ui->colorButton_2->update();
+        ui->openGLWidget->setMaterialSpecColor(chosenColor);
     }
 }
 
@@ -85,9 +101,11 @@ void MainWindow::on_actionCube_triggered()
 {
     ui->openGLWidget->createPrimitive(1);
 }
-
-
 void MainWindow::on_actionSphere_triggered()
 {
     ui->openGLWidget->createPrimitive(2);
 }
+
+
+
+

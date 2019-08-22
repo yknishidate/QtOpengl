@@ -27,8 +27,12 @@ public:
     QVector3D getRotation(){return rotation;}
 
     // Color
-    void setMaterialColor(QColor color);
-    QColor getMaterialColor(){return QColor( material.diffuse[0]*255.0f, material.diffuse[1]*255.0f, material.diffuse[2]*255.0f);}
+    void setMaterialDiffColor(QColor color);
+    QColor getMaterialDiffColor(){return QColor( material.diffuse[0]*255.0f, material.diffuse[1]*255.0f, material.diffuse[2]*255.0f);}
+    void setMaterialSpecColor(QColor color);
+    QColor getMaterialSpecColor(){return QColor( material.specular[0]*255.0f, material.specular[1]*255.0f, material.specular[2]*255.0f);}
+    void setShininess(int shine);
+    int getShininess(){return material.shininess;}
 
     // Texture
     void setTexture(QString fileName);

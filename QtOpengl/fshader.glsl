@@ -3,24 +3,24 @@ const float M_PI = 3.1415926535897932384626433832795;
 uniform int textureSample;
 uniform int wire;
 uniform sampler2D texture;
-in vec2 vTexcoord;
 
-//in vec3 L;
 in vec4 P;
 in vec3 N;
+in vec2 vTexcoord;
 
-out vec4 fColor;
-//Material
+// Material
 uniform vec3 Kamb;
 uniform vec3 Kdiff;
 uniform vec3 Kspec;
 uniform float Kshi;
-//Light
+// Light
 uniform vec3 Lpos =  vec3(100.0f, 100.0f, 100.0f);
 uniform vec3 Ldiff = vec3(1.0f, 1.0f, 1.0f);
 uniform vec3 Lamb  = vec3(0.1f, 0.1f, 0.1f);
 uniform vec3 Lspec = vec3(1.0f, 1.0f, 1.0f);
 
+// Result
+out vec4 fColor;
 
 void main(){
     vec3 diffuse;
@@ -34,6 +34,7 @@ void main(){
         if(textureSample == 0){
             // Sun Light
             //diffuse = Kdiff * Ldiff * max(dot(N, normalize(Lpos)), 0) + Kamb * Lamb ;
+
             // Point Light
             diffuse  =  max(dot(N, L), 0)               * Kdiff * Ldiff + Kamb * Lamb ;
             specular =  pow(max(dot(N, H), 0.0), Kshi)  * Kspec * Lspec;

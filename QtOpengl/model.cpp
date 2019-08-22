@@ -58,10 +58,20 @@ QString Model::getTextureName(){
     return textureName;
 }
 
-void Model::setMaterialColor(QColor color){
+void Model::setMaterialDiffColor(QColor color){
    material.diffuse[0] = material.ambient[0] = color.red()/255.0f;
    material.diffuse[1] = material.ambient[1] = color.green()/255.0f;
    material.diffuse[2] = material.ambient[2] = color.blue()/255.0f;
    qDebug() << "setMaterialColor";
 }
+void Model::setMaterialSpecColor(QColor color){
+   material.specular[0] = color.red()/255.0f;
+   material.specular[1] = color.green()/255.0f;
+   material.specular[2] = color.blue()/255.0f;
+   qDebug() << "setMaterialColor";
+}
 
+void Model::setShininess(int shine){
+   material.shininess = shine;
+   qDebug() << "set shininess";
+}

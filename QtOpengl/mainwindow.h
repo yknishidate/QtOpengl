@@ -22,6 +22,8 @@ private slots:
 
     void on_actionSphere_triggered();
 
+    void on_colorButton_2_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
