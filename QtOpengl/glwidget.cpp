@@ -73,6 +73,8 @@ void GLWidget::selectedModel(QModelIndex modelIndex){
 void GLWidget::initializeGL(){
     initializeOpenGLFunctions();
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    qDebug() << "version:"      << QLatin1String(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+    qDebug() << "GLSL version:" << QLatin1String(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 
     shader.init();
 
@@ -151,6 +153,7 @@ void GLWidget::wheelEvent(QWheelEvent *event){
 
 
 // Slots
+// UI Controled
 void GLWidget::setDisplayMode(bool arg){
     if(arg){displayMode = GL_LINE_STRIP;}
     else{displayMode = GL_TRIANGLES;}
@@ -173,6 +176,7 @@ void GLWidget::setMaterialSpecColor(QColor color){
     update();
 }
 void GLWidget::setShininess(int shine){
+    //models[selectedModelIndex]->setShininess(cbrt(shine));
     models[selectedModelIndex]->setShininess(shine*shine);
     update();
 }

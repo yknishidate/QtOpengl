@@ -22,8 +22,8 @@ Mesh::Mesh(const int type)
     IndexedModel indexModel;
     float size = 5.0f;
     float radius = 5.0f;
-    int stacks = 32*4;
-    int slices = 64*4;
+    int stacks = 32;
+    int slices = 64;
 
     switch(type){
     case 1: // Cube
@@ -239,7 +239,8 @@ void Mesh::init(const IndexedModel& model)
                model.texCoords.size()*sizeof(model.texCoords[0]));
     vbo.write( normalOffset, &model.normals[0],
                model.normals.size()*sizeof(model.normals[0]));
-    //vbo.release();
+//    vbo.release();
+
 
     ibo.create();
     ibo.bind();
@@ -248,6 +249,7 @@ void Mesh::init(const IndexedModel& model)
 
 
     name = model.name;
+
     qDebug() << "Name   :" << QString::fromStdString(model.name);
     qDebug() << "Points :" << model.positions.size();
     qDebug() << "Indeces:" << model.indices.size();

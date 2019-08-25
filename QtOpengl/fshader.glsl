@@ -23,25 +23,21 @@ uniform vec3 Lspec = vec3(1.0f, 1.0f, 1.0f);
 out vec4 fColor;
 
 void main(){
-    vec3 diffuse;
+    vec3 diffuse = vec3(0);
     vec3 specular = vec3(0);
     if(wire == 0){
         vec3 V = -normalize(P.xyz);
         vec3 L = normalize(Lpos-P.xyz);
         vec3 H = normalize(L + V);
-        float norFac = ((Kshi+2.0f)*(Kshi+4.0f))/(8*M_PI*(pow(2, -Kshi/2)) + Kshi);
+        float norFac = ((Kshi+2.0f)*(Kshi+4.0f))/(8*M_PI*(pow(2, -Kshi/2)) + Kshi); //正規化係数
 
         if(textureSample == 0){
-            // Sun Light
-            //diffuse = Kdiff * Ldiff * max(dot(N, normalize(Lpos)), 0) + Kamb * Lamb ;
-
-            // Point Light
-            diffuse  =  max(dot(N, L), 0)               * Kdiff * Ldiff + Kamb * Lamb ;
-            specular =  pow(max(dot(N, H), 0.0), Kshi)  * Kspec * Lspec * norFac/10.0f;
+            diffuse  +=  max(dot(N, L), 0)               * Kdiff * Ldiff + Kamb * Lamb ;
+            specular +=  pow(max(dot(normalize(N), H), 0.0), Kshi)  * Kspec * Lspec * norFac/100.0f;
         }else{
             vec3 texColor = texture2D(texture, vTexcoord).xyz;
-            diffuse = texColor * Ldiff * max(dot(N, L), 0) + texColor*Lamb;
-            specular =  pow(max(dot(N, H), 0.0), Kshi)  * Kspec * Lspec * norFac/10.0f;
+            diffuse += texColor * Ldiff * max(dot(N, L), 0) + texColor*Lamb;
+            specular +=  pow(max(dot(normalize(N), H), 0.0), Kshi)  * Kspec * Lspec * norFac/100.0f;
         }
         fColor = vec4(diffuse + specular, 1.0f);
     }else{

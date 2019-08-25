@@ -42,6 +42,8 @@ HEADERS += \
         model.h \
         objloader.h \
         shader.h \
+        stb_image.h \
+        stb_image_write.h \
         treeview.h \
         vertex.h
 

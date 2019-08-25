@@ -548,7 +548,7 @@
               <number>1</number>
              </property>
              <property name="maximum">
-              <number>20</number>
+              <number>40</number>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -639,8 +639,15 @@
     <addaction name="actionCube"/>
     <addaction name="actionSphere"/>
    </widget>
+   <widget class="QMenu" name="menuRender">
+    <property name="title">
+     <string>Render</string>
+    </property>
+    <addaction name="actionRender"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuCreate"/>
+   <addaction name="menuRender"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="styleSheet">
@@ -660,6 +667,8 @@
    </attribute>
    <addaction name="actionCube"/>
    <addaction name="actionSphere"/>
+   <addaction name="separator"/>
+   <addaction name="actionRender"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen">
@@ -693,6 +702,15 @@
    </property>
    <property name="text">
     <string>Sphere</string>
+   </property>
+  </action>
+  <action name="actionRender">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/resource/Render.png</normaloff>:/resource/Render.png</iconset>
+   </property>
+   <property name="text">
+    <string>Render</string>
    </property>
   </action>
  </widget>

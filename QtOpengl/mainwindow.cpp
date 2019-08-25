@@ -105,7 +105,3 @@ void MainWindow::on_actionSphere_triggered()
 {
     ui->openGLWidget->createPrimitive(2);
 }
-
-
-
-

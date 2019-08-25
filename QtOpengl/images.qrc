@@ -4,5 +4,6 @@
         <file>resource/Ocylinder.png</file>
         <file>resource/Osphere.png</file>
         <file>resource/Otorus.png</file>
+        <file>resource/Render.png</file>
     </qresource>
 </RCC>
