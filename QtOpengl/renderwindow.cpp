@@ -1,7 +1,7 @@
 #include "renderwindow.h"
 #include "ui_renderwindow.h"
 
-RenderWindow::RenderWindow(QWidget *parent, float x, float y) :
+RenderWindow::RenderWindow(QWidget *parent, float x, float y, float l) :
     QMainWindow(parent),
     ui(new Ui::RenderWindow)
 {
@@ -12,6 +12,7 @@ RenderWindow::RenderWindow(QWidget *parent, float x, float y) :
     qDebug() << "View Rotation: (" << x << "," << y << ")";
     ui->renderWidget->setXRot(x);
     ui->renderWidget->setYRot(y);
+    ui->renderWidget->setCameraDistance(l);
 }
 
 RenderWindow::~RenderWindow()

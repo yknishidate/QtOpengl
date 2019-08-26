@@ -101,7 +101,10 @@ void MainWindow::on_colorButton_2_clicked()
 void MainWindow::on_actionRender_triggered()
 {
     qDebug() << "---Render Triggered---";
-    renderwindow = new RenderWindow(this, ui->openGLWidget->getXRot()/16.0f, ui->openGLWidget->getYRot()/16.0f);
+    renderwindow = new RenderWindow(this,
+                                    ui->openGLWidget->getXRot()/16.0f,
+                                    ui->openGLWidget->getYRot()/16.0f,
+                                    ui->openGLWidget->getCamera()->getLength());
     renderwindow->show();
 }
 

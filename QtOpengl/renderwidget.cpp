@@ -5,7 +5,7 @@
 
 RenderWidget::RenderWidget(QWidget *parent)
 {
-    qDebug()  << "---Render Window Contractor---";
+    qDebug()  << "---Render Widget Contractor---";
     QSurfaceFormat format;
     format.setVersion(4, 3);
     format.setProfile(QSurfaceFormat::CoreProfile);
@@ -32,21 +32,15 @@ void RenderWidget::initializeGL(){
     initializeOpenGLFunctions();
     glClearColor(0.5f, 0.5f, 1.0f, 1.0f);
 
-    qDebug() << "version: "
-                 << QLatin1String(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
-    qDebug() << "GLSL version: "
-                 << QLatin1String(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
+    qDebug() << "version:      " << QLatin1String(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+    qDebug() << "GLSL version: " << QLatin1String(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 
     // VAO
     m_vao.create();
     m_vao.bind();
 
     static const GLfloat g_vertex_buffer_data[] = {
-        -1.0f, -1.0f,
-        -1.0f,  1.0f,
-         1.0f, -1.0f,
-         1.0f,  1.0f
-    };
+        -1.0f, -1.0f,    -1.0f,  1.0f,    1.0f, -1.0f,    1.0f,  1.0f };
     static const GLushort g_element_buffer_data[] = { 0, 1, 2, 3 };
 
     // VBO
@@ -63,8 +57,8 @@ void RenderWidget::initializeGL(){
     m_indexBuffer->bind();
     m_indexBuffer->allocate(g_element_buffer_data,sizeof(g_element_buffer_data));
 
-
     // Texture Output(1)
+    GLuint tex_output;
     glActiveTexture(GL_TEXTURE1);
     m_tex_output = new QOpenGLTexture(QOpenGLTexture::Target2D);
     m_tex_output->create();
@@ -77,6 +71,7 @@ void RenderWidget::initializeGL(){
     glBindImageTexture(1, m_tex_output->textureId(), 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 
     // Texture Input(0)
+    GLuint tex_input;
     glActiveTexture(GL_TEXTURE0);
     m_tex_input = new QOpenGLTexture(QOpenGLTexture::Target2D);
     m_tex_input->create();
@@ -106,12 +101,9 @@ void RenderWidget::initializeGL(){
     m_renderProgram->link();
     m_renderProgram->bind();
 
-
     // HDRI (3)
-    // STB IMAGE
     int width, height, bpp;
     float* data = stbi_loadf("E:/Pictures/Textures/_HDRI/arboretum/arboretum_4k.hdr", &width, &height, &bpp, 4);
-
     GLuint hdri;
     glGenTextures(1, &hdri);
     glActiveTexture(GL_TEXTURE3);
@@ -129,9 +121,9 @@ void RenderWidget::initializeGL(){
     glVertexAttribPointer(posPtr, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(posPtr);
 
-
     // Accum (0)
-    // TODO: メンバ変数を消去
+    unsigned accumN = 1;
+    GLuint accum;
     glGenBuffers(1, &accum);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, accum);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(unsigned), &accumN, GL_DYNAMIC_DRAW);
@@ -157,6 +149,17 @@ void RenderWidget::initializeGL(){
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(float), &phi, GL_DYNAMIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, phi_id);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 2);
+
+
+    // Distance (3)
+    float distance = cameraDistance;
+    qDebug() << "Distance:" << distance;
+    GLuint distance_id;
+    glGenBuffers(1, &distance_id);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, distance_id);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(float), &distance, GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, distance_id);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 3);
 
     // Seed (2)
     std::vector<QVector4D> seedDataBuffer;
@@ -193,18 +196,11 @@ void RenderWidget::paintGL(){
     m_vao.bind();
     glDrawElements(GL_TRIANGLE_STRIP,4,GL_UNSIGNED_SHORT,0);
 
-
     m_vao.release();
 
-    if(frame > 1000){
-        rendering = false;
-    }
-
+    if(frame > 1000) rendering = false;
+    if(rendering) update();
     qDebug() << "Rendering:" <<  ++frame;
-
-    if(rendering){
-        update();
-    }
 }
 
 void RenderWidget::resizeGL(int w, int h){

@@ -29,6 +29,9 @@ layout(std430, binding = 1) buffer Theta {
 layout(std430, binding = 2) buffer Phi {
         float _Phi;
 };
+layout(std430, binding = 3) buffer Distance {
+        float _Distance;
+};
 
 // Structs
 struct ray {
@@ -224,7 +227,7 @@ void main() {
     // Seed
     _xors ^= imageLoad(seed, _WorkID.xy);
 
-    vec3 eye = vec3(0, 0, 18);
+    vec3 eye = vec3(0, 0, _Distance);
     vec3 screen_position;
 
     ray _rays;

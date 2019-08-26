@@ -14,7 +14,7 @@ class RenderWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit RenderWindow(QWidget *parent = nullptr, float t = 0.0f, float p = 0.0f);
+    explicit RenderWindow(QWidget *parent = nullptr, float t = 0.0f, float p = 0.0f, float l = 10.0f);
     ~RenderWindow();
 
 private:

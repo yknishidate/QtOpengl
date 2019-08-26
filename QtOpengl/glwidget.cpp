@@ -8,7 +8,7 @@ GLWidget::GLWidget(QWidget *parent)
     : QOpenGLWidget(parent),
       displayMode(GL_TRIANGLES),
       xRot(0), yRot(0), zRot(0),
-      camera(QVector3D(0,0,20), QVector3D(0,1,0)),
+      camera(QVector3D(0,0,20), QVector3D(0,0,0)),
       culling(false), testing(true)
 {
 }

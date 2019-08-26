@@ -33,6 +33,7 @@ public:
     ~RenderWidget();
     void setXRot(float x){xRot = x;}
     void setYRot(float y){yRot = y;}
+    void setCameraDistance(float l){cameraDistance = l;}
 
 protected:
     void initializeGL();
@@ -40,17 +41,12 @@ protected:
     void resizeGL(int w, int h);
 
 private:
-    unsigned accumN = 1;
-    GLuint accum;
     int frame = 0;
     const int tex_w = 960, tex_h = 540;
-    GLuint tex_input;
-    GLuint tex_output;
-
     bool rendering = true;
-
     float xRot;
     float yRot;
+    float cameraDistance;
 
 public slots:
     void stopRendering();

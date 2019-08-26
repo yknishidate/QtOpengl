@@ -10,11 +10,6 @@ public:
     Camera(QVector3D cameraPos, QVector3D targetPos);
     void transform( int xRot, int yRot );
     void dolly( int degree );
-    QMatrix4x4 getRotationMatrix(){return rotationMatrix;}
-    //float getTheta(){return theta;}
-    float getTheta();
-    //float getPhi(){return phi;}
-    float getPhi();
     float getLength(){return length;}
 
     QVector3D getCameraPos(){return cameraPos;}
@@ -24,11 +19,7 @@ public:
 private:
     QVector3D cameraPos;
     QVector3D targetPos;
-    QMatrix4x4 rotationMatrix;
-
-    float theta;
-    float phi;
-    float length = 0;
+    float length;
 };
 
 #endif // CAMERA_H
