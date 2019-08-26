@@ -10,6 +10,7 @@
 #include <QOpenGLVertexArrayObject>
 #include <QDir>
 #include "camera.h"
+#include "model.h"
 
 class RenderWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
 {
@@ -23,9 +24,6 @@ class RenderWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
     QOpenGLShader *m_computeShader;
     QOpenGLShader *m_fragmentShader;
     QOpenGLShader *m_vertexShader;
-    QOpenGLTexture *m_tex_output;
-    QOpenGLTexture *m_tex_input;
-    QOpenGLTexture *m_hdri;
 
 
 public:
@@ -34,6 +32,7 @@ public:
     void setXRot(float x){xRot = x;}
     void setYRot(float y){yRot = y;}
     void setCameraDistance(float l){cameraDistance = l;}
+    void setModels(std::vector<Model *> m){models = m;}
 
 protected:
     void initializeGL();
@@ -47,6 +46,8 @@ private:
     float xRot;
     float yRot;
     float cameraDistance;
+
+    std::vector<Model *> models;
 
 public slots:
     void stopRendering();

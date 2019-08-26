@@ -15,6 +15,7 @@ layout(rgba32ui, binding = 2) uniform uimage2D seed;
 layout(binding = 3) uniform sampler2D background;
 
 
+
 ivec3 _WorkGrupsN = ivec3(gl_NumWorkGroups);
 ivec3 _WorkItemsN = ivec3(gl_WorkGroupSize);
 ivec3 _WorksN = _WorkGrupsN * _WorkItemsN;
@@ -23,15 +24,11 @@ ivec3 _WorkID = ivec3(gl_GlobalInvocationID);
 layout(std430, binding = 0) buffer AccumN {
   uint _AccumN;
 };
-layout(std430, binding = 1) buffer Theta {
-        float _Theta;
-};
-layout(std430, binding = 2) buffer Phi {
-        float _Phi;
-};
-layout(std430, binding = 3) buffer Distance {
-        float _Distance;
-};
+
+layout(location = 0) uniform float _Theta;
+layout(location = 1) uniform float _Phi;
+layout(location = 2) uniform float _Distance;
+
 
 // Structs
 struct ray {
@@ -239,21 +236,18 @@ void main() {
     sphere floor;
     floor.center = vec3(0, -10000, 0);
     floor.radius = 9998;
-
     sphere s1;
     s1.center = vec3(0, 0, 0);
     s1.radius = 2;
-
     sphere s2;
     s2.center = vec3(-3, 0, -2);
     s2.radius = 2;
-
     sphere s3;
     s3.center = vec3(3, 0, -2);
     s3.radius = 2;
 
 
-    //Sample Loop
+    // Sample Loop
     for (int n = 0; n < SPP; n++)
     {
         screen_position.x = float(_WorkID.x + rand()) / _WorksN.x * 16 - 8;

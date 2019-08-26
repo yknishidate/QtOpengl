@@ -1,7 +1,7 @@
 #include "renderwindow.h"
 #include "ui_renderwindow.h"
 
-RenderWindow::RenderWindow(QWidget *parent, float x, float y, float l) :
+RenderWindow::RenderWindow(QWidget *parent, float x, float y, float l, std::vector<Model *> m) :
     QMainWindow(parent),
     ui(new Ui::RenderWindow)
 {
@@ -13,6 +13,8 @@ RenderWindow::RenderWindow(QWidget *parent, float x, float y, float l) :
     ui->renderWidget->setXRot(x);
     ui->renderWidget->setYRot(y);
     ui->renderWidget->setCameraDistance(l);
+//    ui->renderWidget->setModelsPtr(m);
+    ui->renderWidget->setModels(m);
 }
 
 RenderWindow::~RenderWindow()

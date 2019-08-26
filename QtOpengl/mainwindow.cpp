@@ -104,7 +104,10 @@ void MainWindow::on_actionRender_triggered()
     renderwindow = new RenderWindow(this,
                                     ui->openGLWidget->getXRot()/16.0f,
                                     ui->openGLWidget->getYRot()/16.0f,
-                                    ui->openGLWidget->getCamera()->getLength());
+                                    ui->openGLWidget->getCamera()->getLength(),
+                                    ui->openGLWidget->getModels()
+//                                    ui->openGLWidget->getModelsPtr()
+                                    );
     renderwindow->show();
 }
 

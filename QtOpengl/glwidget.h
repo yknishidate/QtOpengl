@@ -26,6 +26,8 @@ public:
     Camera* getCamera(){return &camera;}
     int getXRot(){return xRot;}
     int getYRot(){return yRot;}
+    std::vector<Model *>* getModelsPtr(){return &models;}
+    std::vector<Model *> getModels(){return models;}
 
 protected:
     void initializeGL() override;

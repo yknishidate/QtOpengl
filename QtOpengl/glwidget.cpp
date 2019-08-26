@@ -114,8 +114,7 @@ void GLWidget::paintGL(){
         models[i]->draw(shader.program, displayMode);
     }
 
-    qDebug() << ++frame << ": (" << xRot/16.0f << "," << 360.0f - yRot/16.0f << ")";
-
+    qDebug() << ++frame;
 }
 
 
@@ -131,7 +130,6 @@ void GLWidget::resizeGL(int w, int h){
 // Window Size
 QSize GLWidget::minimumSizeHint() const{return QSize(600, 400);}
 QSize GLWidget::sizeHint() const{return QSize(600, 400);}
-
 
 // Mouse Event
 void GLWidget::mousePressEvent(QMouseEvent *event){
@@ -154,8 +152,7 @@ void GLWidget::wheelEvent(QWheelEvent *event){
 
 
 
-// Slots
-// UI Controled
+// Slots = UI Controled
 void GLWidget::setDisplayMode(bool arg){
     if(arg){displayMode = GL_LINE_STRIP;}
     else{displayMode = GL_TRIANGLES;}
@@ -178,7 +175,6 @@ void GLWidget::setMaterialSpecColor(QColor color){
     update();
 }
 void GLWidget::setShininess(int shine){
-    //models[selectedModelIndex]->setShininess(cbrt(shine));
     models[selectedModelIndex]->setShininess(shine*shine);
     update();
 }
