@@ -210,6 +210,30 @@ Mesh::Mesh(const int type)
             }
         }
         break;
+
+    case 3: // Plane
+        indexModel.name = "Plane";
+
+        // position
+        indexModel.positions.push_back(QVector3D(-1.0f, 0.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f, 0.0f,  1.0f)*size);
+        indexModel.positions.push_back(QVector3D( 1.0f, 0.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f, 0.0f, -1.0f)*size);
+
+        // Tex Coord
+        indexModel.texCoords.push_back(QVector2D(1.0f, 0.0f));
+        indexModel.texCoords.push_back(QVector2D(1.0f, 1.0f));
+        indexModel.texCoords.push_back(QVector2D(0.0f, 1.0f));
+        indexModel.texCoords.push_back(QVector2D(1.0f, 0.0f));
+
+        // Normal
+        indexModel.normals.push_back(QVector3D(0.0f, 1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, 1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, 1.0f, 0.0f));
+        indexModel.normals.push_back(QVector3D(0.0f, 1.0f, 0.0f));
+
+        indexModel.indices = { 0,  1,  2,  0,  2,  3 };
+        break;
     }
 
     init(indexModel);

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QStandardItem>
+#include "renderwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,8 +25,13 @@ private slots:
 
     void on_colorButton_2_clicked();
 
+    void on_actionRender_triggered();
+
+    void on_actionPlane_triggered();
+
 private:
     Ui::MainWindow *ui;
+    RenderWindow *renderwindow;
 };
 
 #endif // MAINWINDOW_H

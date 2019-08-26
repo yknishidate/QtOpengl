@@ -638,6 +638,7 @@
     </property>
     <addaction name="actionCube"/>
     <addaction name="actionSphere"/>
+    <addaction name="actionPlane"/>
    </widget>
    <widget class="QMenu" name="menuRender">
     <property name="title">
@@ -667,6 +668,7 @@
    </attribute>
    <addaction name="actionCube"/>
    <addaction name="actionSphere"/>
+   <addaction name="actionPlane"/>
    <addaction name="separator"/>
    <addaction name="actionRender"/>
   </widget>
@@ -711,6 +713,15 @@
    </property>
    <property name="text">
     <string>Render</string>
+   </property>
+  </action>
+  <action name="actionPlane">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/resource/Oplane.png</normaloff>:/resource/Oplane.png</iconset>
+   </property>
+   <property name="text">
+    <string>Plane</string>
    </property>
   </action>
  </widget>

@@ -97,11 +97,15 @@ void MainWindow::on_colorButton_2_clicked()
     }
 }
 
-void MainWindow::on_actionCube_triggered()
+// Open Render Window
+void MainWindow::on_actionRender_triggered()
 {
-    ui->openGLWidget->createPrimitive(1);
+    qDebug() << "---Render Triggered---";
+    renderwindow = new RenderWindow(this, ui->openGLWidget->getXRot()/16.0f, ui->openGLWidget->getYRot()/16.0f);
+    renderwindow->show();
 }
-void MainWindow::on_actionSphere_triggered()
-{
-    ui->openGLWidget->createPrimitive(2);
-}
+
+// Create Primitives
+void MainWindow::on_actionCube_triggered(){   ui->openGLWidget->createPrimitive(1); }
+void MainWindow::on_actionSphere_triggered(){ ui->openGLWidget->createPrimitive(2); }
+void MainWindow::on_actionPlane_triggered(){  ui->openGLWidget->createPrimitive(3); }

@@ -8,7 +8,7 @@ GLWidget::GLWidget(QWidget *parent)
     : QOpenGLWidget(parent),
       displayMode(GL_TRIANGLES),
       xRot(0), yRot(0), zRot(0),
-      camera(QVector3D(20,10,20), QVector3D(0,1,0)),
+      camera(QVector3D(0,0,20), QVector3D(0,1,0)),
       culling(false), testing(true)
 {
 }
@@ -114,7 +114,8 @@ void GLWidget::paintGL(){
         models[i]->draw(shader.program, displayMode);
     }
 
-    qDebug() << ++frame;
+    qDebug() << ++frame << ": (" << xRot/16.0f << "," << 360.0f - yRot/16.0f << ")";
+
 }
 
 
@@ -130,6 +131,7 @@ void GLWidget::resizeGL(int w, int h){
 // Window Size
 QSize GLWidget::minimumSizeHint() const{return QSize(600, 400);}
 QSize GLWidget::sizeHint() const{return QSize(600, 400);}
+
 
 // Mouse Event
 void GLWidget::mousePressEvent(QMouseEvent *event){

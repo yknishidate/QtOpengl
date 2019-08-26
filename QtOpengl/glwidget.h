@@ -22,6 +22,10 @@ public:
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
     GLenum displayMode;
+    QMatrix4x4 getViewMatrix(){return camera.matrix;}
+    Camera* getCamera(){return &camera;}
+    int getXRot(){return xRot;}
+    int getYRot(){return yRot;}
 
 protected:
     void initializeGL() override;

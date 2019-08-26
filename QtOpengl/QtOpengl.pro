@@ -27,6 +27,8 @@ SOURCES += \
         mesh.cpp \
         model.cpp \
         objloader.cpp \
+        renderwidget.cpp \
+        renderwindow.cpp \
         shader.cpp \
         treeview.cpp
 
@@ -41,6 +43,8 @@ HEADERS += \
         mesh.h \
         model.h \
         objloader.h \
+        renderwidget.h \
+        renderwindow.h \
         shader.h \
         stb_image.h \
         stb_image_write.h \
@@ -48,7 +52,8 @@ HEADERS += \
         vertex.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+        renderwindow.ui
 
 RC_ICONS = QtOpengl.ico
 
