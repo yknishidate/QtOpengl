@@ -10,10 +10,18 @@
 #include "vertex.h"
 #include "objloader.h"
 
+enum ModelType{
+    POLYGONMODEL = 0,
+    PLANE        = 1,
+    CUBE         = 2,
+    SPHERE       = 3
+};
 
 class Mesh : protected QOpenGLFunctions
 {
 public:
+
+
     Mesh();
     Mesh(const QString& fileName);
     Mesh(const int type);

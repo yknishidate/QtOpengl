@@ -4,7 +4,7 @@ Model::Model(const QString& fileName)
 {
     mesh = new Mesh(fileName);
     name = mesh->getName();
-    type = 0;
+    type = POLYGONMODEL;
 
     position = QVector3D(0.0f, 0.0f, 0.0f);
     scale    = QVector3D(1.0f, 1.0f, 1.0f);
@@ -20,9 +20,10 @@ Model::Model(const QString& fileName)
 }
 
 // Primitives
-Model::Model(const int type){
-    mesh = new Mesh(type);
+Model::Model(const int t){
+    mesh = new Mesh(t);
     name = mesh->getName();
+    type = t;
 
     position = QVector3D(0.0f, 0.0f, 0.0f);
     scale    = QVector3D(1.0f, 1.0f, 1.0f);

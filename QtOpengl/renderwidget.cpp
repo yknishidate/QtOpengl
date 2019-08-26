@@ -39,6 +39,7 @@ void RenderWidget::initializeGL(){
     qDebug() << "version     : " << QLatin1String(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
     qDebug() << "GLSL version: " << QLatin1String(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 
+
     // VAO
     m_vao.create();
     m_vao.bind();
@@ -154,7 +155,7 @@ void RenderWidget::initializeGL(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, tex_w, tex_h, 0, GL_RGBA, GL_FLOAT, &seedDataBuffer[0]);
-    glBindImageTexture(2, seed, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32UI);
+    glBindImageTexture(2, seed, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
 
     m_vao.release();
 }
@@ -164,9 +165,22 @@ void RenderWidget::initializeGL(){
 void RenderWidget::paintGL(){
     // compute
     m_computeProgram->bind();
-        m_renderProgram->setUniformValue(0, qDegreesToRadians(yRot));
-        m_renderProgram->setUniformValue(1, qDegreesToRadians(xRot));
-        m_renderProgram->setUniformValue(2, cameraDistance);
+
+    m_renderProgram->setUniformValue(0, qDegreesToRadians(yRot));
+    m_renderProgram->setUniformValue(1, qDegreesToRadians(xRot));
+    m_renderProgram->setUniformValue(2, cameraDistance);
+
+    // Send Model Data
+    // TODO:動作確認ができたら配列として送れるか検討する
+    for(int i =0; i < models.size(); i++){
+        if(models[i]->getType() == ModelType::SPHERE){
+            m_renderProgram->setUniformValue(3, models[i]->getRadius());
+            m_renderProgram->setUniformValue(4, models[i]->getPosition());
+        }else if(models[i]->getType() == ModelType::PLANE){
+            m_renderProgram->setUniformValue(5, models[i]->getPosition());
+        }
+    }
+
     glDispatchCompute(tex_w, tex_h ,1);
     glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
@@ -183,11 +197,11 @@ void RenderWidget::paintGL(){
 }
 
 void RenderWidget::resizeGL(int w, int h){
-    //glViewport(0, 0, w, h);
-    //glMatrixMode(GL_PROJECTION);
-    //glLoadIdentity();
-    //glOrtho(0, 1, 0, 1, 0, 1);
-    //glMatrixMode(GL_MODELVIEW);
+//    glViewport(0, 0, w, h);
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    glOrtho(0, 1, 0, 1, 0, 1);
+//    glMatrixMode(GL_MODELVIEW);
 }
 
 // Slots

@@ -7,10 +7,13 @@
 class Model
 {
 public:
+
     Model(const QString& fileName);
     Model(const int type);
+
     std::string getName(){return name;}
     int getType(){return type;}
+    float getRadius(){return radius;}
 
     // Coordinates
     void  setPositionX(double x){position.setX(x);}
@@ -43,6 +46,7 @@ public:
 private:
     std::string name;
     int type;
+    float radius = 5.0f;
     Mesh *mesh;
 
     // Coordinates

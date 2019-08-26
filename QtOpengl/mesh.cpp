@@ -26,7 +26,7 @@ Mesh::Mesh(const int type)
     int slices = 64;
 
     switch(type){
-    case 1: // Cube
+    case CUBE:
         indexModel.name = "Cube";
 
         // position
@@ -172,7 +172,7 @@ Mesh::Mesh(const int type)
 
         break;
 
-    case 2:
+    case SPHERE:
         indexModel.name = "Sphere";
         // Position, TexCoord, Normal
         for (int j = 0; j <= stacks; ++j)
@@ -211,14 +211,14 @@ Mesh::Mesh(const int type)
         }
         break;
 
-    case 3: // Plane
+    case PLANE: // Plane
         indexModel.name = "Plane";
 
         // position
-        indexModel.positions.push_back(QVector3D(-1.0f, 0.0f,  1.0f)*size);
-        indexModel.positions.push_back(QVector3D( 1.0f, 0.0f,  1.0f)*size);
-        indexModel.positions.push_back(QVector3D( 1.0f, 0.0f, -1.0f)*size);
-        indexModel.positions.push_back(QVector3D(-1.0f, 0.0f, -1.0f)*size);
+        indexModel.positions.push_back(QVector3D(-1.0f, 0.0f,  1.0f)*size*5);
+        indexModel.positions.push_back(QVector3D( 1.0f, 0.0f,  1.0f)*size*5);
+        indexModel.positions.push_back(QVector3D( 1.0f, 0.0f, -1.0f)*size*5);
+        indexModel.positions.push_back(QVector3D(-1.0f, 0.0f, -1.0f)*size*5);
 
         // Tex Coord
         indexModel.texCoords.push_back(QVector2D(1.0f, 0.0f));

@@ -106,12 +106,11 @@ void MainWindow::on_actionRender_triggered()
                                     ui->openGLWidget->getYRot()/16.0f,
                                     ui->openGLWidget->getCamera()->getLength(),
                                     ui->openGLWidget->getModels()
-//                                    ui->openGLWidget->getModelsPtr()
                                     );
     renderwindow->show();
 }
 
 // Create Primitives
-void MainWindow::on_actionCube_triggered(){   ui->openGLWidget->createPrimitive(1); }
-void MainWindow::on_actionSphere_triggered(){ ui->openGLWidget->createPrimitive(2); }
-void MainWindow::on_actionPlane_triggered(){  ui->openGLWidget->createPrimitive(3); }
+void MainWindow::on_actionCube_triggered(){   ui->openGLWidget->createPrimitive(ModelType::CUBE); }
+void MainWindow::on_actionSphere_triggered(){ ui->openGLWidget->createPrimitive(ModelType::SPHERE); }
+void MainWindow::on_actionPlane_triggered(){  ui->openGLWidget->createPrimitive(ModelType::PLANE); }

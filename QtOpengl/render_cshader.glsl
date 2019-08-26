@@ -25,9 +25,17 @@ layout(std430, binding = 0) buffer AccumN {
   uint _AccumN;
 };
 
+// Camera
 layout(location = 0) uniform float _Theta;
 layout(location = 1) uniform float _Phi;
 layout(location = 2) uniform float _Distance;
+
+// Model
+// Sphere
+layout(location = 3) uniform float _Radius;
+layout(location = 4) uniform vec3 _Position;
+// Plane
+layout(location = 5) uniform vec3 _PlanePosition;
 
 
 // Structs
@@ -233,18 +241,19 @@ void main() {
     h.pos = vec3(0);
 
     // Sphere
-    sphere floor;
-    floor.center = vec3(0, -10000, 0);
-    floor.radius = 9998;
+    sphere plane;
+    plane.center = vec3(0, -10000, 0) + _PlanePosition;
+//    plane.center = vec3(0, -10000, 0);
+    plane.radius = 10000;
     sphere s1;
-    s1.center = vec3(0, 0, 0);
-    s1.radius = 2;
-    sphere s2;
-    s2.center = vec3(-3, 0, -2);
-    s2.radius = 2;
-    sphere s3;
-    s3.center = vec3(3, 0, -2);
-    s3.radius = 2;
+    s1.center = _Position;
+    s1.radius = _Radius;
+//    sphere s2;
+//    s2.center = vec3(-3, 0, -2);
+//    s2.radius = 2;
+//    sphere s3;
+//    s3.center = vec3(3, 0, -2);
+//    s3.radius = 2;
 
 
     // Sample Loop
@@ -272,10 +281,10 @@ void main() {
             h.nor = vec3(0);
             h.mat = 0;
 
-            if (hit_sphere(floor, _rays, h)) h.mat = 1;
+            if (hit_sphere(plane, _rays, h)) h.mat = 1;
             if (hit_sphere(s1, _rays, h)) h.mat = 1;
-            if (hit_sphere(s2, _rays, h)) h.mat = 3;
-            if (hit_sphere(s3, _rays, h)) h.mat = 2;
+//            if (hit_sphere(s2, _rays, h)) h.mat = 3;
+//            if (hit_sphere(s3, _rays, h)) h.mat = 2;
 
             switch(h.mat) {
                 case 0: mat_background(_rays, h); break;
