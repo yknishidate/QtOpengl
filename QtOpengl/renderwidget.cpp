@@ -27,6 +27,7 @@ RenderWidget::~RenderWidget()
 }
 
 
+
 void RenderWidget::initializeGL(){
     qDebug()  << "---Initialize GL---";
     initializeOpenGLFunctions();
@@ -130,8 +131,8 @@ void RenderWidget::initializeGL(){
     glEnableVertexAttribArray(posPtr);
 
     // Accum (0)
-    unsigned accumN = 1;
-    GLuint accum;
+    accumN = 1;
+//    GLuint accum;
     glGenBuffers(1, &accum);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, accum);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(unsigned), &accumN, GL_DYNAMIC_DRAW);
@@ -169,6 +170,7 @@ void RenderWidget::paintGL(){
     m_renderProgram->setUniformValue(0, qDegreesToRadians(yRot));
     m_renderProgram->setUniformValue(1, qDegreesToRadians(xRot));
     m_renderProgram->setUniformValue(2, cameraDistance);
+    m_renderProgram->setUniformValue(100, RenderMode);
 
     // Send Model Data
     // TODO:動作確認ができたら配列として送れるか検討する
@@ -191,21 +193,36 @@ void RenderWidget::paintGL(){
 
     m_vao.release();
 
-    if(frame > 100) rendering = false;
+    if(frame > PassLimit) rendering = false;
     if(rendering) update();
     qDebug() << "Rendering:" <<  ++frame;
 }
 
+void RenderWidget::changeRenderMode(const int mode)
+{
+    accumN = 1;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, accum);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(unsigned), &accumN, GL_DYNAMIC_COPY);
+
+    frame = 0;
+    RenderMode = mode;
+    rendering = true;
+    update();
+}
+
+
 void RenderWidget::resizeGL(int w, int h){
-//    glViewport(0, 0, w, h);
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    glOrtho(0, 1, 0, 1, 0, 1);
-//    glMatrixMode(GL_MODELVIEW);
+
 }
 
 // Slots
 void RenderWidget::stopRendering()
 {
     rendering = false;
+}
+void RenderWidget::startRendering()
+{
+    rendering = true;
+    update();
+    qDebug() << "Rendering:" <<  ++frame;
 }

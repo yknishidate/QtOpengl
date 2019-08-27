@@ -25,7 +25,6 @@ class RenderWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
     QOpenGLShader *m_fragmentShader;
     QOpenGLShader *m_vertexShader;
 
-
 public:
     RenderWidget(QWidget *parent = nullptr);
     ~RenderWidget();
@@ -33,6 +32,7 @@ public:
     void setYRot(float y){yRot = y;}
     void setCameraDistance(float l){cameraDistance = l;}
     void setModels(std::vector<Model *> m){models = m;}
+    void changeRenderMode(const int mode);
 
 protected:
     void initializeGL();
@@ -40,6 +40,9 @@ protected:
     void resizeGL(int w, int h);
 
 private:
+    unsigned accumN = 1;
+    GLuint accum;
+
     int frame = 0;
     const int tex_w = 960, tex_h = 540;
     bool rendering = true;
@@ -47,10 +50,14 @@ private:
     float yRot;
     float cameraDistance;
 
+    int RenderMode = 0;
+    int PassLimit = 1000;
+
     std::vector<Model *> models;
 
 public slots:
     void stopRendering();
+    void startRendering();
 
 };
 

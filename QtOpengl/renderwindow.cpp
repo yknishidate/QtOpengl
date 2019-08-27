@@ -8,16 +8,20 @@ RenderWindow::RenderWindow(QWidget *parent, float x, float y, float l, std::vect
     ui->setupUi(this);
 
     connect(ui->stopRenderingButton, SIGNAL(clicked()), ui->renderWidget, SLOT(stopRendering()) );
-    qDebug()  << "---Render Window Contractor---";
-    qDebug() << "View Rotation: (" << x << "," << y << ")";
+    connect(ui->startRenderingButton, SIGNAL(clicked()), ui->renderWidget, SLOT(startRendering()) );
     ui->renderWidget->setXRot(x);
     ui->renderWidget->setYRot(y);
     ui->renderWidget->setCameraDistance(l);
-//    ui->renderWidget->setModelsPtr(m);
     ui->renderWidget->setModels(m);
 }
 
 RenderWindow::~RenderWindow()
 {
     delete ui;
+}
+
+void RenderWindow::on_renderPassBox_currentIndexChanged(int index)
+{
+    ui->renderWidget->changeRenderMode(index);
+    qDebug() << "Render Mode Changed:" << index;
 }

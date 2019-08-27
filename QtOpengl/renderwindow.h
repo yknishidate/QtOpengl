@@ -19,6 +19,10 @@ public:
     explicit RenderWindow(QWidget *parent = nullptr, float t = 0.0f, float p = 0.0f, float l = 10.0f, std::vector<Model *> m = {} );
     ~RenderWindow();
 
+private slots:
+
+    void on_renderPassBox_currentIndexChanged(int index);
+
 private:
     Ui::RenderWindow *ui;
 };

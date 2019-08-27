@@ -4,6 +4,7 @@
 #define DEPTH (10)
 #define SPP 8
 
+
 layout(local_size_x = 1, local_size_y = 1) in;
 
 layout(rgba32f, binding = 0) uniform image2D img_input;
@@ -37,6 +38,7 @@ layout(location = 4) uniform vec3 _Position;
 // Plane
 layout(location = 5) uniform vec3 _PlanePosition;
 
+layout(location = 100) uniform int RenderMode;
 
 // Structs
 struct ray {
@@ -135,12 +137,28 @@ vec4 GammaCorrect(in vec4 Color, in float Gamma)
 //--------------------------------------------------
 //                  Material
 //--------------------------------------------------
+// Background
 void mat_background(inout ray r, in hit h){
     r.depth = DEPTH; //backgroundに当たった時点でdepth最大
     r.emission = texture(background, vec2((PI - atan(-r.direction.x, -r.direction.z)) / (2 * PI), acos(r.direction.y) / PI)).xyz;
 }
+// Background None
+void mat_backNone(inout ray r, in hit h){
+    r.depth = DEPTH; //backgroundに当たった時点でdepth最大
+    r.emission = vec3(0);
+}
+// Background for AmbientOcclusion
+void mat_backao(inout ray r, in hit h) {
+    if(r.depth == 0){
+        r.emission = vec3(0);  //直接見ると0
+    }else if(r.depth == 1){
+        r.emission = vec3(10); //物体からの反射の時はライト
+    }
+    r.depth = DEPTH;
+}
 
 // Light
+// TODO: 色を引数に受け取る
 void mat_light(inout ray r, in hit h) {
   r.depth = DEPTH;
   r.scatter = r.scatter * vec3(1);
@@ -148,7 +166,8 @@ void mat_light(inout ray r, in hit h) {
 }
 
 // Diffuse
-void mat_diffuse(inout ray r, in hit h) {
+// TODO: 色を引数に受け取る
+void mat_diffuse(inout ray r, in hit h, vec3 color) {
   r.depth = r.depth + 1; //depthインクリメント
 
   r.direction.y = sqrt(rand());
@@ -173,7 +192,8 @@ void mat_diffuse(inout ray r, in hit h) {
   BinVec = normalize(cross(TanVec, h.nor));
   r.direction = normalize(BinVec * d * cos(v) + h.nor * r.direction.y + TanVec * d * sin(v));
   r.origin = h.pos + h.nor * 0.001f;
-  r.scatter = r.scatter * vec3(1);
+//  r.scatter = r.scatter * vec3(1);
+  r.scatter = r.scatter * color;
   r.emission = vec3(0);
 }
 
@@ -216,10 +236,61 @@ void mat_glass(inout ray r, in hit h)
   r.emission = vec3(0);
 }
 
+
+// Ambient Occlusion
+// TODO:距離を変更可能にする
+void mat_ao(inout ray r, in hit h)
+{
+  r.depth = r.depth + 1;
+  if(r.depth == 1){ //最初のヒット
+      r.direction.y = sqrt(rand());
+      float d = sqrt(1 - pow2(r.direction.y));
+      float v = rand() * 2 * PI;
+      vec3 UppVec;
+      vec3 BinVec;
+      vec3 TanVec;
+      vec3 EX = vec3(1, 0, 0); float DX = abs(dot(h.nor, EX));
+      vec3 EY = vec3(0, 1, 0); float DY = abs(dot(h.nor, EY));
+      vec3 EZ = vec3(0, 0, 1); float DZ = abs(dot(h.nor, EZ));
+      if (DY < DX) {
+            if (DZ < DY) UppVec = EZ;
+            else UppVec = EY;
+      }
+      else // DX <= DY
+      {
+            if (DZ < DX) UppVec = EZ;
+            else UppVec = EX;
+      }
+      TanVec = normalize(cross(UppVec, h.nor));
+      BinVec = normalize(cross(TanVec, h.nor));
+      r.direction = normalize(BinVec * d * cos(v) + h.nor * r.direction.y + TanVec * d * sin(v));
+      r.origin = h.pos + h.nor * 0.001f;
+      r.emission = vec3(0);
+  }
+  if(r.depth == 2){
+      r.depth = DEPTH;
+      if(h.t < 1){
+          r.emission = vec3(0);
+      }else{
+          r.emission = vec3(10);
+      }
+  }
+}
+
+//Depth
+// TODO: 距離を変更可能にする
+float maxDist = 4.0;
+void mat_depth(inout ray r, in hit h) {
+  r.depth = DEPTH; //depthを最大にして終了させる
+  r.scatter = r.scatter * vec3(1);
+  r.emission = vec3(10.0 - 10.0/maxDist * h.t);
+}
+
+// Normal
 void mat_nor(inout ray r, in hit h) {
   r.depth = DEPTH;
-  r.scatter = r.scatter * vec3(h.nor*sin(_AccumN/100));
-  r.emission = vec3(3);
+//  r.scatter = r.scatter * vec3(h.nor);
+  r.emission = vec3(h.nor)/2.0 + vec3(0.5);
 }
 
 //--------------------------------------------------
@@ -227,7 +298,11 @@ void mat_nor(inout ray r, in hit h) {
 //--------------------------------------------------
 void main() {
     vec4 pixel = vec4(0, 0, 0, 0);
-    vec4 A = imageLoad(img_input, _WorkID.xy);  //今まで計算した画像
+
+    vec4 A = imageLoad(img_input, _WorkID.xy);
+    if(_AccumN < 10){
+        A = vec4(0, 0, 0, 0);
+    }
 
     // Seed
     _xors ^= imageLoad(seed, _WorkID.xy);
@@ -241,20 +316,43 @@ void main() {
     h.pos = vec3(0);
 
     // Sphere
-    sphere plane;
-    plane.center = vec3(0, -10000, 0) + _PlanePosition;
+//    sphere plane;
+//    plane.center = vec3(0, -10000, 0) + _PlanePosition;
 //    plane.center = vec3(0, -10000, 0);
-    plane.radius = 10000;
-    sphere s1;
-    s1.center = _Position;
-    s1.radius = _Radius;
-//    sphere s2;
-//    s2.center = vec3(-3, 0, -2);
-//    s2.radius = 2;
-//    sphere s3;
-//    s3.center = vec3(3, 0, -2);
-//    s3.radius = 2;
+//    plane.radius = 10000;
 
+    //--------------------Test--------------------------
+    // Cornel Box
+    sphere floor;
+    floor.center = vec3(0, -10000, 0);
+    floor.radius = 9998;
+    sphere wall_left;
+    wall_left.center = vec3(-10000, 0, 0);
+    wall_left.radius = 9994;
+    sphere wall_right;
+    wall_right.center = vec3(10000, 0, 0);
+    wall_right.radius = 9994;
+    sphere wall_flont;
+    wall_flont.center = vec3(0, 0, -10000);
+    wall_flont.radius = 9992;
+    sphere wall_top;
+    wall_top.center = vec3(0, 10000, 0);
+    wall_top.radius = 9992;
+    //--------------------Test--------------------------
+
+    sphere s1;
+    s1.center = vec3(0, 0, 0);
+    s1.radius = 2;
+//    s1.center = _Position;
+//    s1.radius = _Radius;
+
+    sphere s2;
+    s2.center = vec3(-3, 0, -3);
+    s2.radius = 2;
+
+    sphere s3;
+    s3.center = vec3(3, 0, -3);
+    s3.radius = 2;
 
     // Sample Loop
     for (int n = 0; n < SPP; n++)
@@ -279,19 +377,102 @@ void main() {
             h.t = 10000;
             h.pos = vec3(0);
             h.nor = vec3(0);
-            h.mat = 0;
 
-            if (hit_sphere(plane, _rays, h)) h.mat = 1;
-            if (hit_sphere(s1, _rays, h)) h.mat = 1;
-//            if (hit_sphere(s2, _rays, h)) h.mat = 3;
-//            if (hit_sphere(s3, _rays, h)) h.mat = 2;
+            //--------------------Test--------------------------
+
+
+            bool CornelBox = true;
+            vec3 diffColor;
+
+            switch(RenderMode){
+            case 0: // RGBA
+                h.mat = 0; // Sky
+//                if (hit_sphere(plane, _rays, h)) h.mat = 1;
+                if(CornelBox){
+                    if (hit_sphere(wall_left, _rays, h)){
+                        h.mat = 1;
+                        diffColor = vec3(1, 0.3, 0.3);
+                    }
+                    if (hit_sphere(wall_right, _rays, h)){
+                        h.mat = 1;
+                        diffColor = vec3(0.3, 0.3, 1);
+                    }
+                    if (hit_sphere(wall_flont, _rays, h)){
+                        h.mat = 1;
+                        diffColor = vec3(1, 1, 1);
+                    }
+                    if (hit_sphere(wall_top, _rays, h)){
+                        h.mat = 1;
+                        diffColor = vec3(1, 1, 1);
+                    }
+                }
+                if (hit_sphere(floor, _rays, h)){
+                    h.mat = 1;
+                    diffColor = vec3(1, 1, 1);
+                }
+                if (hit_sphere(s1, _rays, h)) h.mat = 3;
+                if (hit_sphere(s2, _rays, h)) h.mat = 4;
+                if (hit_sphere(s3, _rays, h)) h.mat = 2;
+                break;
+
+            case 1: // AO
+                h.mat = 10; // Sky
+//                if (hit_sphere(plane, _rays, h)) h.mat = 5;
+                if(CornelBox){
+                    if (hit_sphere(wall_left, _rays, h)) h.mat = 5;
+                    if (hit_sphere(wall_right, _rays, h)) h.mat = 5;
+                    if (hit_sphere(wall_flont, _rays, h)) h.mat = 5;
+                    if (hit_sphere(wall_top, _rays, h)) h.mat = 5;
+                }
+                if (hit_sphere(floor, _rays, h)) h.mat = 5;
+                if (hit_sphere(s1, _rays, h)) h.mat = 5;
+                if (hit_sphere(s2, _rays, h)) h.mat = 5;
+                if (hit_sphere(s3, _rays, h)) h.mat = 5;
+                break;
+
+            case 2: // Depth
+                h.mat = 11;
+//                if (hit_sphere(plane, _rays, h)) h.mat = 5;
+                if(CornelBox){
+                    if (hit_sphere(wall_left, _rays, h)) h.mat = 6;
+                    if (hit_sphere(wall_right, _rays, h)) h.mat = 6;
+                    if (hit_sphere(wall_flont, _rays, h)) h.mat = 6;
+                    if (hit_sphere(wall_top, _rays, h)) h.mat = 6;
+                }
+                if (hit_sphere(floor, _rays, h)) h.mat = 6;
+                if (hit_sphere(s1, _rays, h)) h.mat = 6;
+                if (hit_sphere(s2, _rays, h)) h.mat = 6;
+                if (hit_sphere(s3, _rays, h)) h.mat = 6;
+                break;
+
+            case 3: // Normal
+                h.mat = 11;
+//                if (hit_sphere(plane, _rays, h)) h.mat = 5;
+                if(CornelBox){
+                    if (hit_sphere(wall_left, _rays, h)) h.mat = 7;
+                    if (hit_sphere(wall_right, _rays, h)) h.mat = 7;
+                    if (hit_sphere(wall_flont, _rays, h)) h.mat = 7;
+                    if (hit_sphere(wall_top, _rays, h)) h.mat = 7;
+                }
+                if (hit_sphere(floor, _rays, h)) h.mat = 7;
+                if (hit_sphere(s1, _rays, h)) h.mat = 7;
+                if (hit_sphere(s2, _rays, h)) h.mat = 7;
+                if (hit_sphere(s3, _rays, h)) h.mat = 7;
+                break;
+            }
+            //--------------------Test--------------------------
 
             switch(h.mat) {
                 case 0: mat_background(_rays, h); break;
-                case 1: mat_diffuse(_rays, h); break;
+                case 1: mat_diffuse(_rays, h, diffColor); break;
                 case 2: mat_glass(_rays, h); break;
                 case 3: mat_mirror(_rays, h); break;
                 case 4: mat_light(_rays, h); break;
+                case 5: mat_ao(_rays, h); break;
+                case 6: mat_depth(_rays, h); break;
+                case 7: mat_nor(_rays, h); break;
+                case 10: mat_backao(_rays, h); break;
+                case 11: mat_backNone(_rays, h); break;
             }
         }
 
