@@ -26,13 +26,14 @@ layout(std430, binding = 0) buffer AccumN {
   uint _AccumN;
 };
 
-layout(std430, binding = 1) buffer Radius
-{
+layout(std430, binding = 1) buffer SphereRadius {
     float rad[];
 };
-layout(std430, binding = 2) buffer Position
-{
-    vec3 pos[];
+layout(std430, binding = 2) buffer SpherePosition {
+    vec4 pos[];
+};
+layout(std430, binding = 3) buffer PlanePosition {
+    vec4 planePos[];
 };
 
 
@@ -41,14 +42,7 @@ layout(location = 0) uniform float _Theta;
 layout(location = 1) uniform float _Phi;
 layout(location = 2) uniform float _Distance;
 
-// Model
-// Sphere
-layout(location = 3) uniform float _Radius;
-layout(location = 4) uniform vec3 _Position;
-// Plane
-layout(location = 5) uniform vec3 _PlanePosition;
-
-layout(location = 100) uniform int RenderMode;
+layout(location = 3) uniform int RenderMode;
 
 // Structs
 struct ray {
@@ -357,26 +351,17 @@ void main() {
     //--------------------Test--------------------------
 
     // Import from Editor
-//    sphere plane;
-//    plane.center = vec3(0, -10000, 0) + _PlanePosition;
-//    plane.radius = 10000;
+    sphere plane;
+    int planeExist = planePos.length();
+    if(planeExist != 0){
+        plane.center = vec3(0, -10000, 0) + planePos[0].xyz;
+        plane.radius = 10000;
+    }
 
-//    sphere s10;
-//    s10.center = _Position;
-//    s10.radius = _Radius;
-
-
-    sphere s[10];
-//    vec3 pos[5] = {vec3(-10, 0, 0),
-//                   vec3( -5, 0, 0),
-//                   vec3(  0, 0, 0),
-//                   vec3(  5, 0, 0),
-//                   vec3( 10, 0, 0),};
-//    float rad[5] = {1, 2, 3, 4, 5};
-
+    sphere s[16];
     int modelN = rad.length();
     for(int i = 0; i < modelN; i++){
-        s[i].center = pos[i];
+        s[i].center = pos[i].xyz;
         s[i].radius = rad[i];
     }
 
@@ -408,7 +393,7 @@ void main() {
             switch(RenderMode){
             case 0: // RGBA
                 h.mat = 0; // Sky
-                if(CornelBox){
+                if(CornelBox){ // Cornel Box
                     if (hit_sphere(wall_left, _rays, h)){
                         h.mat = 1;
                         diffColor = vec3(1, 0.3, 0.3);
@@ -420,16 +405,21 @@ void main() {
                     if (hit_sphere(wall_flont, _rays, h)) h.mat = 1;
                     if (hit_sphere(wall_top, _rays, h))   h.mat = 1;
                 }
-                if(DefaultScene){
+                if(DefaultScene){ // Default
                     if (hit_sphere(floor, _rays, h)) h.mat = 1;
                     if (hit_sphere(s1, _rays, h)) h.mat = 3;
                     if (hit_sphere(s2, _rays, h)) h.mat = 4;
                     if (hit_sphere(s3, _rays, h)) h.mat = 2;
                 }
+                // Scene Data
+                if(planeExist != 0){
+                    if (hit_sphere(plane, _rays, h)){
+                        h.mat = 1;
+                    }
+                }
                 for(int i = 0; i < modelN; i++){
                     if (hit_sphere(s[i], _rays, h)){
                         h.mat = 1;
-                        diffColor = vec3(0.2*i, 0.5, 1-0.2*i);
                     }
                 }
                 break;
@@ -447,6 +437,12 @@ void main() {
                     if (hit_sphere(s1, _rays, h)) h.mat = 5;
                     if (hit_sphere(s2, _rays, h)) h.mat = 5;
                     if (hit_sphere(s3, _rays, h)) h.mat = 5;
+                }
+                // Scene Data
+                if(planeExist != 0){
+                    if (hit_sphere(plane, _rays, h)){
+                        h.mat = 5;
+                    }
                 }
                 for(int i = 0; i < modelN; i++){
                     if (hit_sphere(s[i], _rays, h)){
@@ -469,6 +465,12 @@ void main() {
                     if (hit_sphere(s2, _rays, h)) h.mat = 6;
                     if (hit_sphere(s3, _rays, h)) h.mat = 6;
                 }
+                // Scene Data
+                if(planeExist != 0){
+                    if (hit_sphere(plane, _rays, h)){
+                        h.mat = 6;
+                    }
+                }
                 for(int i = 0; i < modelN; i++){
                     if (hit_sphere(s[i], _rays, h)){
                         h.mat = 6;
@@ -489,6 +491,12 @@ void main() {
                     if (hit_sphere(s1, _rays, h)) h.mat = 7;
                     if (hit_sphere(s2, _rays, h)) h.mat = 7;
                     if (hit_sphere(s3, _rays, h)) h.mat = 7;
+                }
+                // Scene Data
+                if(planeExist != 0){
+                    if (hit_sphere(plane, _rays, h)){
+                        h.mat = 7;
+                    }
                 }
                 for(int i = 0; i < modelN; i++){
                     if (hit_sphere(s[i], _rays, h)){

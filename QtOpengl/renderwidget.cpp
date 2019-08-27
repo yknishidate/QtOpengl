@@ -92,6 +92,7 @@ void RenderWidget::initializeGL(){
     glBindImageTexture(1, m_tex_output->textureId(), 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 
 
+
     // Shader
     m_computeShader = new QOpenGLShader(QOpenGLShader::Compute);
     m_computeShader->compileSourceFile(":/render_cshader.glsl");
@@ -138,6 +139,8 @@ void RenderWidget::initializeGL(){
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, accum);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
+
+
     // Seed (2)
     std::vector<QVector4D> seedDataBuffer;
     for (int i = 0; i < tex_w; i++) {
@@ -158,7 +161,18 @@ void RenderWidget::initializeGL(){
     glBindImageTexture(2, seed, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
 
     //--------------------Test--------------------------
-    float radData[] = {1, 1.2, 1.4, 1.6, 1.8};
+    // Load Models
+//    for(int i =0; i < models.size(); i++){
+//        if(models[i]->getType() == ModelType::SPHERE){
+//            m_renderProgram->setUniformValue(3, models[i]->getRadius());
+//            m_renderProgram->setUniformValue(4, models[i]->getPosition());
+//        }else if(models[i]->getType() == ModelType::PLANE){
+//            m_renderProgram->setUniformValue(5, models[i]->getPosition());
+//        }
+//    }
+
+
+    float radData[] = {2, 2, 2};
     GLuint rad;
     glGenBuffers(1, &rad);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, rad);
@@ -167,17 +181,25 @@ void RenderWidget::initializeGL(){
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
 
 
-    QVector3D posData[]  = {QVector3D(-10, 4, 0),
-                            QVector3D( -5, 2, 0),
-                            QVector3D(  0, 0, 0),
-                            QVector3D(  5, 2, 0),
-                            QVector3D( 10, 4, 0),};
+    QVector4D posData[]  = {QVector4D( -5, 0, 0, 1),
+                            QVector4D(  0, 0, 0, 1),
+                            QVector4D(  5, 0, 0, 1)};
     GLuint pos;
     glGenBuffers(1, &pos);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, pos);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(posData), &posData, GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, pos); //binding = 2
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
+
+    QVector4D planePosData[] = {QVector4D( 0, -2, 0, 1)};
+    GLuint planePos;
+    glGenBuffers(1, &planePos);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, planePos);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(planePosData), &planePosData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, planePos); //binding = 2
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
+
+
     //--------------------Test--------------------------
 
     m_vao.release();
@@ -189,20 +211,11 @@ void RenderWidget::paintGL(){
     // compute
     m_computeProgram->bind();
 
-    m_renderProgram->setUniformValue(0, qDegreesToRadians(yRot));
-    m_renderProgram->setUniformValue(1, qDegreesToRadians(xRot));
-    m_renderProgram->setUniformValue(2, cameraDistance);
-    m_renderProgram->setUniformValue(100, RenderMode);
-
-    // Send Model Data
-    // TODO:動作確認ができたら配列として送れるか検討する
-    for(int i =0; i < models.size(); i++){
-        if(models[i]->getType() == ModelType::SPHERE){
-            m_renderProgram->setUniformValue(3, models[i]->getRadius());
-            m_renderProgram->setUniformValue(4, models[i]->getPosition());
-        }else if(models[i]->getType() == ModelType::PLANE){
-            m_renderProgram->setUniformValue(5, models[i]->getPosition());
-        }
+    if(frame == 0){
+        m_renderProgram->setUniformValue(0, qDegreesToRadians(yRot));
+        m_renderProgram->setUniformValue(1, qDegreesToRadians(xRot));
+        m_renderProgram->setUniformValue(2, cameraDistance);
+        m_renderProgram->setUniformValue(3, RenderMode);
     }
 
     glDispatchCompute(tex_w, tex_h ,1);
