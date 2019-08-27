@@ -164,21 +164,29 @@ void RenderWidget::initializeGL(){
     //--------------------------------------------------
     //                 Model Data
     //--------------------------------------------------
+
+    // Model Data
+    std::vector<float> radData;
+    std::vector<QVector4D> posData;
+    std::vector<QVector4D> planePosData;
+
     // Load Models
-//    for(int i =0; i < models.size(); i++){
-//        if(models[i]->getType() == ModelType::SPHERE){
+    for(int i =0; i < models.size(); i++){
+        if(models[i]->getType() == ModelType::SPHERE){
+            radData.push_back(models[i]->getRadius());
+            posData.push_back(QVector4D(models[i]->getPosition(), 1));
 //            m_renderProgram->setUniformValue(3, models[i]->getRadius());
 //            m_renderProgram->setUniformValue(4, models[i]->getPosition());
-//        }else if(models[i]->getType() == ModelType::PLANE){
+        }else if(models[i]->getType() == ModelType::PLANE){
+            planePosData.push_back(QVector4D(models[i]->getPosition(), 1));
 //            m_renderProgram->setUniformValue(5, models[i]->getPosition());
-//        }
-//    }
+        }
+    }
 
     // Sphere Radius
-    std::vector<float> radData;
-    radData.push_back(2);
-    radData.push_back(2);
-    radData.push_back(2);
+//    radData.push_back(2);
+//    radData.push_back(2);
+//    radData.push_back(2);
     GLuint rad;
     glGenBuffers(1, &rad);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, rad);
@@ -187,10 +195,9 @@ void RenderWidget::initializeGL(){
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
 
     // Sphere Position
-    std::vector<QVector4D> posData;
-    posData.push_back(QVector4D(-5, 0, 0, 1));
-    posData.push_back(QVector4D( 0, 0, 0, 1));
-    posData.push_back(QVector4D( 5, 0, 0, 1));
+//    posData.push_back(QVector4D(-5, 0, 0, 1));
+//    posData.push_back(QVector4D( 0, 0, 0, 1));
+//    posData.push_back(QVector4D( 5, 0, 0, 1));
     GLuint pos;
     glGenBuffers(1, &pos);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, pos);
@@ -199,15 +206,13 @@ void RenderWidget::initializeGL(){
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
 
     // Plane Position
-    std::vector<QVector4D> planePosData;
-    planePosData.push_back(QVector4D( 0, -2, 0, 1));
+//    planePosData.push_back(QVector4D( 0, -2, 0, 1));
     GLuint planePos;
     glGenBuffers(1, &planePos);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, planePos);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(QVector4D)*planePosData.size(), &planePosData[0], GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, planePos); //binding = 3
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
-
 
     m_vao.release();
 }
