@@ -26,6 +26,16 @@ layout(std430, binding = 0) buffer AccumN {
   uint _AccumN;
 };
 
+layout(std430, binding = 1) buffer Radius
+{
+    float rad[];
+};
+layout(std430, binding = 2) buffer Position
+{
+    vec3 pos[];
+};
+
+
 // Camera
 layout(location = 0) uniform float _Theta;
 layout(location = 1) uniform float _Phi;
@@ -315,14 +325,8 @@ void main() {
     h.t = 10000;
     h.pos = vec3(0);
 
-    // Sphere
-//    sphere plane;
-//    plane.center = vec3(0, -10000, 0) + _PlanePosition;
-//    plane.center = vec3(0, -10000, 0);
-//    plane.radius = 10000;
-
-    //--------------------Test--------------------------
     // Cornel Box
+    bool CornelBox = false;
     sphere floor;
     floor.center = vec3(0, -10000, 0);
     floor.radius = 9998;
@@ -338,21 +342,45 @@ void main() {
     sphere wall_top;
     wall_top.center = vec3(0, 10000, 0);
     wall_top.radius = 9992;
-    //--------------------Test--------------------------
 
+    // Default Scene
+    bool DefaultScene = false;
     sphere s1;
     s1.center = vec3(0, 0, 0);
     s1.radius = 2;
-//    s1.center = _Position;
-//    s1.radius = _Radius;
-
     sphere s2;
     s2.center = vec3(-3, 0, -3);
     s2.radius = 2;
-
     sphere s3;
     s3.center = vec3(3, 0, -3);
     s3.radius = 2;
+    //--------------------Test--------------------------
+
+    // Import from Editor
+//    sphere plane;
+//    plane.center = vec3(0, -10000, 0) + _PlanePosition;
+//    plane.radius = 10000;
+
+//    sphere s10;
+//    s10.center = _Position;
+//    s10.radius = _Radius;
+
+
+    sphere s[10];
+//    vec3 pos[5] = {vec3(-10, 0, 0),
+//                   vec3( -5, 0, 0),
+//                   vec3(  0, 0, 0),
+//                   vec3(  5, 0, 0),
+//                   vec3( 10, 0, 0),};
+//    float rad[5] = {1, 2, 3, 4, 5};
+
+    int modelN = rad.length();
+    for(int i = 0; i < modelN; i++){
+        s[i].center = pos[i];
+        s[i].radius = rad[i];
+    }
+
+    //--------------------Test--------------------------
 
     // Sample Loop
     for (int n = 0; n < SPP; n++)
@@ -366,8 +394,6 @@ void main() {
         mat3 M2 = mat3(1, 0, 0, 0, cos(_Phi), -sin(_Phi), 0, sin(_Phi), cos(_Phi));
         _rays.origin = M1 * M2 * eye;
         _rays.direction = normalize( M1 * M2 * (screen_position - eye));
-
-
         _rays.scatter  = vec3(1);
         _rays.emission = vec3(0);
         _rays.depth = 0;
@@ -377,17 +403,11 @@ void main() {
             h.t = 10000;
             h.pos = vec3(0);
             h.nor = vec3(0);
-
-            //--------------------Test--------------------------
-
-
-            bool CornelBox = true;
-            vec3 diffColor;
+            vec3 diffColor = vec3(1);
 
             switch(RenderMode){
             case 0: // RGBA
                 h.mat = 0; // Sky
-//                if (hit_sphere(plane, _rays, h)) h.mat = 1;
                 if(CornelBox){
                     if (hit_sphere(wall_left, _rays, h)){
                         h.mat = 1;
@@ -397,70 +417,86 @@ void main() {
                         h.mat = 1;
                         diffColor = vec3(0.3, 0.3, 1);
                     }
-                    if (hit_sphere(wall_flont, _rays, h)){
+                    if (hit_sphere(wall_flont, _rays, h)) h.mat = 1;
+                    if (hit_sphere(wall_top, _rays, h))   h.mat = 1;
+                }
+                if(DefaultScene){
+                    if (hit_sphere(floor, _rays, h)) h.mat = 1;
+                    if (hit_sphere(s1, _rays, h)) h.mat = 3;
+                    if (hit_sphere(s2, _rays, h)) h.mat = 4;
+                    if (hit_sphere(s3, _rays, h)) h.mat = 2;
+                }
+                for(int i = 0; i < modelN; i++){
+                    if (hit_sphere(s[i], _rays, h)){
                         h.mat = 1;
-                        diffColor = vec3(1, 1, 1);
-                    }
-                    if (hit_sphere(wall_top, _rays, h)){
-                        h.mat = 1;
-                        diffColor = vec3(1, 1, 1);
+                        diffColor = vec3(0.2*i, 0.5, 1-0.2*i);
                     }
                 }
-                if (hit_sphere(floor, _rays, h)){
-                    h.mat = 1;
-                    diffColor = vec3(1, 1, 1);
-                }
-                if (hit_sphere(s1, _rays, h)) h.mat = 3;
-                if (hit_sphere(s2, _rays, h)) h.mat = 4;
-                if (hit_sphere(s3, _rays, h)) h.mat = 2;
                 break;
 
             case 1: // AO
                 h.mat = 10; // Sky
-//                if (hit_sphere(plane, _rays, h)) h.mat = 5;
                 if(CornelBox){
                     if (hit_sphere(wall_left, _rays, h)) h.mat = 5;
                     if (hit_sphere(wall_right, _rays, h)) h.mat = 5;
                     if (hit_sphere(wall_flont, _rays, h)) h.mat = 5;
                     if (hit_sphere(wall_top, _rays, h)) h.mat = 5;
                 }
-                if (hit_sphere(floor, _rays, h)) h.mat = 5;
-                if (hit_sphere(s1, _rays, h)) h.mat = 5;
-                if (hit_sphere(s2, _rays, h)) h.mat = 5;
-                if (hit_sphere(s3, _rays, h)) h.mat = 5;
+                if(DefaultScene){
+                    if (hit_sphere(floor, _rays, h)) h.mat = 5;
+                    if (hit_sphere(s1, _rays, h)) h.mat = 5;
+                    if (hit_sphere(s2, _rays, h)) h.mat = 5;
+                    if (hit_sphere(s3, _rays, h)) h.mat = 5;
+                }
+                for(int i = 0; i < modelN; i++){
+                    if (hit_sphere(s[i], _rays, h)){
+                        h.mat = 5;
+                    }
+                }
                 break;
 
             case 2: // Depth
                 h.mat = 11;
-//                if (hit_sphere(plane, _rays, h)) h.mat = 5;
                 if(CornelBox){
                     if (hit_sphere(wall_left, _rays, h)) h.mat = 6;
                     if (hit_sphere(wall_right, _rays, h)) h.mat = 6;
                     if (hit_sphere(wall_flont, _rays, h)) h.mat = 6;
                     if (hit_sphere(wall_top, _rays, h)) h.mat = 6;
                 }
-                if (hit_sphere(floor, _rays, h)) h.mat = 6;
-                if (hit_sphere(s1, _rays, h)) h.mat = 6;
-                if (hit_sphere(s2, _rays, h)) h.mat = 6;
-                if (hit_sphere(s3, _rays, h)) h.mat = 6;
+                if(DefaultScene){
+                    if (hit_sphere(floor, _rays, h)) h.mat = 6;
+                    if (hit_sphere(s1, _rays, h)) h.mat = 6;
+                    if (hit_sphere(s2, _rays, h)) h.mat = 6;
+                    if (hit_sphere(s3, _rays, h)) h.mat = 6;
+                }
+                for(int i = 0; i < modelN; i++){
+                    if (hit_sphere(s[i], _rays, h)){
+                        h.mat = 6;
+                    }
+                }
                 break;
 
             case 3: // Normal
                 h.mat = 11;
-//                if (hit_sphere(plane, _rays, h)) h.mat = 5;
                 if(CornelBox){
                     if (hit_sphere(wall_left, _rays, h)) h.mat = 7;
                     if (hit_sphere(wall_right, _rays, h)) h.mat = 7;
                     if (hit_sphere(wall_flont, _rays, h)) h.mat = 7;
                     if (hit_sphere(wall_top, _rays, h)) h.mat = 7;
                 }
-                if (hit_sphere(floor, _rays, h)) h.mat = 7;
-                if (hit_sphere(s1, _rays, h)) h.mat = 7;
-                if (hit_sphere(s2, _rays, h)) h.mat = 7;
-                if (hit_sphere(s3, _rays, h)) h.mat = 7;
+                if(DefaultScene){
+                    if (hit_sphere(floor, _rays, h)) h.mat = 7;
+                    if (hit_sphere(s1, _rays, h)) h.mat = 7;
+                    if (hit_sphere(s2, _rays, h)) h.mat = 7;
+                    if (hit_sphere(s3, _rays, h)) h.mat = 7;
+                }
+                for(int i = 0; i < modelN; i++){
+                    if (hit_sphere(s[i], _rays, h)){
+                        h.mat = 7;
+                    }
+                }
                 break;
             }
-            //--------------------Test--------------------------
 
             switch(h.mat) {
                 case 0: mat_background(_rays, h); break;
@@ -474,11 +510,11 @@ void main() {
                 case 10: mat_backao(_rays, h); break;
                 case 11: mat_backNone(_rays, h); break;
             }
-        }
+        } // Depth Loop
 
         pixel.rgb = _rays.scatter * _rays.emission;
         A.rgb += (pixel.rgb - A.rgb) / _AccumN;
-    }
+    } // Sample Loop
 
 
     // Output

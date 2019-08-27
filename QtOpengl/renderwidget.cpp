@@ -132,7 +132,6 @@ void RenderWidget::initializeGL(){
 
     // Accum (0)
     accumN = 1;
-//    GLuint accum;
     glGenBuffers(1, &accum);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, accum);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(unsigned), &accumN, GL_DYNAMIC_DRAW);
@@ -157,6 +156,29 @@ void RenderWidget::initializeGL(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, tex_w, tex_h, 0, GL_RGBA, GL_FLOAT, &seedDataBuffer[0]);
     glBindImageTexture(2, seed, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+
+    //--------------------Test--------------------------
+    float radData[] = {1, 1.2, 1.4, 1.6, 1.8};
+    GLuint rad;
+    glGenBuffers(1, &rad);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, rad);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(radData), &radData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, rad); //binding = 1
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
+
+
+    QVector3D posData[]  = {QVector3D(-10, 4, 0),
+                            QVector3D( -5, 2, 0),
+                            QVector3D(  0, 0, 0),
+                            QVector3D(  5, 2, 0),
+                            QVector3D( 10, 4, 0),};
+    GLuint pos;
+    glGenBuffers(1, &pos);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, pos);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(posData), &posData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, pos); //binding = 2
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
+    //--------------------Test--------------------------
 
     m_vao.release();
 }
