@@ -60,9 +60,11 @@ public slots:
     void createPrimitive(int type);
     void openTexture();
     void selectedModel(QModelIndex modelIndex);
+
+
+    void changeMeterialType(int t);
     void setMaterialDiffColor(QColor color);
     void setMaterialSpecColor(QColor color);
-
     void setShininess(int shine);
     void deleteModel(int id);
 
@@ -83,6 +85,8 @@ signals:
     void setSpinboxRotationX(double n);
     void setSpinboxRotationY(double n);
     void setSpinboxRotationZ(double n);
+
+    void setMeterialType(int type); // test
 
     void setColorButton(QColor color);
     void setColorButton_2(QColor color);

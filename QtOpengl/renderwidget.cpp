@@ -168,6 +168,7 @@ void RenderWidget::initializeGL(){
     std::vector<float> radData;
     std::vector<QVector4D> posData;
     std::vector<QVector4D> planePosData;
+    std::vector<int> meterialTypeData;
 
     // Load Models
     for(int i =0; i < models.size(); i++){
@@ -175,8 +176,10 @@ void RenderWidget::initializeGL(){
             radData.push_back(models[i]->getRadius());
             posData.push_back(QVector4D(models[i]->getPosition(), 1));
         }else if(models[i]->getType() == ModelType::PLANE){
-            planePosData.push_back(QVector4D(models[i]->getPosition(), 1));
+            radData.push_back(10000);
+            posData.push_back(QVector4D((QVector3D(0, -10000, 0) + models[i]->getPosition()), 1));
         }
+        meterialTypeData.push_back(models[i]->getMaterialType());
     }
 
     // Sphere Radius
@@ -195,12 +198,12 @@ void RenderWidget::initializeGL(){
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, pos); //binding = 2
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
 
-    // Plane Position
-    GLuint planePos;
-    glGenBuffers(1, &planePos);
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, planePos);
-    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(QVector4D)*planePosData.size(), &planePosData[0], GL_STATIC_DRAW);
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, planePos); //binding = 3
+    // Material Type
+    GLuint materialType;
+    glGenBuffers(1, &materialType);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, materialType);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(int)*meterialTypeData.size(), &meterialTypeData[0], GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, materialType); //binding = 3
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
 
     m_vao.release();

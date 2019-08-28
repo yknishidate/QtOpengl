@@ -13,6 +13,7 @@ Model::Model(const QString& fileName)
     texture = nullptr;
     textureName = "";
 
+    material.type = 0;
     material.ambient = QVector3D(0.7f, 0.7f, 0.7f);
     material.diffuse = QVector3D(0.7f, 0.7f, 0.7f);
     material.specular = QVector3D(0.7f, 0.7f, 0.7f);
@@ -32,6 +33,7 @@ Model::Model(const int t){
     texture = nullptr;
     textureName = "";
 
+    material.type = 0;
     material.ambient = QVector3D(0.7f, 0.7f, 0.7f);
     material.diffuse = QVector3D(0.7f, 0.7f, 0.7f);
     material.specular = QVector3D(0.7f, 0.7f, 0.7f);
@@ -64,6 +66,12 @@ void Model::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode)
 QString Model::getTextureName(){
     return textureName;
 }
+
+void Model::setMaterialType(int type)
+{
+    material.type = type;
+}
+
 
 void Model::setMaterialDiffColor(QColor color){
    material.diffuse[0] = material.ambient[0] = color.red()/255.0f;

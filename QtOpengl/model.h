@@ -31,6 +31,8 @@ public:
     QVector3D getRotation(){return rotation;}
 
     // Color
+    void setMaterialType(int type);
+    int getMaterialType(){return material.type;}
     void setMaterialDiffColor(QColor color);
     QColor getMaterialDiffColor(){return QColor( material.diffuse[0]*255.0f, material.diffuse[1]*255.0f, material.diffuse[2]*255.0f);}
     void setMaterialSpecColor(QColor color);

@@ -32,10 +32,16 @@ layout(std430, binding = 1) buffer SphereRadius {
 layout(std430, binding = 2) buffer SpherePosition {
     vec4 pos[];
 };
-layout(std430, binding = 3) buffer PlanePosition {
-    vec4 planePos[];
+
+//---------------------Test-------------------------
+layout(std430, binding = 3) buffer MaterialType {
+    int materialType[];
 };
 
+layout(std430, binding = 4) buffer DiffColor {
+    vec4 diffColor[];
+};
+//---------------------Test-------------------------
 
 // Camera
 layout(location = 0) uniform float _Theta;
@@ -207,7 +213,7 @@ void mat_mirror(inout ray r, in hit h)
   r.depth = r.depth + 1;
   r.origin = h.pos + h.nor * 0.001f;
   r.direction = 2 * dot(-r.direction, h.nor) * h.nor + r.direction;
-  r.scatter = r.scatter * vec3(1, 0, 0);
+  r.scatter = r.scatter * vec3(1);
   r.emission = vec3(0);
 }
 
@@ -351,14 +357,7 @@ void main() {
     //--------------------Test--------------------------
 
     // Import from Editor
-    sphere plane;
-    int planeExist = planePos.length();
-    if(planeExist != 0){
-        plane.center = vec3(0, -10000, 0) + planePos[0].xyz;
-        plane.radius = 10000;
-    }
-
-    sphere s[16];
+    sphere s[16]; // Max = 16
     int modelN = rad.length();
     for(int i = 0; i < modelN; i++){
         s[i].center = pos[i].xyz;
@@ -392,40 +391,29 @@ void main() {
 
             switch(RenderMode){
             case 0: // RGBA
-                h.mat = 0; // Sky
+                h.mat = 10; // Sky
                 if(CornelBox){ // Cornel Box
-                    if (hit_sphere(wall_left, _rays, h)){
-                        h.mat = 1;
-                        diffColor = vec3(1, 0.3, 0.3);
-                    }
-                    if (hit_sphere(wall_right, _rays, h)){
-                        h.mat = 1;
-                        diffColor = vec3(0.3, 0.3, 1);
-                    }
-                    if (hit_sphere(wall_flont, _rays, h)) h.mat = 1;
-                    if (hit_sphere(wall_top, _rays, h))   h.mat = 1;
+                    if (hit_sphere(wall_left, _rays, h)) { h.mat = 0; diffColor = vec3(1, 0.3, 0.3); }
+                    if (hit_sphere(wall_right, _rays, h)){ h.mat = 0; diffColor = vec3(0.3, 0.3, 1); }
+                    if (hit_sphere(wall_flont, _rays, h)){ h.mat = 0; diffColor = vec3(1); }
+                    if (hit_sphere(wall_top, _rays, h))  { h.mat = 0; diffColor = vec3(1); }
                 }
                 if(DefaultScene){ // Default
-                    if (hit_sphere(floor, _rays, h)) h.mat = 1;
-                    if (hit_sphere(s1, _rays, h)) h.mat = 3;
-                    if (hit_sphere(s2, _rays, h)) h.mat = 4;
+                    if (hit_sphere(floor, _rays, h)) { h.mat = 0; diffColor = vec3(1); }
+                    if (hit_sphere(s1, _rays, h)) h.mat = 1;
+                    if (hit_sphere(s2, _rays, h)) h.mat = 3;
                     if (hit_sphere(s3, _rays, h)) h.mat = 2;
                 }
                 // Scene Data
-                if(planeExist != 0){ // Plane
-                    if (hit_sphere(plane, _rays, h)){
-                        h.mat = 1;
-                    }
-                }
                 for(int i = 0; i < modelN; i++){ // Sphere
                     if (hit_sphere(s[i], _rays, h)){
-                        h.mat = 3;
+                        h.mat = materialType[i];
                     }
                 }
                 break;
 
             case 1: // AO
-                h.mat = 10; // Sky
+                h.mat = 11; // Sky
                 if(CornelBox){
                     if (hit_sphere(wall_left, _rays, h)) h.mat = 5;
                     if (hit_sphere(wall_right, _rays, h)) h.mat = 5;
@@ -439,11 +427,6 @@ void main() {
                     if (hit_sphere(s3, _rays, h)) h.mat = 5;
                 }
                 // Scene Data
-                if(planeExist != 0){
-                    if (hit_sphere(plane, _rays, h)){
-                        h.mat = 5;
-                    }
-                }
                 for(int i = 0; i < modelN; i++){
                     if (hit_sphere(s[i], _rays, h)){
                         h.mat = 5;
@@ -452,7 +435,7 @@ void main() {
                 break;
 
             case 2: // Depth
-                h.mat = 11;
+                h.mat = 12;
                 if(CornelBox){
                     if (hit_sphere(wall_left, _rays, h)) h.mat = 6;
                     if (hit_sphere(wall_right, _rays, h)) h.mat = 6;
@@ -466,11 +449,6 @@ void main() {
                     if (hit_sphere(s3, _rays, h)) h.mat = 6;
                 }
                 // Scene Data
-                if(planeExist != 0){
-                    if (hit_sphere(plane, _rays, h)){
-                        h.mat = 6;
-                    }
-                }
                 for(int i = 0; i < modelN; i++){
                     if (hit_sphere(s[i], _rays, h)){
                         h.mat = 6;
@@ -479,7 +457,7 @@ void main() {
                 break;
 
             case 3: // Normal
-                h.mat = 11;
+                h.mat = 12;
                 if(CornelBox){
                     if (hit_sphere(wall_left, _rays, h)) h.mat = 7;
                     if (hit_sphere(wall_right, _rays, h)) h.mat = 7;
@@ -493,11 +471,6 @@ void main() {
                     if (hit_sphere(s3, _rays, h)) h.mat = 7;
                 }
                 // Scene Data
-                if(planeExist != 0){
-                    if (hit_sphere(plane, _rays, h)){
-                        h.mat = 7;
-                    }
-                }
                 for(int i = 0; i < modelN; i++){
                     if (hit_sphere(s[i], _rays, h)){
                         h.mat = 7;
@@ -507,16 +480,17 @@ void main() {
             }
 
             switch(h.mat) {
-                case 0: mat_background(_rays, h); break;
-                case 1: mat_diffuse(_rays, h, diffColor); break;
+                case 0: mat_diffuse(_rays, h, diffColor); break;
+                case 1: mat_mirror(_rays, h); break;
                 case 2: mat_glass(_rays, h); break;
-                case 3: mat_mirror(_rays, h); break;
+                case 3: mat_light(_rays, h); break;
                 case 4: mat_light(_rays, h); break;
                 case 5: mat_ao(_rays, h); break;
                 case 6: mat_depth(_rays, h); break;
                 case 7: mat_nor(_rays, h); break;
-                case 10: mat_backao(_rays, h); break;
-                case 11: mat_backNone(_rays, h); break;
+                case 10: mat_background(_rays, h); break;
+                case 11: mat_backao(_rays, h); break;
+                case 12: mat_backNone(_rays, h); break;
             }
         } // Depth Loop
 

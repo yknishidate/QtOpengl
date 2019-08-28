@@ -44,11 +44,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->openGLWidget, SIGNAL(setSpinboxRotationY(double)), ui->doubleSpinBox_ry, SLOT(setValue(double)));
     connect(ui->openGLWidget, SIGNAL(setSpinboxRotationZ(double)), ui->doubleSpinBox_rz, SLOT(setValue(double)));
 
-    // Texture
-    connect(ui->toolButton, SIGNAL(clicked()), ui->openGLWidget, SLOT(openTexture()));
-    connect(ui->openGLWidget, SIGNAL(loadedTexture(QString)), ui->lineEdit, SLOT(setText(QString)));
-    ui->lineEdit->setReadOnly(true);
-    connect(ui->openGLWidget, SIGNAL(setTextureName(QString)), ui->lineEdit, SLOT(setText(QString)));
+
+
+
+    // MaterialType
+    connect(ui->openGLWidget, SIGNAL(setMeterialType(int)), ui->materialTypeComboBox, SLOT(setCurrentIndex(int)));
+    connect(ui->materialTypeComboBox, SIGNAL(currentIndexChanged(int)), ui->openGLWidget, SLOT(changeMeterialType(int)));
+
 
     // Color
     QPalette pal = ui->colorButton->palette();
@@ -57,6 +59,13 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->openGLWidget, SIGNAL(setColorButton(QColor)), ui->colorButton, SLOT(setColor(QColor)));
     ui->colorButton_2->setPalette(pal);
     connect(ui->openGLWidget, SIGNAL(setColorButton_2(QColor)), ui->colorButton_2, SLOT(setColor(QColor)));
+
+
+    // Texture
+    connect(ui->toolButton, SIGNAL(clicked()), ui->openGLWidget, SLOT(openTexture()));
+    connect(ui->openGLWidget, SIGNAL(loadedTexture(QString)), ui->lineEdit, SLOT(setText(QString)));
+    ui->lineEdit->setReadOnly(true);
+    connect(ui->openGLWidget, SIGNAL(setTextureName(QString)), ui->lineEdit, SLOT(setText(QString)));
 
     // Shine Slider
     connect(ui->shineSlider, SIGNAL(valueChanged(int)), ui->openGLWidget, SLOT(setShininess(int)));

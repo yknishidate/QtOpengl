@@ -64,11 +64,15 @@ void GLWidget::selectedModel(QModelIndex modelIndex){
     emit setSpinboxRotationZ(models[selectedModelIndex]->getRotation().z());
 
     emit setTextureName(models[selectedModelIndex]->getTextureName());
+
+    emit setMeterialType(models[selectedModelIndex]->getMaterialType());
+
     emit setColorButton(models[selectedModelIndex]->getMaterialDiffColor());
     emit setColorButton_2(models[selectedModelIndex]->getMaterialSpecColor());
 
     emit setShininessSlider(sqrt(models[selectedModelIndex]->getShininess()));
 }
+
 
 void GLWidget::initializeGL(){
     initializeOpenGLFunctions();
@@ -164,6 +168,12 @@ void GLWidget::setCullFace(bool arg){
 }
 void GLWidget::setDepthTest(bool arg){
     testing = arg;
+    update();
+}
+
+void GLWidget::changeMeterialType(int t)
+{
+    models[selectedModelIndex]->setMaterialType(t);
     update();
 }
 void GLWidget::setMaterialDiffColor(QColor color){
