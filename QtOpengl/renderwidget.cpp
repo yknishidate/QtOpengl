@@ -1,5 +1,5 @@
-#include "renderwidget.h"
 #define STB_IMAGE_IMPLEMENTATION
+#include "renderwidget.h"
 #include "stb_image.h"
 #include "stb_image_write.h"
 #include <iostream>
@@ -65,7 +65,7 @@ void RenderWidget::initializeGL(){
 
     // Texture Input(0)
     QOpenGLTexture *m_tex_input;
-    GLuint tex_input;
+//    GLuint tex_input;
     glActiveTexture(GL_TEXTURE0);
     m_tex_input = new QOpenGLTexture(QOpenGLTexture::Target2D);
     m_tex_input->create();
@@ -79,7 +79,7 @@ void RenderWidget::initializeGL(){
 
     // Texture Output(1)
     QOpenGLTexture *m_tex_output;
-    GLuint tex_output;
+//    GLuint tex_output;
     glActiveTexture(GL_TEXTURE1);
     m_tex_output = new QOpenGLTexture(QOpenGLTexture::Target2D);
     m_tex_output->create();
@@ -227,10 +227,9 @@ void RenderWidget::paintGL(){
     m_renderProgram->bind();
     m_vao.bind();
     glDrawElements(GL_TRIANGLE_STRIP,4,GL_UNSIGNED_SHORT,0);
-
     m_vao.release();
 
-    if(frame > PassLimit) rendering = false;
+    if(frame == PassLimit) rendering = false;
     if(rendering) update();
     qDebug() << "Rendering:" <<  ++frame;
 }
@@ -245,6 +244,16 @@ void RenderWidget::changeRenderMode(const int mode)
     RenderMode = mode;
     rendering = true;
     update();
+}
+
+void RenderWidget::saveImage()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "", tr("Images (*.png *.jpg)"));
+
+    if (!fileName.isEmpty()) {
+        QImage img = grabFramebuffer();
+        img.save(fileName);
+    }
 }
 
 

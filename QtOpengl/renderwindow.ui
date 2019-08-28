@@ -23,6 +23,17 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <widget class="QPushButton" name="saveButton">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="images.qrc">
+          <normaloff>:/resource/icon_white_64.png</normaloff>:/resource/icon_white_64.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QComboBox" name="renderPassBox">
         <property name="styleSheet">
          <string notr="true"/>
@@ -178,6 +189,8 @@
    <header>renderwidget.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
  <connections/>
 </ui>

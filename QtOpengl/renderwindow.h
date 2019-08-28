@@ -23,6 +23,8 @@ private slots:
 
     void on_renderPassBox_currentIndexChanged(int index);
 
+    void on_saveButton_clicked();
+
 private:
     Ui::RenderWindow *ui;
 };

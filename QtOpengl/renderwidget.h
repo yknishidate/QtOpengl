@@ -25,6 +25,11 @@ class RenderWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
     QOpenGLShader *m_fragmentShader;
     QOpenGLShader *m_vertexShader;
 
+    QGLFramebufferObject *catchFbo; //test
+
+    GLuint tex_input;
+    GLuint tex_output;
+
 public:
     RenderWidget(QWidget *parent = nullptr);
     ~RenderWidget();
@@ -33,6 +38,7 @@ public:
     void setCameraDistance(float l){cameraDistance = l;}
     void setModels(std::vector<Model *> m){models = m;}
     void changeRenderMode(const int mode);
+    void saveImage();
 
 protected:
     void initializeGL();
@@ -51,9 +57,11 @@ private:
     float cameraDistance;
 
     int RenderMode = 0;
-    int PassLimit = 1000;
+    int PassLimit = 100;
 
     std::vector<Model *> models;
+
+    bool save = false;
 
 public slots:
     void stopRendering();

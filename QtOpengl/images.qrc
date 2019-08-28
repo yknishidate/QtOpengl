@@ -6,5 +6,6 @@
         <file>resource/Otorus.png</file>
         <file>resource/Render.png</file>
         <file>resource/Oplane.png</file>
+        <file>resource/icon_white_64.png</file>
     </qresource>
 </RCC>
