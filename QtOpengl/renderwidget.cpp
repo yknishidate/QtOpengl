@@ -248,14 +248,10 @@ void RenderWidget::changeRenderMode(const int mode)
 
 void RenderWidget::saveImage()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "", tr("Images (*.png *.jpg)"));
-
-    if (!fileName.isEmpty()) {
-        QImage img = grabFramebuffer();
-        img.save(fileName);
-    }
+    rendering = false;
+    QString fileName = QFileDialog::getSaveFileName(this, "", "Untitled.png", tr("Images (*.png)"));
+    if (!fileName.isEmpty()) grabFramebuffer().save(fileName);
 }
-
 
 void RenderWidget::resizeGL(int w, int h){
 

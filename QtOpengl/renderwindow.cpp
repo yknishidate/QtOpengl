@@ -23,11 +23,9 @@ RenderWindow::~RenderWindow()
 void RenderWindow::on_renderPassBox_currentIndexChanged(int index)
 {
     ui->renderWidget->changeRenderMode(index);
-    qDebug() << "Render Mode Changed:" << index;
 }
 
 void RenderWindow::on_saveButton_clicked()
 {
-    qDebug() << "Clicked Save Button";
     ui->renderWidget->saveImage();
 }
