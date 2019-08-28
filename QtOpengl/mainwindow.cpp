@@ -10,18 +10,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Options
-    connect(ui->checkBox,   SIGNAL(toggled(bool)), ui->openGLWidget, SLOT(setDisplayMode(bool)));
-    connect(ui->checkBox_2, SIGNAL(toggled(bool)), ui->openGLWidget, SLOT(setCullFace(bool)));
-    connect(ui->checkBox_3, SIGNAL(toggled(bool)), ui->openGLWidget, SLOT(setDepthTest(bool)));
-    ui->checkBox_3->setChecked(true);
-
     // Menu Bar
     connect(ui->actionOpen, SIGNAL(triggered()), ui->openGLWidget, SLOT(open()));
 
     // Tree View
     connect(ui->treeView, SIGNAL(clicked(QModelIndex)), ui->openGLWidget, SLOT(selectedModel(QModelIndex)));
     connect(ui->openGLWidget, SIGNAL(loadedModel(Model*)), ui->treeView, SLOT(addModel(Model*)));
+    connect(ui->treeView, SIGNAL(modelDeleted(int)), ui->openGLWidget, SLOT(deleteModel(int)));
 
     // Attibute Group
     ui->attributesGroup->setVisible(false);
@@ -114,3 +109,19 @@ void MainWindow::on_actionRender_triggered()
 void MainWindow::on_actionCube_triggered(){   ui->openGLWidget->createPrimitive(ModelType::CUBE); }
 void MainWindow::on_actionSphere_triggered(){ ui->openGLWidget->createPrimitive(ModelType::SPHERE); }
 void MainWindow::on_actionPlane_triggered(){  ui->openGLWidget->createPrimitive(ModelType::PLANE); }
+
+void MainWindow::on_actionWireframe_toggled(bool arg1)
+{
+    ui->openGLWidget->setDisplayMode(arg1);
+    qDebug() << "test" << arg1;
+}
+
+void MainWindow::on_actionBackface_Culling_toggled(bool arg1)
+{
+    ui->openGLWidget->setCullFace(arg1);
+}
+
+void MainWindow::on_actionDepth_Testing_toggled(bool arg1)
+{
+    ui->openGLWidget->setDepthTest(arg1);
+}

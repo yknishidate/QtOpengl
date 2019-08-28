@@ -51,7 +51,7 @@ void GLWidget::openTexture(){
 
 void GLWidget::selectedModel(QModelIndex modelIndex){
     selectedModelIndex = modelIndex.row();
-    qDebug() << "Select:" << selectedModelIndex;
+    qDebug() << "Select:" << selectedModelIndex ;
 
     emit setSpinboxPositionX(models[selectedModelIndex]->getPosition().x());
     emit setSpinboxPositionY(models[selectedModelIndex]->getPosition().y());
@@ -176,6 +176,16 @@ void GLWidget::setMaterialSpecColor(QColor color){
 }
 void GLWidget::setShininess(int shine){
     models[selectedModelIndex]->setShininess(shine*shine);
+    update();
+}
+
+void GLWidget::deleteModel(int id)
+{
+    qDebug() << models.size();
+    models.erase(models.begin() + id);
+    delete(*(models.begin() + id));
+    qDebug() << models.size();
+    modelCount--;
     update();
 }
 

@@ -245,6 +245,7 @@ Mesh::~Mesh()
 {
     vbo.destroy();
     ibo.destroy();
+    qDebug() << "Mesh Deleted";
 }
 
 void Mesh::init(const IndexedModel& model)

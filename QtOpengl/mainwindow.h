@@ -29,6 +29,12 @@ private slots:
 
     void on_actionPlane_triggered();
 
+    void on_actionWireframe_toggled(bool arg1);
+
+    void on_actionBackface_Culling_toggled(bool arg1);
+
+    void on_actionDepth_Testing_toggled(bool arg1);
+
 private:
     Ui::MainWindow *ui;
     RenderWindow *renderwindow;

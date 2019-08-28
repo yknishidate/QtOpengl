@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1062</width>
+    <width>1256</width>
     <height>736</height>
    </rect>
   </property>
@@ -24,6 +24,12 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QComboBox" name="renderPassBox">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="frame">
+         <bool>false</bool>
+        </property>
         <item>
          <property name="text">
           <string>RGBA</string>
@@ -64,6 +70,12 @@
         <property name="text">
          <string>Stop</string>
         </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item>
@@ -86,7 +98,7 @@
          </sizepolicy>
         </property>
         <property name="styleSheet">
-         <string notr="true">QFrame { background-color : #464646; }</string>
+         <string notr="true">QFrame { background-color : #464646; border: none; }</string>
         </property>
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
@@ -128,6 +140,9 @@
           <height>0</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <widget class="QWidget" name="tab_3">
          <attribute name="title">
           <string>Tab 1</string>
@@ -149,7 +164,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1062</width>
+     <width>1256</width>
      <height>20</height>
     </rect>
    </property>

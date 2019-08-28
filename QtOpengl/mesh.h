@@ -20,8 +20,6 @@ enum ModelType{
 class Mesh : protected QOpenGLFunctions
 {
 public:
-
-
     Mesh();
     Mesh(const QString& fileName);
     Mesh(const int type);

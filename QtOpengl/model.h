@@ -10,6 +10,7 @@ public:
 
     Model(const QString& fileName);
     Model(const int type);
+    ~Model();
 
     std::string getName(){return name;}
     int getType(){return type;}

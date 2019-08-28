@@ -38,6 +38,12 @@ Model::Model(const int t){
     material.shininess = 16.0f;
 }
 
+Model::~Model()
+{
+    delete mesh;
+    delete texture;
+}
+
 void Model::setTexture(QString fileName){
     textureName = fileName;
     texture = new QOpenGLTexture(QImage(fileName).mirrored());

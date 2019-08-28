@@ -207,7 +207,7 @@ void mat_mirror(inout ray r, in hit h)
   r.depth = r.depth + 1;
   r.origin = h.pos + h.nor * 0.001f;
   r.direction = 2 * dot(-r.direction, h.nor) * h.nor + r.direction;
-  r.scatter = r.scatter * vec3(1);
+  r.scatter = r.scatter * vec3(1, 0, 0);
   r.emission = vec3(0);
 }
 
@@ -412,14 +412,14 @@ void main() {
                     if (hit_sphere(s3, _rays, h)) h.mat = 2;
                 }
                 // Scene Data
-                if(planeExist != 0){
+                if(planeExist != 0){ // Plane
                     if (hit_sphere(plane, _rays, h)){
                         h.mat = 1;
                     }
                 }
-                for(int i = 0; i < modelN; i++){
+                for(int i = 0; i < modelN; i++){ // Sphere
                     if (hit_sphere(s[i], _rays, h)){
-                        h.mat = 1;
+                        h.mat = 3;
                     }
                 }
                 break;

@@ -64,6 +64,7 @@ public slots:
     void setMaterialSpecColor(QColor color);
 
     void setShininess(int shine);
+    void deleteModel(int id);
 
 signals:
     void xRotationChanged(int angle);

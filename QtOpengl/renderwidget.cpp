@@ -92,7 +92,6 @@ void RenderWidget::initializeGL(){
     glBindImageTexture(1, m_tex_output->textureId(), 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 
 
-
     // Shader
     m_computeShader = new QOpenGLShader(QOpenGLShader::Compute);
     m_computeShader->compileSourceFile(":/render_cshader.glsl");
@@ -175,18 +174,12 @@ void RenderWidget::initializeGL(){
         if(models[i]->getType() == ModelType::SPHERE){
             radData.push_back(models[i]->getRadius());
             posData.push_back(QVector4D(models[i]->getPosition(), 1));
-//            m_renderProgram->setUniformValue(3, models[i]->getRadius());
-//            m_renderProgram->setUniformValue(4, models[i]->getPosition());
         }else if(models[i]->getType() == ModelType::PLANE){
             planePosData.push_back(QVector4D(models[i]->getPosition(), 1));
-//            m_renderProgram->setUniformValue(5, models[i]->getPosition());
         }
     }
 
     // Sphere Radius
-//    radData.push_back(2);
-//    radData.push_back(2);
-//    radData.push_back(2);
     GLuint rad;
     glGenBuffers(1, &rad);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, rad);
@@ -195,9 +188,6 @@ void RenderWidget::initializeGL(){
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
 
     // Sphere Position
-//    posData.push_back(QVector4D(-5, 0, 0, 1));
-//    posData.push_back(QVector4D( 0, 0, 0, 1));
-//    posData.push_back(QVector4D( 5, 0, 0, 1));
     GLuint pos;
     glGenBuffers(1, &pos);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, pos);
@@ -206,7 +196,6 @@ void RenderWidget::initializeGL(){
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
 
     // Plane Position
-//    planePosData.push_back(QVector4D( 0, -2, 0, 1));
     GLuint planePos;
     glGenBuffers(1, &planePos);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, planePos);
@@ -216,8 +205,6 @@ void RenderWidget::initializeGL(){
 
     m_vao.release();
 }
-
-
 
 void RenderWidget::paintGL(){
     // compute
