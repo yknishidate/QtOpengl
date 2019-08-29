@@ -26,8 +26,10 @@ uniform vec3 Lspec = vec3(1.0f, 1.0f, 1.0f);
 out vec4 fColor;
 
 //----------Test----------
+uniform vec3        cameraPosition;
 uniform samplerCube cubeTexture;
-in vec4        vPosition;
+in vec3 w_Position;
+in vec3 w_Normal;
 //----------Test----------
 
 void main(){
@@ -57,8 +59,8 @@ void main(){
             fColor = vec4(diffuse + specular, 1.0f);
             break;
         case 1: //Metal
-            vec3 ref = reflect(-normalize(P.xyz), N);
-            fColor   = textureCube(cubeTexture, ref);
+            vec3 ref = reflect(w_Position - cameraPosition, N);
+            fColor   = vec4(Kspec, 1.0) * textureCube(cubeTexture, ref);
             break;
         case 2: // Glass
             fColor = vec4(0.6);

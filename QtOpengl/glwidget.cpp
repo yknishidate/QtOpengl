@@ -119,6 +119,7 @@ void GLWidget::paintGL(){
         normalMatrix = modelMatrix.normalMatrix();
 
         shader.update(proj, camera.matrix, modelMatrix, normalMatrix);
+        shader.program->setUniformValue("cameraPosition", camera.getCameraPos());
         models[i]->draw(shader.program, displayMode, false);
 
         //---------Outline--------

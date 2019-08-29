@@ -42,4 +42,5 @@ void Shader::update(QMatrix4x4 projMatrix, QMatrix4x4 viewMatrix, QMatrix4x4 mod
 
     program->setUniformValue(mvMatrixLoc,     viewMatrix * modelMatrix);
     program->setUniformValue(normalMatrixLoc, normalMatrix);
+
 }

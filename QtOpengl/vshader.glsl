@@ -14,11 +14,14 @@ out vec4 P;
 out vec3 N;
 out vec2 vTexcoord;
 //----------Test----------
-out vec4 vPosition;
+out vec3 w_Position;
+out vec3 w_Normal;
 //----------Test----------
 
 void main(){
-  vPosition   = (modelMatrix * vec4(position, 1.0));
+  w_Position = (modelMatrix * vec4(position, 1.0)).xyz;
+  w_Normal   = (normalMatrix * normal);
+
   P = mvMatrix * vec4(position, 1.0);   //カメラ座標のPosition
   N = normalize(normalMatrix * normal); //ワールド座標のNormal
   vTexcoord = texcoord;
