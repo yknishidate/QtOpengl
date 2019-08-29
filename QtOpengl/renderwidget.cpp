@@ -171,6 +171,7 @@ void RenderWidget::initializeGL(){
     std::vector<int> meterialTypeData;
     std::vector<QVector4D> materialDiffColorData;
     std::vector<QVector4D> materialSpecColorData;
+    std::vector<QVector4D> materialTransColorData;
 
     // Load Models
     for(int i =0; i < models.size(); i++){
@@ -184,6 +185,7 @@ void RenderWidget::initializeGL(){
         meterialTypeData.push_back(models[i]->getMaterialType());
         materialDiffColorData.push_back(QVector4D(models[i]->getMaterialDiffColorF(), 1));
         materialSpecColorData.push_back(QVector4D(models[i]->getMaterialSpecColorF(), 1));
+        materialTransColorData.push_back(QVector4D(models[i]->getMaterialTransColorF()));
     }
 
     // Sphere Radius
@@ -224,6 +226,14 @@ void RenderWidget::initializeGL(){
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, materialSpecColor);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(QVector4D)*materialSpecColorData.size(), &materialSpecColorData[0], GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, materialSpecColor); //binding = 5
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
+
+    // Transparent
+    GLuint materialTransColor;
+    glGenBuffers(1, &materialTransColor);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, materialTransColor);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(QVector4D)*materialTransColorData.size(), &materialTransColorData[0], GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, materialTransColor); //binding = 6
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
 
     m_vao.release();
