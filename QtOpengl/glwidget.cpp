@@ -136,7 +136,7 @@ void GLWidget::paintGL(){
         //---------Outline--------
     }
 
-    qDebug() << ++frame;
+    qDebug() << ++frame << camera.getCameraPos();
 }
 
 

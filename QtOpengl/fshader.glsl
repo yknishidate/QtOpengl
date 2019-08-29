@@ -28,8 +28,6 @@ out vec4 fColor;
 //----------Test----------
 uniform samplerCube cubeTexture;
 in vec4        vPosition;
-in vec4        vNormal;
-in vec4        vColor;
 //----------Test----------
 
 void main(){

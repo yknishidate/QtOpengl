@@ -13,16 +13,13 @@ void Camera::transform( int xRot, int yRot){
     rotation.rotate(xRot / 16.0f, 1, 0, 0);
     rotation.rotate(yRot / 16.0f, 0, 1, 0);
 
+    cameraPos = QVector3D(0, 0, length) * rotation;
+
     matrix.setToIdentity();
-    matrix.lookAt(cameraPos * rotation, targetPos, QVector3D(0, 1, 0));
+    matrix.lookAt(cameraPos, targetPos, QVector3D(0, 1, 0));
 }
 
 void Camera::dolly( int degree ){
-    QVector3D relativeVec = targetPos - cameraPos;
-    QVector3D cameraDir = relativeVec.normalized();
-    if(relativeVec.length() > 2 || degree < 0){
-        cameraPos = cameraPos + cameraDir * degree/10;
-    }
-    length = relativeVec.length();
+    length -= degree/10;
 }
 

@@ -19,6 +19,7 @@ private:
     int lightPosLoc;
 
     int viewMatrixLoc;
+    int modelMatrixLoc;
 };
 
 #endif // SHADER_H
