@@ -13,7 +13,7 @@ struct Material{
 
     float ior;
     QVector4D transparentColor;
-    QVector3D lightColor;
+    QVector4D lightColor;
 };
 
 #endif // MATERIAL_H

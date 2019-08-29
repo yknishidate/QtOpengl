@@ -19,7 +19,7 @@ Model::Model(const QString& fileName)
     material.specular = QVector3D(1.0f, 1.0f, 1.0f);
     material.shininess = 16.0f;
     material.transparentColor = QVector4D(1.0f, 1.0f, 1.0f, 0.3f);
-    material.lightColor = QVector3D(1.0f, 1.0f, 1.0f);
+    material.lightColor = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
     material.ior = 1.5f;
 }
 
@@ -42,7 +42,7 @@ Model::Model(const int t){
     material.specular = QVector3D(1.0f, 1.0f, 1.0f);
     material.shininess = 16.0f;
     material.transparentColor = QVector4D(1.0f, 1.0f, 1.0f, 0.3f);
-    material.lightColor = QVector3D(1.0f, 1.0f, 1.0f);
+    material.lightColor = QVector4D(1.0f, 1.0f, 1.0f, 1.0f);
     material.ior = 1.5f;
 }
 
@@ -67,6 +67,7 @@ void Model::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, bool 
     shader_program->setUniformValue("Kspec", material.specular);
     shader_program->setUniformValue("Kshi", material.shininess);
     shader_program->setUniformValue("transparentColor", material.transparentColor);
+    shader_program->setUniformValue("lightColor", material.lightColor);
     shader_program->setUniformValue("outline", outline);
     mesh->draw(shader_program, displayMode, texture, material.type);
 }

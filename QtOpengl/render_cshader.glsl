@@ -47,6 +47,9 @@ layout(std430, binding = 5) buffer MaterialSpecColor {
 layout(std430, binding = 6) buffer MaterialTransColor {
     vec4 materialTransColor[];
 };
+layout(std430, binding = 7) buffer MaterialLightColor {
+    vec4 materialLightColor[];
+};
 //---------------------Test-------------------------
 
 // Camera
@@ -170,9 +173,9 @@ void mat_backao(inout ray r, in hit h) {
 }
 
 // Light
-void mat_light(inout ray r, in hit h) {
+void mat_light(inout ray r, in hit h, vec3 color) {
   r.depth = DEPTH;
-  r.scatter = r.scatter * vec3(1);
+  r.scatter = r.scatter * color;
   r.emission = vec3(10);
 }
 
@@ -389,6 +392,7 @@ void main() {
             vec3 diffColor = vec3(1);
             vec3 specColor = vec3(1);
             vec4 transColor = vec4(1);
+            vec3 lightColor = vec3(1);
 
             switch(RenderMode){
             case 0: // RGBA
@@ -412,6 +416,7 @@ void main() {
                         diffColor = materialDiffColor[i].xyz;
                         specColor = materialSpecColor[i].xyz;
                         transColor = materialTransColor[i];
+                        lightColor = materialLightColor[i].xyz;
                     }
                 }
                 break;
@@ -487,8 +492,8 @@ void main() {
                 case 0: mat_diffuse(_rays, h, diffColor); break;
                 case 1: mat_mirror(_rays, h, specColor); break;
                 case 2: mat_glass(_rays, h, transColor); break;
-                case 3: mat_light(_rays, h); break;
-                case 4: mat_light(_rays, h); break;
+                case 3: mat_light(_rays, h, lightColor); break;
+                case 4:  break;
                 case 5: mat_ao(_rays, h); break;
                 case 6: mat_depth(_rays, h); break;
                 case 7: mat_nor(_rays, h); break;

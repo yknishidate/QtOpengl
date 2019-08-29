@@ -17,6 +17,7 @@ uniform vec3 Kdiff;
 uniform vec3 Kspec;
 uniform float Kshi;
 uniform vec4 transparentColor;
+uniform vec4 lightColor;
 // Light
 uniform vec3 Lpos =  vec3(100.0f, 100.0f, 100.0f);
 uniform vec3 Ldiff = vec3(1.0f, 1.0f, 1.0f);
@@ -64,10 +65,10 @@ void main(){
             fColor   = vec4(Kspec, 1.0) * textureCube(cubeTexture, ref);
             break;
         case 2: // Glass
-            fColor = vec4(transparentColor);
+            fColor = transparentColor;
             break;
         case 3: // Light
-            fColor = vec4(1);
+            fColor = lightColor;
             break;
         }
     }
