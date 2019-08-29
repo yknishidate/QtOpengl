@@ -69,6 +69,7 @@ void GLWidget::selectedModel(QModelIndex modelIndex){
 
     emit setColorButton(models[selectedModelIndex]->getMaterialDiffColor());
     emit setColorButton_2(models[selectedModelIndex]->getMaterialSpecColor());
+    emit setTransColorButton(models[selectedModelIndex]->getMaterialTransColor());
 
     emit setShininessSlider(sqrt(models[selectedModelIndex]->getShininess()));
 }
@@ -100,6 +101,8 @@ void GLWidget::paintGL(){
     else        glDisable(GL_CULL_FACE);
     if(testing) glEnable(GL_DEPTH_TEST);
     else        glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     camera.transform(xRot, yRot);
 
@@ -201,6 +204,10 @@ void GLWidget::setMaterialDiffColor(QColor color){
 }
 void GLWidget::setMaterialSpecColor(QColor color){
     models[selectedModelIndex]->setMaterialSpecColor(color);
+    update();
+}
+void GLWidget::setMaterialTransColor(QColor color){
+    models[selectedModelIndex]->setMaterialTransColor(color);
     update();
 }
 void GLWidget::setShininess(int shine){

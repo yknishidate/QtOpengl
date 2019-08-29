@@ -45,8 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->openGLWidget, SIGNAL(setSpinboxRotationZ(double)), ui->doubleSpinBox_rz, SLOT(setValue(double)));
 
 
-
-
     // MaterialType
     connect(ui->openGLWidget, SIGNAL(setMeterialType(int)), ui->materialTypeComboBox, SLOT(setCurrentIndex(int)));
     connect(ui->materialTypeComboBox, SIGNAL(currentIndexChanged(int)), ui->openGLWidget, SLOT(changeMeterialType(int)));
@@ -59,6 +57,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->openGLWidget, SIGNAL(setColorButton(QColor)), ui->colorButton, SLOT(setColor(QColor)));
     ui->colorButton_2->setPalette(pal);
     connect(ui->openGLWidget, SIGNAL(setColorButton_2(QColor)), ui->colorButton_2, SLOT(setColor(QColor)));
+    ui->transColorButton->setPalette(pal);
+    connect(ui->openGLWidget, SIGNAL(setTransColorButton(QColor)), ui->transColorButton, SLOT(setColor(QColor)));
 
 
     // Texture
@@ -101,6 +101,19 @@ void MainWindow::on_colorButton_2_clicked()
     }
 }
 
+void MainWindow::on_transColorButton_clicked()
+{
+    QColor chosenColor = QColorDialog::getColor();
+    if(chosenColor.isValid()){
+        QPalette pal = ui->transColorButton->palette();
+        pal.setColor(QPalette::Button, chosenColor);
+        ui->transColorButton->setPalette(pal);
+        ui->transColorButton->update();
+        ui->openGLWidget->setMaterialTransColor(chosenColor);
+    }
+}
+
+
 // Open Render Window
 void MainWindow::on_actionRender_triggered()
 {
@@ -123,3 +136,4 @@ void MainWindow::on_actionPlane_triggered(){  ui->openGLWidget->createPrimitive(
 void MainWindow::on_actionWireframe_toggled(bool arg1) { ui->openGLWidget->setDisplayMode(arg1);}
 void MainWindow::on_actionBackface_Culling_toggled(bool arg1){ ui->openGLWidget->setCullFace(arg1);}
 void MainWindow::on_actionDepth_Testing_toggled(bool arg1){ ui->openGLWidget->setDepthTest(arg1);}
+

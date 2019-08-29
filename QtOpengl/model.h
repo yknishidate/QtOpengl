@@ -33,12 +33,19 @@ public:
     // Color
     void setMaterialType(int type);
     int getMaterialType(){return material.type;}
+    // Diff
     void setMaterialDiffColor(QColor color);
     QColor getMaterialDiffColor(){return QColor( material.diffuse[0]*255.0f, material.diffuse[1]*255.0f, material.diffuse[2]*255.0f);}
     QVector3D getMaterialDiffColorF(){return material.diffuse;}
+    // Spec
     void setMaterialSpecColor(QColor color);
     QColor getMaterialSpecColor(){return QColor( material.specular[0]*255.0f, material.specular[1]*255.0f, material.specular[2]*255.0f);}
     QVector3D getMaterialSpecColorF(){return material.specular;}
+    // Trans
+    void setMaterialTransColor(QColor color);
+    QColor getMaterialTransColor(){return QColor( material.transparentColor[0]*255.0f, material.transparentColor[1]*255.0f, material.transparentColor[2]*255.0f);}
+    QVector4D getMaterialTransColorF(){return material.transparentColor;}
+    // Shininess
     void setShininess(int shine);
     int getShininess(){return material.shininess;}
 

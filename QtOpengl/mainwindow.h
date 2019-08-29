@@ -35,6 +35,8 @@ private slots:
 
     void on_actionDepth_Testing_toggled(bool arg1);
 
+    void on_transColorButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     RenderWindow *renderwindow;

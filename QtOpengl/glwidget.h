@@ -65,6 +65,7 @@ public slots:
     void changeMeterialType(int t);
     void setMaterialDiffColor(QColor color);
     void setMaterialSpecColor(QColor color);
+    void setMaterialTransColor(QColor color);
     void setShininess(int shine);
     void deleteModel(int id);
 
@@ -90,6 +91,7 @@ signals:
 
     void setColorButton(QColor color);
     void setColorButton_2(QColor color);
+    void setTransColorButton(QColor color);
     void setShininessSlider(int shine);
 
     void setTextureName(QString s);
