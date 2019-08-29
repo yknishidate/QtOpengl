@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include "mesh.h"
 #include <QVector>
 #include <QVector2D>
 #include <QVector3D>
@@ -266,18 +267,18 @@ void Mesh::init(const IndexedModel& model)
                model.normals.size()*sizeof(model.normals[0]));
 //    vbo.release();
 
-
     ibo.create();
     ibo.bind();
     ibo.allocate(&model.indices[0], model.indices.size() *sizeof(model.indices[0]));
     m_numIndices = model.indices.size();
 
-
     name = model.name;
 
-    qDebug() << "Name   :" << QString::fromStdString(model.name);
-    qDebug() << "Points :" << model.positions.size();
-    qDebug() << "Indeces:" << model.indices.size();
+    initCubeMap();
+
+    qDebug() << "Name          :" << QString::fromStdString(model.name);
+    qDebug() << "Points        :" << model.positions.size();
+    qDebug() << "Indeces       :" << model.indices.size();
     qDebug() << "vboTotalSize  :" << vboTotalSize;
     qDebug() << "vbo ID        :" << vbo.bufferId();
     qDebug() << "ibo ID        :" << ibo.bufferId();
@@ -285,22 +286,35 @@ void Mesh::init(const IndexedModel& model)
 
 
 
-void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture)
+void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture, int materialType)
 {
-    if(displayMode == GL_TRIANGLES){
-        shader_program->setUniformValue("wire", 0);
-        if( texture != nullptr){
-            texture->bind();
-            shader_program->setUniformValue("textureSample", 1);
-        }else{
-            shader_program->setUniformValue("textureSample", 0);
-        }
-    }
-    else{
+    if(displayMode == GL_LINE_STRIP){
         glLineWidth(0.8f);
         shader_program->setUniformValue("textureSample", 0);
         shader_program->setUniformValue("wire", 1);
+    }else{
+        shader_program->setUniformValue("wire", 0);
+        shader_program->setUniformValue("materialType", materialType);
+        switch (materialType) {
+        case 0: // Diffuse
+            if( texture != nullptr){
+                texture->bind();
+                shader_program->setUniformValue("textureSample", 1);
+            }else{
+                shader_program->setUniformValue("textureSample", 0);
+            }
+            break;
+        case 1: // Metal
+            glBindTexture(GL_TEXTURE_CUBE_MAP, textureGL);
+            shader_program->setUniformValue("textureSample", 1);
+            break;
+        case 2: // Glass
+            break;
+        case 3: // Light
+            break;
+        }
     }
+
     //shader_program->bind();
     vao.bind();
     ibo.bind();
@@ -321,4 +335,25 @@ void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenG
     if(displayMode == GL_TRIANGLES && texture != nullptr){
         texture->release();
     }
+}
+
+void Mesh::initCubeMap(){
+    QImage x = QImage("E:/Pictures/Textures/Cubemap/cube_PX.png").rgbSwapped();
+    QImage y = QImage("E:/Pictures/Textures/Cubemap/cube_PY.png").rgbSwapped();
+    QImage z = QImage("E:/Pictures/Textures/Cubemap/cube_PZ.png").rgbSwapped();
+    QImage _x = QImage("E:/Pictures/Textures/Cubemap/cube_NX.png").rgbSwapped();
+    QImage _y = QImage("E:/Pictures/Textures/Cubemap/cube_NY.png").rgbSwapped();
+    QImage _z = QImage("E:/Pictures/Textures/Cubemap/cube_NZ.png").rgbSwapped();
+    glGenTextures(1, &textureGL);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, textureGL);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) x.bits());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) y.bits());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) z.bits());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) _x.bits());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) _y.bits());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) _z.bits());
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//    glBindTexture(GL_TEXTURE_CUBE_MAP, textureGL);
+//    shader_program->setUniformValue("textureSample", 1);
 }

@@ -35,8 +35,10 @@ public:
     int getMaterialType(){return material.type;}
     void setMaterialDiffColor(QColor color);
     QColor getMaterialDiffColor(){return QColor( material.diffuse[0]*255.0f, material.diffuse[1]*255.0f, material.diffuse[2]*255.0f);}
+    QVector3D getMaterialDiffColorF(){return material.diffuse;}
     void setMaterialSpecColor(QColor color);
     QColor getMaterialSpecColor(){return QColor( material.specular[0]*255.0f, material.specular[1]*255.0f, material.specular[2]*255.0f);}
+    QVector3D getMaterialSpecColorF(){return material.specular;}
     void setShininess(int shine);
     int getShininess(){return material.shininess;}
 
@@ -44,7 +46,7 @@ public:
     void setTexture(QString fileName);
     QString getTextureName();
 
-    void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode);
+    void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, bool outline);
 
 private:
     std::string name;

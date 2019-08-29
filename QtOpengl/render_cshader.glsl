@@ -33,13 +33,16 @@ layout(std430, binding = 2) buffer SpherePosition {
     vec4 pos[];
 };
 
-//---------------------Test-------------------------
 layout(std430, binding = 3) buffer MaterialType {
     int materialType[];
 };
 
-layout(std430, binding = 4) buffer DiffColor {
-    vec4 diffColor[];
+//---------------------Test-------------------------
+layout(std430, binding = 4) buffer MaterialDiffColor {
+    vec4 materialDiffColor[];
+};
+layout(std430, binding = 5) buffer MaterialSpecColor {
+    vec4 materialSpecColor[];
 };
 //---------------------Test-------------------------
 
@@ -47,7 +50,6 @@ layout(std430, binding = 4) buffer DiffColor {
 layout(location = 0) uniform float _Theta;
 layout(location = 1) uniform float _Phi;
 layout(location = 2) uniform float _Distance;
-
 layout(location = 3) uniform int RenderMode;
 
 // Structs
@@ -132,14 +134,11 @@ vec4 ToneMap(in vec4 Color, in float White)
 vec4 GammaCorrect(in vec4 Color, in float Gamma)
 {
   vec4 Result;
-
   float G = 1 / Gamma;
-
   Result.r = pow(Color.r, G);
   Result.g = pow(Color.g, G);
   Result.b = pow(Color.b, G);
   Result.a = 1;
-
   return Result;
 }
 
@@ -168,7 +167,6 @@ void mat_backao(inout ray r, in hit h) {
 }
 
 // Light
-// TODO: 色を引数に受け取る
 void mat_light(inout ray r, in hit h) {
   r.depth = DEPTH;
   r.scatter = r.scatter * vec3(1);
@@ -176,7 +174,6 @@ void mat_light(inout ray r, in hit h) {
 }
 
 // Diffuse
-// TODO: 色を引数に受け取る
 void mat_diffuse(inout ray r, in hit h, vec3 color) {
   r.depth = r.depth + 1; //depthインクリメント
 
@@ -208,12 +205,11 @@ void mat_diffuse(inout ray r, in hit h, vec3 color) {
 }
 
 //Mirror
-void mat_mirror(inout ray r, in hit h)
-{
+void mat_mirror(inout ray r, in hit h, vec3 color){
   r.depth = r.depth + 1;
   r.origin = h.pos + h.nor * 0.001f;
   r.direction = 2 * dot(-r.direction, h.nor) * h.nor + r.direction;
-  r.scatter = r.scatter * vec3(1);
+  r.scatter = r.scatter * color;
   r.emission = vec3(0);
 }
 
@@ -388,6 +384,7 @@ void main() {
             h.pos = vec3(0);
             h.nor = vec3(0);
             vec3 diffColor = vec3(1);
+            vec3 specColor = vec3(1);
 
             switch(RenderMode){
             case 0: // RGBA
@@ -408,6 +405,9 @@ void main() {
                 for(int i = 0; i < modelN; i++){ // Sphere
                     if (hit_sphere(s[i], _rays, h)){
                         h.mat = materialType[i];
+                        diffColor = materialDiffColor[i].xyz;
+                        specColor = materialSpecColor[i].xyz;
+//                        specColor = vec3(1,0,0);
                     }
                 }
                 break;
@@ -481,7 +481,7 @@ void main() {
 
             switch(h.mat) {
                 case 0: mat_diffuse(_rays, h, diffColor); break;
-                case 1: mat_mirror(_rays, h); break;
+                case 1: mat_mirror(_rays, h, specColor); break;
                 case 2: mat_glass(_rays, h); break;
                 case 3: mat_light(_rays, h); break;
                 case 4: mat_light(_rays, h); break;

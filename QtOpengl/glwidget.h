@@ -121,6 +121,9 @@ private:
     int frame;
     int selectedModelIndex = -1;
 
+    //----------Test----------
+    GLuint textureGL;
+
 };
 
 #endif // GLWIDGET_H

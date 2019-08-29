@@ -28,7 +28,8 @@ public:
     std::string getName(){return name;}
 
     void init(const IndexedModel& model);
-    void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture);
+    void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture,int materialType);
+    void initCubeMap();
 
 private:
     QOpenGLVertexArrayObject vao;
@@ -36,6 +37,8 @@ private:
     QOpenGLBuffer ibo;
     GLuint m_numVertices;
     GLuint m_numIndices;
+
+    GLuint textureGL;
 
     std::string name;
 

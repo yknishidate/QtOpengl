@@ -119,18 +119,7 @@ void MainWindow::on_actionCube_triggered(){   ui->openGLWidget->createPrimitive(
 void MainWindow::on_actionSphere_triggered(){ ui->openGLWidget->createPrimitive(ModelType::SPHERE); }
 void MainWindow::on_actionPlane_triggered(){  ui->openGLWidget->createPrimitive(ModelType::PLANE); }
 
-void MainWindow::on_actionWireframe_toggled(bool arg1)
-{
-    ui->openGLWidget->setDisplayMode(arg1);
-    qDebug() << "test" << arg1;
-}
-
-void MainWindow::on_actionBackface_Culling_toggled(bool arg1)
-{
-    ui->openGLWidget->setCullFace(arg1);
-}
-
-void MainWindow::on_actionDepth_Testing_toggled(bool arg1)
-{
-    ui->openGLWidget->setDepthTest(arg1);
-}
+// Options
+void MainWindow::on_actionWireframe_toggled(bool arg1) { ui->openGLWidget->setDisplayMode(arg1);}
+void MainWindow::on_actionBackface_Culling_toggled(bool arg1){ ui->openGLWidget->setCullFace(arg1);}
+void MainWindow::on_actionDepth_Testing_toggled(bool arg1){ ui->openGLWidget->setDepthTest(arg1);}

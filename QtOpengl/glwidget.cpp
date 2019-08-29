@@ -7,7 +7,7 @@
 GLWidget::GLWidget(QWidget *parent)
     : QOpenGLWidget(parent),
       displayMode(GL_TRIANGLES),
-      xRot(0), yRot(0), zRot(0),
+      xRot(30*16), yRot(-45*16), zRot(0),
       camera(QVector3D(0,0,20), QVector3D(0,0,0)),
       culling(false), testing(true)
 {
@@ -85,6 +85,10 @@ void GLWidget::initializeGL(){
     grid.init();
     modelMatrix.setToIdentity();
 
+
+    //----------Test----------
+
+
     frame = 0;
 }
 
@@ -115,7 +119,21 @@ void GLWidget::paintGL(){
         normalMatrix = modelMatrix.normalMatrix();
 
         shader.update(proj, camera.matrix, modelMatrix, normalMatrix);
-        models[i]->draw(shader.program, displayMode);
+        models[i]->draw(shader.program, displayMode, false);
+
+        //---------Outline--------
+        if(selectedModelIndex == i){
+            glEnable(GL_CULL_FACE);
+            glFrontFace(GL_CW);
+            modelMatrix.scale(1.01);
+            shader.update(proj, camera.matrix, modelMatrix, normalMatrix);
+            if(displayMode == GL_TRIANGLES)
+                models[i]->draw(shader.program, displayMode, true);
+
+            glDisable(GL_CULL_FACE);
+            glFrontFace(GL_CCW);
+        }
+        //---------Outline--------
     }
 
     qDebug() << ++frame;
@@ -128,7 +146,7 @@ void GLWidget::paintGL(){
 
 void GLWidget::resizeGL(int w, int h){
     proj.setToIdentity();
-    proj.perspective(45.0f, GLfloat(w)/h, 0.01f, 1000.0f);
+    proj.perspective(53.13f, GLfloat(w)/h, 0.01f, 1000.0f);
 }
 
 // Window Size
@@ -156,7 +174,7 @@ void GLWidget::wheelEvent(QWheelEvent *event){
 
 
 
-// Slots = UI Controled
+// Slots = UI Changed
 void GLWidget::setDisplayMode(bool arg){
     if(arg){displayMode = GL_LINE_STRIP;}
     else{displayMode = GL_TRIANGLES;}

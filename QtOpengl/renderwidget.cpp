@@ -169,6 +169,8 @@ void RenderWidget::initializeGL(){
     std::vector<QVector4D> posData;
     std::vector<QVector4D> planePosData;
     std::vector<int> meterialTypeData;
+    std::vector<QVector4D> materialDiffColorData;
+    std::vector<QVector4D> materialSpecColorData;
 
     // Load Models
     for(int i =0; i < models.size(); i++){
@@ -180,6 +182,8 @@ void RenderWidget::initializeGL(){
             posData.push_back(QVector4D((QVector3D(0, -10000, 0) + models[i]->getPosition()), 1));
         }
         meterialTypeData.push_back(models[i]->getMaterialType());
+        materialDiffColorData.push_back(QVector4D(models[i]->getMaterialDiffColorF(), 1));
+        materialSpecColorData.push_back(QVector4D(models[i]->getMaterialSpecColorF(), 1));
     }
 
     // Sphere Radius
@@ -204,6 +208,22 @@ void RenderWidget::initializeGL(){
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, materialType);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(int)*meterialTypeData.size(), &meterialTypeData[0], GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, materialType); //binding = 3
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
+
+    // Diffuse
+    GLuint materialDiffColor;
+    glGenBuffers(1, &materialDiffColor);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, materialDiffColor);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(QVector4D)*materialDiffColorData.size(), &materialDiffColorData[0], GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, materialDiffColor); //binding = 4
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
+
+    // Specular
+    GLuint materialSpecColor;
+    glGenBuffers(1, &materialSpecColor);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, materialSpecColor);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(QVector4D)*materialSpecColorData.size(), &materialSpecColorData[0], GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, materialSpecColor); //binding = 5
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0); // unbind
 
     m_vao.release();
@@ -249,7 +269,7 @@ void RenderWidget::changeRenderMode(const int mode)
 void RenderWidget::saveImage()
 {
     rendering = false;
-    QString fileName = QFileDialog::getSaveFileName(this, "", "Untitled.png", tr("Images (*.png)"));
+    QString fileName = QFileDialog::getSaveFileName(this, "", "Untitled.png");
     if (!fileName.isEmpty()) grabFramebuffer().save(fileName);
 }
 

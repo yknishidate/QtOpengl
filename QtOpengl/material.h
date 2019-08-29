@@ -4,6 +4,7 @@
 
 struct Material{
     int type;
+
     QVector3D ambient;
     QVector3D diffuse;
     QVector3D specular;

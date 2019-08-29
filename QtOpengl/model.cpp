@@ -54,13 +54,14 @@ void Model::setTexture(QString fileName){
     texture->setWrapMode(QOpenGLTexture::Repeat);
 }
 
-void Model::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode)
+void Model::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, bool outline)
 {
     shader_program->setUniformValue("Kamb", material.ambient);
     shader_program->setUniformValue("Kdiff", material.diffuse);
     shader_program->setUniformValue("Kspec", material.specular);
     shader_program->setUniformValue("Kshi", material.shininess);
-    mesh->draw(shader_program, displayMode, texture);
+    shader_program->setUniformValue("outline", outline);
+    mesh->draw(shader_program, displayMode, texture, material.type);
 }
 
 QString Model::getTextureName(){
