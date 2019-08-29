@@ -59,6 +59,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->openGLWidget, SIGNAL(setColorButton_2(QColor)), ui->colorButton_2, SLOT(setColor(QColor)));
     ui->transColorButton->setPalette(pal);
     connect(ui->openGLWidget, SIGNAL(setTransColorButton(QColor)), ui->transColorButton, SLOT(setColor(QColor)));
+    ui->lightColorButton->setPalette(pal);
+    connect(ui->openGLWidget, SIGNAL(setLightColorButton(QColor)), ui->lightColorButton, SLOT(setColor(QColor)));
 
 
     // Texture
@@ -71,6 +73,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->shineSlider, SIGNAL(valueChanged(int)), ui->openGLWidget, SLOT(setShininess(int)));
     connect(ui->openGLWidget, SIGNAL(setShininessSlider(int)), ui->shineSlider, SLOT(setValue(int)));
 
+    // Material Hide
+    ui->label_11->hide();   ui->transColorButton->hide();
+    ui->label_ior->hide();   ui->iorDoubleSpinBox->hide();
+    ui->label_light->hide();ui->lightColorButton->hide();
 }
 
 MainWindow::~MainWindow()
@@ -113,6 +119,19 @@ void MainWindow::on_transColorButton_clicked()
     }
 }
 
+void MainWindow::on_lightColorButton_clicked()
+{
+    QColor chosenColor = QColorDialog::getColor();
+    if(chosenColor.isValid()){
+        QPalette pal = ui->lightColorButton->palette();
+        pal.setColor(QPalette::Button, chosenColor);
+        ui->lightColorButton->setPalette(pal);
+        ui->lightColorButton->update();
+        ui->openGLWidget->setMaterialLightColor(chosenColor);
+    }
+}
+
+
 
 // Open Render Window
 void MainWindow::on_actionRender_triggered()
@@ -136,4 +155,47 @@ void MainWindow::on_actionPlane_triggered(){  ui->openGLWidget->createPrimitive(
 void MainWindow::on_actionWireframe_toggled(bool arg1) { ui->openGLWidget->setDisplayMode(arg1);}
 void MainWindow::on_actionBackface_Culling_toggled(bool arg1){ ui->openGLWidget->setCullFace(arg1);}
 void MainWindow::on_actionDepth_Testing_toggled(bool arg1){ ui->openGLWidget->setDepthTest(arg1);}
+
+
+void MainWindow::on_materialTypeComboBox_currentIndexChanged(int index)
+{
+    switch (index) {
+    case 0: // Diff
+        ui->label_7->show();    ui->colorButton->show();
+        ui->label_8->show();    ui->colorButton_2->show();
+        ui->label_11->hide();   ui->transColorButton->hide();
+        ui->label_light->hide();ui->lightColorButton->hide();
+        ui->label_ior->hide();  ui->iorDoubleSpinBox->hide();
+        ui->label_9->show();    ui->shineSlider->show();
+        ui->label_6->show();    ui->lineEdit->show();           ui->toolButton->show();
+        break;
+    case 1: // Metal
+        ui->label_7->hide();    ui->colorButton->hide();
+        ui->label_8->show();    ui->colorButton_2->show();
+        ui->label_11->hide();   ui->transColorButton->hide();
+        ui->label_light->hide();ui->lightColorButton->hide();
+        ui->label_ior->hide();  ui->iorDoubleSpinBox->hide();
+        ui->label_9->hide();    ui->shineSlider->hide();
+        ui->label_6->hide();    ui->lineEdit->hide();           ui->toolButton->hide();
+        break;
+    case 2: // Glass
+        ui->label_7->hide();    ui->colorButton->hide();
+        ui->label_8->hide();    ui->colorButton_2->hide();
+        ui->label_11->show();   ui->transColorButton->show();
+        ui->label_light->hide();ui->lightColorButton->hide();
+        ui->label_ior->show();  ui->iorDoubleSpinBox->show();
+        ui->label_9->hide();    ui->shineSlider->hide();
+        ui->label_6->hide();    ui->lineEdit->hide();           ui->toolButton->hide();
+        break;
+    case 3: // Light
+        ui->label_7->hide();    ui->colorButton->hide();
+        ui->label_8->hide();    ui->colorButton_2->hide();
+        ui->label_11->hide();   ui->transColorButton->hide();
+        ui->label_light->show();ui->lightColorButton->show();
+        ui->label_ior->hide();  ui->iorDoubleSpinBox->hide();
+        ui->label_9->hide();    ui->shineSlider->hide();
+        ui->label_6->hide();    ui->lineEdit->hide();           ui->toolButton->hide();
+        break;
+    }
+}
 

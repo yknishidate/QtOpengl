@@ -37,6 +37,10 @@ private slots:
 
     void on_transColorButton_clicked();
 
+    void on_materialTypeComboBox_currentIndexChanged(int index);
+
+    void on_lightColorButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     RenderWindow *renderwindow;

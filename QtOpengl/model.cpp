@@ -19,6 +19,8 @@ Model::Model(const QString& fileName)
     material.specular = QVector3D(1.0f, 1.0f, 1.0f);
     material.shininess = 16.0f;
     material.transparentColor = QVector4D(1.0f, 1.0f, 1.0f, 0.3f);
+    material.lightColor = QVector3D(1.0f, 1.0f, 1.0f);
+    material.ior = 1.5f;
 }
 
 // Primitives
@@ -40,6 +42,8 @@ Model::Model(const int t){
     material.specular = QVector3D(1.0f, 1.0f, 1.0f);
     material.shininess = 16.0f;
     material.transparentColor = QVector4D(1.0f, 1.0f, 1.0f, 0.3f);
+    material.lightColor = QVector3D(1.0f, 1.0f, 1.0f);
+    material.ior = 1.5f;
 }
 
 Model::~Model()
@@ -91,6 +95,11 @@ void Model::setMaterialTransColor(QColor color){
    material.transparentColor[0] = color.red()/255.0f;
    material.transparentColor[1] = color.green()/255.0f;
    material.transparentColor[2] = color.blue()/255.0f;
+}
+void Model::setMaterialLightColor(QColor color){
+   material.lightColor[0] = color.red()/255.0f;
+   material.lightColor[1] = color.green()/255.0f;
+   material.lightColor[2] = color.blue()/255.0f;
 }
 
 void Model::setShininess(int shine){

@@ -11,7 +11,9 @@ struct Material{
     QVector3D specular;
     float shininess;
 
+    float ior;
     QVector4D transparentColor;
+    QVector3D lightColor;
 };
 
 #endif // MATERIAL_H

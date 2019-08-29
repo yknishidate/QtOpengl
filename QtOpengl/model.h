@@ -45,6 +45,10 @@ public:
     void setMaterialTransColor(QColor color);
     QColor getMaterialTransColor(){return QColor( material.transparentColor[0]*255.0f, material.transparentColor[1]*255.0f, material.transparentColor[2]*255.0f);}
     QVector4D getMaterialTransColorF(){return material.transparentColor;}
+    // Light
+    void setMaterialLightColor(QColor color);
+    QColor getMaterialLightColor(){return QColor( material.lightColor[0]*255.0f, material.lightColor[1]*255.0f, material.lightColor[2]*255.0f);}
+    QVector4D getMaterialLightColorF(){return material.lightColor;}
     // Shininess
     void setShininess(int shine);
     int getShininess(){return material.shininess;}

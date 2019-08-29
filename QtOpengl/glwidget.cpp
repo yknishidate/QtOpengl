@@ -70,6 +70,7 @@ void GLWidget::selectedModel(QModelIndex modelIndex){
     emit setColorButton(models[selectedModelIndex]->getMaterialDiffColor());
     emit setColorButton_2(models[selectedModelIndex]->getMaterialSpecColor());
     emit setTransColorButton(models[selectedModelIndex]->getMaterialTransColor());
+    emit setLightColorButton(models[selectedModelIndex]->getMaterialLightColor());
 
     emit setShininessSlider(sqrt(models[selectedModelIndex]->getShininess()));
 }
@@ -208,6 +209,10 @@ void GLWidget::setMaterialSpecColor(QColor color){
 }
 void GLWidget::setMaterialTransColor(QColor color){
     models[selectedModelIndex]->setMaterialTransColor(color);
+    update();
+}
+void GLWidget::setMaterialLightColor(QColor color){
+    models[selectedModelIndex]->setMaterialLightColor(color);
     update();
 }
 void GLWidget::setShininess(int shine){
