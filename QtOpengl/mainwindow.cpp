@@ -21,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // Attibute Group
     ui->attributesGroup->setVisible(false);
     connect(ui->treeView, SIGNAL(clicked(QModelIndex)), ui->attributesGroup, SLOT(setVisibleTrue(QModelIndex)));
+    connect(ui->openGLWidget, SIGNAL(sphereSelected(bool)), ui->sphereWidget, SLOT(setVisible(bool)));
+//    connect(ui->openGLWidget, SIGNAL(cubeSelected()), ui->sphereWidget, SLOT(setVisibleFalse()));
+
 
     // Coordinates
     // Spinbox -> Model
@@ -77,6 +80,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_11->hide();   ui->transColorButton->hide();
     ui->label_ior->hide();   ui->iorDoubleSpinBox->hide();
     ui->label_light->hide();ui->lightColorButton->hide();
+
+    // Sphere
+    connect(ui->openGLWidget, SIGNAL(setSphereRadSpinBox(double)), ui->radSpinBox, SLOT(setValue(double)));
+    connect(ui->openGLWidget, SIGNAL(setSphereSegSpinBox(int)), ui->segBox, SLOT(setValue(int)));
 }
 
 MainWindow::~MainWindow()
@@ -148,7 +155,8 @@ void MainWindow::on_actionRender_triggered()
 
 // Create Primitives
 void MainWindow::on_actionCube_triggered(){   ui->openGLWidget->createPrimitive(ModelType::CUBE); }
-void MainWindow::on_actionSphere_triggered(){ ui->openGLWidget->createPrimitive(ModelType::SPHERE); }
+//void MainWindow::on_actionSphere_triggered(){ ui->openGLWidget->createPrimitive(ModelType::SPHERE); }
+void MainWindow::on_actionSphere_triggered(){ui->openGLWidget->createSphere(5, 16, 32);}
 void MainWindow::on_actionPlane_triggered(){  ui->openGLWidget->createPrimitive(ModelType::PLANE); }
 
 // Options
@@ -199,3 +207,13 @@ void MainWindow::on_materialTypeComboBox_currentIndexChanged(int index)
     }
 }
 
+
+void MainWindow::on_radSpinBox_valueChanged(double arg1)
+{
+    ui->openGLWidget->changeSphereRad(arg1);
+}
+
+void MainWindow::on_segBox_valueChanged(int arg1)
+{
+    ui->openGLWidget->changeSphereSeg(arg1);
+}

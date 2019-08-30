@@ -12,6 +12,7 @@
 #include "shader.h"
 #include "treeview.h"
 #include "model.h"
+#include "spheremodel.h"
 
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
@@ -61,6 +62,11 @@ public slots:
     void openTexture();
     void selectedModel(QModelIndex modelIndex);
 
+    void createSphere(float r, int st, int sl);
+    void changeSphere(float r, int st, int sl);
+    void changeSphereRad(float r);
+    void changeSphereSeg(int st);
+
 
     void changeMeterialType(int t);
     void setMaterialDiffColor(QColor color);
@@ -98,6 +104,12 @@ signals:
     void setShininessSlider(int shine);
 
     void setTextureName(QString s);
+    //----------Test----------
+    void setSphereRadSpinBox(double r);
+    void setSphereSegSpinBox(int st);
+    void sphereSelected(bool arg);
+    void cubeSelected(bool arg);
+    //----------Test----------
 
 private:
     int xRot;

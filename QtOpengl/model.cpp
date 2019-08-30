@@ -1,5 +1,8 @@
 #include "model.h"
 
+Model::Model(){
+
+}
 Model::Model(const QString& fileName)
 {
     mesh = new Mesh(fileName);
@@ -24,7 +27,7 @@ Model::Model(const QString& fileName)
 }
 
 // Primitives
-Model::Model(const int t){
+Model::Model(const int t) {
     mesh = new Mesh(t);
     name = mesh->getName();
     type = t;
@@ -46,8 +49,7 @@ Model::Model(const int t){
     material.ior = 1.5f;
 }
 
-Model::~Model()
-{
+Model::~Model() {
     delete mesh;
     delete texture;
 }

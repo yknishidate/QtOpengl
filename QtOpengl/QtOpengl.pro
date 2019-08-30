@@ -30,6 +30,7 @@ SOURCES += \
         renderwidget.cpp \
         renderwindow.cpp \
         shader.cpp \
+        spheremodel.cpp \
         treeview.cpp
 
 HEADERS += \
@@ -46,6 +47,7 @@ HEADERS += \
         renderwidget.h \
         renderwindow.h \
         shader.h \
+        spheremodel.h \
         stb_image.h \
         stb_image_write.h \
         treeview.h \

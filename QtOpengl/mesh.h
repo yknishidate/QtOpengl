@@ -27,7 +27,11 @@ public:
 
     std::string getName(){return name;}
 
+    void createSphere(float radius, int stacks, int slices);
+    void changeSphere(float radius, int stacks, int slices);
+
     void init(const IndexedModel& model);
+    void change(const IndexedModel& model);
     void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture,int materialType);
     void initCubeMap();
 
@@ -37,6 +41,8 @@ private:
     QOpenGLBuffer ibo;
     GLuint m_numVertices;
     GLuint m_numIndices;
+
+    IndexedModel indexModel;
 
     GLuint textureGL;
 

@@ -1,5 +1,4 @@
 #include "mesh.h"
-#include "mesh.h"
 #include <QVector>
 #include <QVector2D>
 #include <QVector3D>
@@ -7,6 +6,7 @@
 
 
 Mesh::Mesh()
+    : ibo(QOpenGLBuffer::IndexBuffer)
 {
 }
 
@@ -249,6 +249,93 @@ Mesh::~Mesh()
     qDebug() << "Mesh Deleted";
 }
 
+void Mesh::createSphere(float radius, int stacks, int slices)
+{
+    indexModel.name = "Sphere";
+    // Position, TexCoord, Normal
+    for (int j = 0; j <= stacks; ++j)
+    {
+        const float t(static_cast<float>(j) / static_cast<float>(stacks));
+        const float y(cos(M_PI * t) * radius), r(sin(M_PI * t) * radius);
+        for (int i = 0; i <= slices; ++i)
+        {
+            const float s(static_cast<float>(i) / static_cast<float>(slices));
+            const float z(r * cos(M_PI * 2 * s)), x(r * sin(M_PI * 2 * s));
+            indexModel.positions.push_back(QVector3D(x, y, z));
+            indexModel.texCoords.push_back(QVector2D(1.0f/slices * i, 1.0f-(1.0f/stacks * j)));
+            indexModel.normals.push_back(QVector3D(x, y, z).normalized());
+        }
+    }
+    // Index
+    for (int j = 0; j < stacks; ++j)
+    {
+        const int k((slices + 1) * j);
+        for (int i = 0; i < slices; ++i)
+        {
+            // 頂点のインデックス
+            const GLuint k0(k + i);
+            const GLuint k1(k0 + 1);
+            const GLuint k2(k1 + slices);
+            const GLuint k3(k2 + 1);
+            // 左下の三角形
+            indexModel.indices.push_back(k0);
+            indexModel.indices.push_back(k2);
+            indexModel.indices.push_back(k3);
+            // 右上の三角形
+            indexModel.indices.push_back(k0);
+            indexModel.indices.push_back(k3);
+            indexModel.indices.push_back(k1);
+        }
+    }
+    init(indexModel);
+}
+
+void Mesh::changeSphere(float radius, int stacks, int slices)
+{
+//    indexModel.name = "Sphere";
+    // Position, TexCoord, Normal
+    indexModel.positions.clear();
+    indexModel.texCoords.clear();
+    indexModel.normals.clear();
+    indexModel.indices.clear();
+
+    for (int j = 0; j <= stacks; ++j)
+    {
+        const float t(static_cast<float>(j) / static_cast<float>(stacks));
+        const float y(cos(M_PI * t) * radius), r(sin(M_PI * t) * radius);
+        for (int i = 0; i <= slices; ++i)
+        {
+            const float s(static_cast<float>(i) / static_cast<float>(slices));
+            const float z(r * cos(M_PI * 2 * s)), x(r * sin(M_PI * 2 * s));
+            indexModel.positions.push_back(QVector3D(x, y, z));
+            indexModel.texCoords.push_back(QVector2D(1.0f/slices * i, 1.0f-(1.0f/stacks * j)));
+            indexModel.normals.push_back(QVector3D(x, y, z).normalized());
+        }
+    }
+    // Index
+    for (int j = 0; j < stacks; ++j)
+    {
+        const int k((slices + 1) * j);
+        for (int i = 0; i < slices; ++i)
+        {
+            // 頂点のインデックス
+            const GLuint k0(k + i);
+            const GLuint k1(k0 + 1);
+            const GLuint k2(k1 + slices);
+            const GLuint k3(k2 + 1);
+            // 左下の三角形
+            indexModel.indices.push_back(k0);
+            indexModel.indices.push_back(k2);
+            indexModel.indices.push_back(k3);
+            // 右上の三角形
+            indexModel.indices.push_back(k0);
+            indexModel.indices.push_back(k3);
+            indexModel.indices.push_back(k1);
+        }
+    }
+    change(indexModel);
+}
+
 void Mesh::init(const IndexedModel& model)
 {
     qDebug() << "---initMesh()---";
@@ -282,6 +369,33 @@ void Mesh::init(const IndexedModel& model)
     qDebug() << "vboTotalSize  :" << vboTotalSize;
     qDebug() << "vbo ID        :" << vbo.bufferId();
     qDebug() << "ibo ID        :" << ibo.bufferId();
+}
+
+void Mesh::change(const IndexedModel &model)
+{
+    qDebug() << "---Change Mesh---";
+    vbo.destroy();
+    ibo.destroy();
+
+    texCoordOffset = model.positions.size()*sizeof(model.positions[0]);
+    normalOffset   = texCoordOffset + model.texCoords.size()*sizeof(model.texCoords[0]);
+    vboTotalSize   = normalOffset   + model.normals.size()*sizeof(model.normals[0]);
+
+    vbo.create();
+    vbo.bind();
+    vbo.allocate( &model.positions[0], vboTotalSize);    // "&qvec[0]" で渡す
+    vbo.write( texCoordOffset, &model.texCoords[0],
+               model.texCoords.size()*sizeof(model.texCoords[0]));
+    vbo.write( normalOffset, &model.normals[0],
+               model.normals.size()*sizeof(model.normals[0]));
+
+    ibo.create();
+    ibo.bind();
+    ibo.allocate(&model.indices[0], model.indices.size() *sizeof(model.indices[0]));
+    m_numIndices = model.indices.size();
+
+    qDebug() << "Points        :" << model.positions.size();
+    qDebug() << "Indeces       :" << model.indices.size();
 }
 
 

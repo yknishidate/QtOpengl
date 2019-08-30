@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QWheelEvent>
+#include <typeinfo>
 
 
 GLWidget::GLWidget(QWidget *parent)
@@ -20,25 +21,49 @@ void GLWidget::open(){
     if(fileName != ""){
         models.push_back(new Model(fileName));
         emit loadedModel(models[modelCount]);
-
         modelCount++;
         update();
     }
 }
 
 void GLWidget::createPrimitive(int type){
-
     models.push_back(new Model(type));
     emit loadedModel(models[modelCount]);
-
     modelCount++;
+    update();
+}
+
+void GLWidget::createSphere(float r, int st, int sl){
+    models.push_back(new SphereModel(r, st, sl));
+    emit loadedModel(models[modelCount]);
+    modelCount++;
+    update();
+}
+
+void GLWidget::changeSphere(float r, int st, int sl)
+{
+    models[selectedModelIndex]->change(r, st, sl);
+    models[selectedModelIndex]->setRadius(r);
+    update();
+}
+void GLWidget::changeSphereRad(float r)
+{
+    models[selectedModelIndex]->change(r, models[selectedModelIndex]->getStacks(), models[selectedModelIndex]->getSlices());
+    models[selectedModelIndex]->setRadius(r);
+    update();
+}
+
+void GLWidget::changeSphereSeg(int st)
+{
+    models[selectedModelIndex]->change(models[selectedModelIndex]->getRadius(), st, st*2);
+    models[selectedModelIndex]->setStacks(st);
+    models[selectedModelIndex]->setSlices(st*2);
     update();
 }
 
 void GLWidget::openTexture(){
     QString fileName = QFileDialog::getOpenFileName(this);
     qDebug() << "---openTexture()---";
-
     if(fileName != ""){
         if(selectedModelIndex != -1)
         {
@@ -51,7 +76,16 @@ void GLWidget::openTexture(){
 
 void GLWidget::selectedModel(QModelIndex modelIndex){
     selectedModelIndex = modelIndex.row();
-    qDebug() << "Select:" << selectedModelIndex ;
+    //----------Test----------
+    if(typeid(*models[selectedModelIndex]) == typeid(SphereModel)){
+        emit sphereSelected(true);
+        emit setSphereRadSpinBox(models[selectedModelIndex]->getRadius());
+        emit setSphereSegSpinBox(models[selectedModelIndex]->getStacks());
+    }
+    else {
+        emit sphereSelected(false);
+    }
+    //----------Test----------
 
     emit setSpinboxPositionX(models[selectedModelIndex]->getPosition().x());
     emit setSpinboxPositionY(models[selectedModelIndex]->getPosition().y());
@@ -73,6 +107,7 @@ void GLWidget::selectedModel(QModelIndex modelIndex){
     emit setLightColorButton(models[selectedModelIndex]->getMaterialLightColor());
 
     emit setShininessSlider(sqrt(models[selectedModelIndex]->getShininess()));
+
 }
 
 
@@ -141,7 +176,7 @@ void GLWidget::paintGL(){
         //---------Outline--------
     }
 
-    qDebug() << ++frame << camera.getCameraPos();
+//    qDebug() << ++frame;
 }
 
 

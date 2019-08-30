@@ -41,6 +41,10 @@ private slots:
 
     void on_lightColorButton_clicked();
 
+    void on_radSpinBox_valueChanged(double arg1);
+
+    void on_segBox_valueChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     RenderWindow *renderwindow;

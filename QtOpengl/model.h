@@ -7,14 +7,20 @@
 class Model
 {
 public:
-
+    Model();
     Model(const QString& fileName);
     Model(const int type);
     ~Model();
 
     std::string getName(){return name;}
     int getType(){return type;}
-    float getRadius(){return radius;}
+    virtual float getRadius(){return radius;}
+    virtual void change(float r, int st, int sl){};
+    virtual int getStacks(){};
+    virtual int getSlices(){};
+    virtual void setRadius(float r){};
+    virtual void setStacks(int s){};
+    virtual void setSlices(int s){};
 
     // Coordinates
     void  setPositionX(double x){position.setX(x);}
@@ -59,7 +65,7 @@ public:
 
     void draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, bool outline);
 
-private:
+protected:
     std::string name;
     int type;
     float radius = 5.0f;
