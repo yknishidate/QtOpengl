@@ -23,7 +23,7 @@ ivec3 _WorksN = _WorkGrupsN * _WorkItemsN;
 ivec3 _WorkID = ivec3(gl_GlobalInvocationID);
 
 layout(std430, binding = 0) buffer AccumN {
-  uint _AccumN;
+    uint _AccumN;
 };
 
 layout(std430, binding = 1) buffer SphereRadius {
@@ -63,51 +63,51 @@ layout(location = 3) uniform int RenderMode;
 
 // Structs
 struct ray {
-  vec3 origin;
-  vec3 direction;
-  vec3 scatter;
-  vec3 emission;
-  int depth;
+    vec3 origin;
+    vec3 direction;
+    vec3 scatter;
+    vec3 emission;
+    int depth;
 };
 struct hit{
-  float t;
-  vec3 pos;
-  vec3 nor;
-  uint mat;
+    float t;
+    vec3 pos;
+    vec3 nor;
+    uint mat;
 };
 struct sphere {
-  vec3 center;
-  float radius;
+    vec3 center;
+    float radius;
 };
 float pow2(float x) {
-  return x * x;
+    return x * x;
 }
 float pow5(float x) {
-  return x * x * x * x * x;
+    return x * x * x * x * x;
 }
 float fresnel(in float n, in float u) {
-  float f0 = pow2((n - 1) / (n + 1));
-  return f0 + (1 - f0) * pow5(1 - u);
+    float f0 = pow2((n - 1) / (n + 1));
+    return f0 + (1 - f0) * pow5(1 - u);
 }
 
 //Hit
 bool hit_sphere(in sphere s, in ray r, inout hit h) {
-  vec3 oc = r.origin - s.center;
-  float a = dot(r.direction, r.direction);
-  float b = dot(oc, r.direction);
-  float c = dot(oc, oc) - pow2(s.radius);
-  float discriminant = pow2(b) - a * c; //解の公式のD
-  float t;
+    vec3 oc = r.origin - s.center;
+    float a = dot(r.direction, r.direction);
+    float b = dot(oc, r.direction);
+    float c = dot(oc, oc) - pow2(s.radius);
+    float discriminant = pow2(b) - a * c; //解の公式のD
+    float t;
 
-  if (discriminant > 0) //D > 0
-  {
-    t = (-b - sqrt(discriminant)) / a; //small t
-    if (0 < t && t < h.t)
+    if (discriminant > 0) //D > 0
     {
-      h.t = t;
-      h.pos = r.origin + t * r.direction;
-      h.nor = normalize(h.pos - s.center);
-      return true;
+        t = (-b - sqrt(discriminant)) / a; //small t
+        if (0 < t && t < h.t)
+        {
+        h.t = t;
+        h.pos = r.origin + t * r.direction;
+        h.nor = normalize(h.pos - s.center);
+        return true;
     }
 
     t = (-b + sqrt(discriminant)) / a; //big t
@@ -125,30 +125,30 @@ bool hit_sphere(in sphere s, in ray r, inout hit h) {
 //XORshift
 uvec4 _xors;
 float rand() {
-  uint t = (_xors[0] ^ (_xors[0] << 11));
-  _xors[0] = _xors[1];
-  _xors[1] = _xors[2];
-  _xors[2] = _xors[3];
-  _xors[3] = (_xors[3] ^ (_xors[3] >> 19)) ^ (t ^ (t >> 8));
-  return _xors[3] / 4294967295.0f;
+    uint t = (_xors[0] ^ (_xors[0] << 11));
+    _xors[0] = _xors[1];
+    _xors[1] = _xors[2];
+    _xors[2] = _xors[3];
+    _xors[3] = (_xors[3] ^ (_xors[3] >> 19)) ^ (t ^ (t >> 8));
+    return _xors[3] / 4294967295.0f;
 }
 
 // ToneMap
 vec4 ToneMap(in vec4 Color, in float White)
 {
-  return clamp(Color * (1 + Color / White) / (1 + Color), 0, 1);
+    return clamp(Color * (1 + Color / White) / (1 + Color), 0, 1);
 }
 
 //Gamma Correction
 vec4 GammaCorrect(in vec4 Color, in float Gamma)
 {
-  vec4 Result;
-  float G = 1 / Gamma;
-  Result.r = pow(Color.r, G);
-  Result.g = pow(Color.g, G);
-  Result.b = pow(Color.b, G);
-  Result.a = 1;
-  return Result;
+    vec4 Result;
+    float G = 1 / Gamma;
+    Result.r = pow(Color.r, G);
+    Result.g = pow(Color.g, G);
+    Result.b = pow(Color.b, G);
+    Result.a = 1;
+    return Result;
 }
 
 
@@ -177,78 +177,76 @@ void mat_backao(inout ray r, in hit h) {
 
 // Light
 void mat_light(inout ray r, in hit h, vec3 color) {
-  r.depth = DEPTH;
-  r.scatter = r.scatter * color;
-  r.emission = vec3(10);
+    r.depth = DEPTH;
+    r.scatter = r.scatter * color;
+    r.emission = vec3(10);
 }
 
 // Diffuse
 void mat_diffuse(inout ray r, in hit h, vec3 color) {
-  r.depth = r.depth + 1; //depthインクリメント
+    r.depth = r.depth + 1; //depthインクリメント
 
-  r.direction.y = sqrt(rand());
-  float d = sqrt(1 - pow2(r.direction.y));
-  float v = rand() * 2 * PI;
-  vec3 UppVec;
-  vec3 BinVec;
-  vec3 TanVec;
-  vec3 EX = vec3(1, 0, 0); float DX = abs(dot(h.nor, EX));
-  vec3 EY = vec3(0, 1, 0); float DY = abs(dot(h.nor, EY));
-  vec3 EZ = vec3(0, 0, 1); float DZ = abs(dot(h.nor, EZ));
-  if (DY < DX) {
-    if (DZ < DY) UppVec = EZ;
-    else UppVec = EY;
-  }
-  else // DX <= DY
-  {
-    if (DZ < DX) UppVec = EZ;
-    else UppVec = EX;
-  }
-  TanVec = normalize(cross(UppVec, h.nor));
-  BinVec = normalize(cross(TanVec, h.nor));
-  r.direction = normalize(BinVec * d * cos(v) + h.nor * r.direction.y + TanVec * d * sin(v));
-  r.origin = h.pos + h.nor * 0.001f;
-//  r.scatter = r.scatter * vec3(1);
-  r.scatter = r.scatter * color;
-  r.emission = vec3(0);
+    r.direction.y = sqrt(rand());
+    float d = sqrt(1 - pow2(r.direction.y));
+    float v = rand() * 2 * PI;
+    vec3 UppVec;
+    vec3 BinVec;
+    vec3 TanVec;
+    vec3 EX = vec3(1, 0, 0); float DX = abs(dot(h.nor, EX));
+    vec3 EY = vec3(0, 1, 0); float DY = abs(dot(h.nor, EY));
+    vec3 EZ = vec3(0, 0, 1); float DZ = abs(dot(h.nor, EZ));
+    if (DY < DX) {
+        if (DZ < DY) UppVec = EZ;
+        else UppVec = EY;
+    }
+    else // DX <= DY
+    {
+        if (DZ < DX) UppVec = EZ;
+        else UppVec = EX;
+    }
+    TanVec = normalize(cross(UppVec, h.nor));
+    BinVec = normalize(cross(TanVec, h.nor));
+    r.direction = normalize(BinVec * d * cos(v) + h.nor * r.direction.y + TanVec * d * sin(v));
+    r.origin = h.pos + h.nor * 0.001f;
+    r.scatter = r.scatter * color;
+    r.emission = vec3(0);
 }
 
 //Mirror
 void mat_mirror(inout ray r, in hit h, vec3 color){
-  r.depth = r.depth + 1;
-  r.origin = h.pos + h.nor * 0.001f;
-  r.direction = 2 * dot(-r.direction, h.nor) * h.nor + r.direction;
-  r.scatter = r.scatter * color;
-  r.emission = vec3(0);
+    r.depth = r.depth + 1;
+    r.origin = h.pos + h.nor * 0.001f;
+    r.direction = 2 * dot(-r.direction, h.nor) * h.nor + r.direction;
+    r.scatter = r.scatter * color;
+    r.emission = vec3(0);
 }
 
 //Glass
 void mat_glass(inout ray r, in hit h, vec4 color, float ior)
 {
-  r.depth = r.depth + 1;
-  float n = ior;
-  vec3 N;
-  if (dot(-r.direction, h.nor) > 0) {
-    n = 1.0 / n;
-    N = h.nor;
-  }
-  else {
-    n = n / 1.0;
-    N = -h.nor;
-  }
-  if (rand() < fresnel(n, dot(-r.direction, N))) {
-    r.origin = h.pos + N * 0.001f;
-    r.direction = 2 * dot(-r.direction, N) * N + r.direction;
-  }
-  else {
-    r.origin = h.pos - N * 0.001f;
-    float t = dot(-r.direction, N);
-    r.direction = n * r.direction +
+    r.depth = r.depth + 1;
+    float n = ior;
+    vec3 N;
+    if (dot(-r.direction, h.nor) > 0) {
+        n = 1.0 / n;
+        N = h.nor;
+    }
+    else {
+        n = n / 1.0;
+        N = -h.nor;
+    }
+    if (rand() < fresnel(n, dot(-r.direction, N))) {
+        r.origin = h.pos + N * 0.001f;
+        r.direction = 2 * dot(-r.direction, N) * N + r.direction;
+    }
+    else {
+        r.origin = h.pos - N * 0.001f;
+        float t = dot(-r.direction, N);
+        r.direction = n * r.direction +
                   (n * t - sqrt(1 - pow2(n) * (1 - pow2(t)))) * N;
-  }
-
-  r.scatter = r.scatter * color.xyz;
-  r.emission = vec3(0);
+    }
+    r.scatter = r.scatter * color.xyz;
+    r.emission = vec3(0);
 }
 
 
@@ -256,56 +254,55 @@ void mat_glass(inout ray r, in hit h, vec4 color, float ior)
 // TODO:距離を変更可能にする
 void mat_ao(inout ray r, in hit h)
 {
-  r.depth = r.depth + 1;
-  if(r.depth == 1){ //最初のヒット
-      r.direction.y = sqrt(rand());
-      float d = sqrt(1 - pow2(r.direction.y));
-      float v = rand() * 2 * PI;
-      vec3 UppVec;
-      vec3 BinVec;
-      vec3 TanVec;
-      vec3 EX = vec3(1, 0, 0); float DX = abs(dot(h.nor, EX));
-      vec3 EY = vec3(0, 1, 0); float DY = abs(dot(h.nor, EY));
-      vec3 EZ = vec3(0, 0, 1); float DZ = abs(dot(h.nor, EZ));
-      if (DY < DX) {
+    r.depth = r.depth + 1;
+    if(r.depth == 1){ //最初のヒット
+        r.direction.y = sqrt(rand());
+        float d = sqrt(1 - pow2(r.direction.y));
+        float v = rand() * 2 * PI;
+        vec3 UppVec;
+        vec3 BinVec;
+        vec3 TanVec;
+        vec3 EX = vec3(1, 0, 0); float DX = abs(dot(h.nor, EX));
+        vec3 EY = vec3(0, 1, 0); float DY = abs(dot(h.nor, EY));
+        vec3 EZ = vec3(0, 0, 1); float DZ = abs(dot(h.nor, EZ));
+        if (DY < DX) {
             if (DZ < DY) UppVec = EZ;
             else UppVec = EY;
-      }
-      else // DX <= DY
-      {
+        }
+        else {
             if (DZ < DX) UppVec = EZ;
             else UppVec = EX;
-      }
-      TanVec = normalize(cross(UppVec, h.nor));
-      BinVec = normalize(cross(TanVec, h.nor));
-      r.direction = normalize(BinVec * d * cos(v) + h.nor * r.direction.y + TanVec * d * sin(v));
-      r.origin = h.pos + h.nor * 0.001f;
-      r.emission = vec3(0);
-  }
-  if(r.depth == 2){
-      r.depth = DEPTH;
-      if(h.t < 1){
-          r.emission = vec3(0);
-      }else{
-          r.emission = vec3(10);
-      }
-  }
+        }
+        TanVec = normalize(cross(UppVec, h.nor));
+        BinVec = normalize(cross(TanVec, h.nor));
+        r.direction = normalize(BinVec * d * cos(v) + h.nor * r.direction.y + TanVec * d * sin(v));
+        r.origin = h.pos + h.nor * 0.001f;
+        r.emission = vec3(0);
+    }
+    if(r.depth == 2){
+        r.depth = DEPTH;
+        if(h.t < 1){
+            r.emission = vec3(0);
+        }else{
+            r.emission = vec3(10);
+        }
+    }
 }
 
 //Depth
 // TODO: 距離を変更可能にする
 float maxDist = 4.0;
 void mat_depth(inout ray r, in hit h) {
-  r.depth = DEPTH; //depthを最大にして終了させる
-  r.scatter = r.scatter * vec3(1);
-  r.emission = vec3(10.0 - 10.0/maxDist * h.t);
+    r.depth = DEPTH; //depthを最大にして終了させる
+    r.scatter = r.scatter * vec3(1);
+    r.emission = vec3(10.0 - 10.0/maxDist * h.t);
 }
 
 // Normal
 void mat_nor(inout ray r, in hit h) {
-  r.depth = DEPTH;
-//  r.scatter = r.scatter * vec3(h.nor);
-  r.emission = vec3(h.nor)/2.0 + vec3(0.5);
+    r.depth = DEPTH;
+//    r.scatter = r.scatter * vec3(h.nor);
+    r.emission = vec3(h.nor)/2.0 + vec3(0.5);
 }
 
 //--------------------------------------------------
@@ -321,9 +318,6 @@ void main() {
 
     // Seed
     _xors ^= imageLoad(seed, _WorkID.xy);
-
-    vec3 eye = vec3(0, 0, _Distance);
-    vec3 screen_position;
 
     ray _rays;
     hit h;
@@ -359,9 +353,7 @@ void main() {
     sphere s3;
     s3.center = vec3(3, 0, -3);
     s3.radius = 2;
-    //--------------------Test--------------------------
 
-    // Import from Editor
     sphere s[16]; // Max = 16
     int modelN = rad.length();
     for(int i = 0; i < modelN; i++){
@@ -369,20 +361,75 @@ void main() {
         s[i].radius = rad[i];
     }
 
+
+    vec3 screen_position;
+    vec3 camPos = vec3(0, 0, _Distance);
+
+    //--------------------Test--------------------------
+    vec3 camForward = vec3( 0, 0,-1);
+    vec3 camUp      = vec3( 0, 1, 0);
+    vec3 camRight   = vec3(-1, 0, 0);
+
+    float a = 1.6; //イメージセンサーからレンズ中心までの距離
+    float b; //レンズ中心からピントの合う平面までの距離
+    float f; //焦点距離
+    float lensRadius =0.1;
+    vec3  lensCenter = camPos + a*camForward;
+
+//    vec3  focusPoint = vec3(0, 0, 0);
+//    float cosine = dot(camForward, normalize(focusPoint - camPos));
+//    b = cosine * (focusPoint - camPos).length() - a;
+     b = _Distance-a;
+     f = 1/(1/a + 1/b);
     //--------------------Test--------------------------
 
     // Sample Loop
     for (int n = 0; n < SPP; n++)
     {
-        screen_position.x = float(_WorkID.x + rand()) / _WorksN.x * 16 - 8;
-        screen_position.y = float(_WorkID.y + rand()) / _WorksN.y * 9 - 4.5;
-        screen_position.z = eye.z - 9;
+        //--------------------Test--------------------------
+        // Pinhole Camera
+//          screen_position.x = float(_WorkID.x + rand()) / _WorksN.x * -16 + 8;
+//          screen_position.y = float(_WorkID.y + rand()) / _WorksN.y * -9 + 4.5;
+//          screen_position.z = camPos.z ;
 
-        // Ray
-        mat3 M1 = mat3( cos(_Theta), 0, sin(_Theta), 0, 1, 0, -sin(_Theta), 0, cos(_Theta));
-        mat3 M2 = mat3(1, 0, 0, 0, cos(_Phi), -sin(_Phi), 0, sin(_Phi), cos(_Phi));
-        _rays.origin = M1 * M2 * eye;
-        _rays.direction = normalize( M1 * M2 * (screen_position - eye));
+//          mat3 M1 = mat3( cos(_Theta), 0, sin(_Theta), 0, 1, 0, -sin(_Theta), 0, cos(_Theta));
+//          mat3 M2 = mat3(1, 0, 0, 0, cos(_Phi), -sin(_Phi), 0, sin(_Phi), cos(_Phi));
+//          _rays.origin = M1 * M2 * screen_position;
+//          _rays.direction = normalize( M1 * M2 * ((camPos + vec3(0, 0, -9)) - screen_position) );
+
+        // Lens Camera
+          screen_position.x = float(_WorkID.x/* + rand()*/) / _WorksN.x * -2 + 1;
+          screen_position.y = float(_WorkID.y/* + rand()*/) / _WorksN.y * -1.125 + 1.125/2;
+          screen_position.z = camPos.z ;
+
+          vec3 r  = normalize(lensCenter - screen_position);
+          vec3 pf = screen_position + (a+b)/dot(camForward, r) * r;
+
+          // Sample Disk
+          float x, y;
+          float u1 = rand();
+          float u2 = rand();
+          x = sqrt(u1) * cos(2*PI*u2);
+          y = sqrt(u1) * sin(2*PI*u2);
+          vec3 l = lensCenter + lensRadius*(x*camRight + y*camUp); // Origin
+
+          mat3 M1 = mat3( cos(_Theta), 0, sin(_Theta), 0, 1, 0, -sin(_Theta), 0, cos(_Theta));
+          mat3 M2 = mat3(1, 0, 0, 0, cos(_Phi), -sin(_Phi), 0, sin(_Phi), cos(_Phi));
+          _rays.origin = M1 * M2 * l;
+          _rays.direction = normalize( M1 * M2 * normalize(pf - l) );
+
+        //--------------------Test--------------------------
+
+        // Normal
+//        screen_position.x = float(_WorkID.x + rand()) / _WorksN.x * 16 - 8;
+//        screen_position.y = float(_WorkID.y + rand()) / _WorksN.y * 9 - 4.5;
+//        screen_position.z = camPos.z - 9;
+
+//        mat3 M1 = mat3( cos(_Theta), 0, sin(_Theta), 0, 1, 0, -sin(_Theta), 0, cos(_Theta));
+//        mat3 M2 = mat3(1, 0, 0, 0, cos(_Phi), -sin(_Phi), 0, sin(_Phi), cos(_Phi));
+//        _rays.origin = M1 * M2 * camPos;
+//        _rays.direction = normalize( M1 * M2 * (screen_position - camPos));
+
         _rays.scatter  = vec3(1);
         _rays.emission = vec3(0);
         _rays.depth = 0;
