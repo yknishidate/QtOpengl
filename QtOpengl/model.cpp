@@ -99,6 +99,11 @@ void Model::setMaterialTransColor(QColor color){
    material.transparentColor[1] = color.green()/255.0f;
    material.transparentColor[2] = color.blue()/255.0f;
 }
+
+void Model::setMaterialIor(float i)
+{
+    material.ior = i;
+}
 void Model::setMaterialLightColor(QColor color){
    material.lightColor[0] = color.red()/255.0f;
    material.lightColor[1] = color.green()/255.0f;

@@ -75,6 +75,8 @@ public slots:
     void setShininess(int shine);
     void setMaterialLightColor(QColor color);
 
+    void setMaterialIor(double i);
+
     void deleteModel(int id);
 
 signals:
@@ -95,13 +97,14 @@ signals:
     void setSpinboxRotationY(double n);
     void setSpinboxRotationZ(double n);
 
-    void setMeterialType(int type); // test
+    void setMeterialType(int type);
 
     void setColorButton(QColor color);
     void setColorButton_2(QColor color);
     void setTransColorButton(QColor color);
     void setLightColorButton(QColor color);
     void setShininessSlider(int shine);
+    void setIorSpinBox(double i);
 
     void setTextureName(QString s);
     //----------Test----------
@@ -109,6 +112,8 @@ signals:
     void setSphereSegSpinBox(int st);
     void sphereSelected(bool arg);
     void cubeSelected(bool arg);
+
+    void setMeterialIor(float i);
     //----------Test----------
 
 private:

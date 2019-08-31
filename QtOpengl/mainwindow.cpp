@@ -76,6 +76,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->shineSlider, SIGNAL(valueChanged(int)), ui->openGLWidget, SLOT(setShininess(int)));
     connect(ui->openGLWidget, SIGNAL(setShininessSlider(int)), ui->shineSlider, SLOT(setValue(int)));
 
+    // IOR
+    connect(ui->iorDoubleSpinBox, SIGNAL(valueChanged(double)), ui->openGLWidget, SLOT(setMaterialIor(double)));
+    connect(ui->openGLWidget, SIGNAL(setIorSpinBox(double)), ui->iorDoubleSpinBox, SLOT(setValue(double)));
+
     // Material Hide
     ui->label_11->hide();   ui->transColorButton->hide();
     ui->label_ior->hide();   ui->iorDoubleSpinBox->hide();
