@@ -15,9 +15,9 @@ public:
     std::string getName(){return name;}
     int getType(){return type;}
     virtual float getRadius(){return radius;}
-    virtual void change(float r, int st, int sl){};
-    virtual int getStacks(){};
-    virtual int getSlices(){};
+    virtual void change(float r, int st, int sl){;}
+    virtual int getStacks(){return 1;}
+    virtual int getSlices(){return 1;}
     virtual void setRadius(float r){};
     virtual void setStacks(int s){};
     virtual void setSlices(int s){};

@@ -8,7 +8,7 @@
 GLWidget::GLWidget(QWidget *parent)
     : QOpenGLWidget(parent),
       displayMode(GL_TRIANGLES),
-      xRot(30*16), yRot(-45*16), zRot(0),
+      xRot(20*16), yRot(-45*16), zRot(0),
       camera(QVector3D(0,0,20), QVector3D(0,0,0)),
       culling(false), testing(true)
 {
@@ -146,7 +146,6 @@ void GLWidget::paintGL(){
     modelMatrix.setToIdentity();
     shader.update(proj, camera.matrix);
 
-
     // Draw Grid
     grid.draw(shader.program);
 
@@ -168,20 +167,16 @@ void GLWidget::paintGL(){
             glFrontFace(GL_CW);
             modelMatrix.scale(1.01);
             shader.update(proj, camera.matrix, modelMatrix, normalMatrix);
-            if(displayMode == GL_TRIANGLES)
-                models[i]->draw(shader.program, displayMode, true);
-
+            if(displayMode == GL_TRIANGLES) models[i]->draw(shader.program, displayMode, true);
             glDisable(GL_CULL_FACE);
             glFrontFace(GL_CCW);
         }
-        //---------Outline--------
     }
 
 //    qDebug() << ++frame;
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 
 

@@ -373,7 +373,7 @@ void main() {
     float a = 1.6; //イメージセンサーからレンズ中心までの距離
     float b; //レンズ中心からピントの合う平面までの距離
     float f; //焦点距離
-    float lensRadius =0.1;
+    float lensRadius = 0.5;
     vec3  lensCenter = camPos + a*camForward;
 
 //    vec3  focusPoint = vec3(0, 0, 0);
@@ -398,38 +398,40 @@ void main() {
 //          _rays.direction = normalize( M1 * M2 * ((camPos + vec3(0, 0, -9)) - screen_position) );
 
         // Lens Camera
-          screen_position.x = float(_WorkID.x/* + rand()*/) / _WorksN.x * -2 + 1;
-          screen_position.y = float(_WorkID.y/* + rand()*/) / _WorksN.y * -1.125 + 1.125/2;
-          screen_position.z = camPos.z ;
 
-          vec3 r  = normalize(lensCenter - screen_position);
-          vec3 pf = screen_position + (a+b)/dot(camForward, r) * r;
+        bool dof = true;
+        if(dof){
+            screen_position.x = float(_WorkID.x/* + rand()*/) / _WorksN.x * -2 + 1;
+            screen_position.y = float(_WorkID.y/* + rand()*/) / _WorksN.y * -1.125 + 1.125/2;
+            screen_position.z = camPos.z ;
 
-          // Sample Disk
-          float x, y;
-          float u1 = rand();
-          float u2 = rand();
-          x = sqrt(u1) * cos(2*PI*u2);
-          y = sqrt(u1) * sin(2*PI*u2);
-          vec3 l = lensCenter + lensRadius*(x*camRight + y*camUp); // Origin
+            vec3 r  = normalize(lensCenter - screen_position);
+            vec3 pf = screen_position + (a+b)/dot(camForward, r) * r;
 
-          mat3 M1 = mat3( cos(_Theta), 0, sin(_Theta), 0, 1, 0, -sin(_Theta), 0, cos(_Theta));
-          mat3 M2 = mat3(1, 0, 0, 0, cos(_Phi), -sin(_Phi), 0, sin(_Phi), cos(_Phi));
-          _rays.origin = M1 * M2 * l;
-          _rays.direction = normalize( M1 * M2 * normalize(pf - l) );
+            // Sample Disk
+            float x, y;
+            float u1 = rand();
+            float u2 = rand();
+            x = sqrt(u1) * cos(2*PI*u2);
+            y = sqrt(u1) * sin(2*PI*u2);
+            vec3 l = lensCenter + lensRadius*(x*camRight + y*camUp); // Origin
+
+            mat3 M1 = mat3( cos(_Theta), 0, sin(_Theta), 0, 1, 0, -sin(_Theta), 0, cos(_Theta));
+            mat3 M2 = mat3(1, 0, 0, 0, cos(_Phi), -sin(_Phi), 0, sin(_Phi), cos(_Phi));
+            _rays.origin = M1 * M2 * l;
+            _rays.direction = normalize( M1 * M2 * normalize(pf - l) );
+        }else{
+            screen_position.x = float(_WorkID.x + rand()) / _WorksN.x * 16 - 8;
+            screen_position.y = float(_WorkID.y + rand()) / _WorksN.y * 9 - 4.5;
+            screen_position.z = camPos.z - 9;
+
+            mat3 M1 = mat3( cos(_Theta), 0, sin(_Theta), 0, 1, 0, -sin(_Theta), 0, cos(_Theta));
+            mat3 M2 = mat3(1, 0, 0, 0, cos(_Phi), -sin(_Phi), 0, sin(_Phi), cos(_Phi));
+            _rays.origin = M1 * M2 * camPos;
+            _rays.direction = normalize( M1 * M2 * (screen_position - camPos));
+        }
 
         //--------------------Test--------------------------
-
-        // Normal
-//        screen_position.x = float(_WorkID.x + rand()) / _WorksN.x * 16 - 8;
-//        screen_position.y = float(_WorkID.y + rand()) / _WorksN.y * 9 - 4.5;
-//        screen_position.z = camPos.z - 9;
-
-//        mat3 M1 = mat3( cos(_Theta), 0, sin(_Theta), 0, 1, 0, -sin(_Theta), 0, cos(_Theta));
-//        mat3 M2 = mat3(1, 0, 0, 0, cos(_Phi), -sin(_Phi), 0, sin(_Phi), cos(_Phi));
-//        _rays.origin = M1 * M2 * camPos;
-//        _rays.direction = normalize( M1 * M2 * (screen_position - camPos));
-
         _rays.scatter  = vec3(1);
         _rays.emission = vec3(0);
         _rays.depth = 0;

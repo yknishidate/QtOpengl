@@ -452,12 +452,12 @@ void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenG
 }
 
 void Mesh::initCubeMap(){
-    QImage x = QImage("E:/Pictures/Textures/Cubemap/cube_PX.png").rgbSwapped();
-    QImage y = QImage("E:/Pictures/Textures/Cubemap/cube_PY.png").rgbSwapped();
-    QImage z = QImage("E:/Pictures/Textures/Cubemap/cube_PZ.png").rgbSwapped();
-    QImage _x = QImage("E:/Pictures/Textures/Cubemap/cube_NX.png").rgbSwapped();
-    QImage _y = QImage("E:/Pictures/Textures/Cubemap/cube_NY.png").rgbSwapped();
-    QImage _z = QImage("E:/Pictures/Textures/Cubemap/cube_NZ.png").rgbSwapped();
+    QImage x = QImage(":/resource/cube_PX.png").rgbSwapped();
+    QImage y = QImage(":/resource/cube_PY.png").rgbSwapped();
+    QImage z = QImage(":/resource/cube_PZ.png").rgbSwapped();
+    QImage _x = QImage(":/resource/cube_NX.png").rgbSwapped();
+    QImage _y = QImage(":/resource/cube_NY.png").rgbSwapped();
+    QImage _z = QImage(":/resource/cube_NZ.png").rgbSwapped();
     glGenTextures(1, &textureGL);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureGL);
     glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*) x.bits());

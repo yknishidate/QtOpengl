@@ -17,8 +17,8 @@ Model::Model(const QString& fileName)
     textureName = "";
 
     material.type = 0;
-    material.ambient = QVector3D(0.7f, 0.7f, 0.7f);
-    material.diffuse = QVector3D(0.7f, 0.7f, 0.7f);
+    material.ambient = QVector3D(1.0f, 1.0f, 1.0f);
+    material.diffuse = QVector3D(1.0f, 1.0f, 1.0f);
     material.specular = QVector3D(1.0f, 1.0f, 1.0f);
     material.shininess = 16.0f;
     material.transparentColor = QVector4D(1.0f, 1.0f, 1.0f, 0.3f);
@@ -40,8 +40,8 @@ Model::Model(const int t) {
     textureName = "";
 
     material.type = 0;
-    material.ambient = QVector3D(0.7f, 0.7f, 0.7f);
-    material.diffuse = QVector3D(0.7f, 0.7f, 0.7f);
+    material.ambient = QVector3D(1.0f, 1.0f, 1.0f);
+    material.diffuse = QVector3D(1.0f, 1.0f, 1.0f);
     material.specular = QVector3D(1.0f, 1.0f, 1.0f);
     material.shininess = 16.0f;
     material.transparentColor = QVector4D(1.0f, 1.0f, 1.0f, 0.3f);

@@ -45,8 +45,7 @@ void RenderWidget::initializeGL(){
     m_vao.create();
     m_vao.bind();
 
-    static const GLfloat g_vertex_buffer_data[] = {
-        -1.0f, -1.0f,    -1.0f,  1.0f,    1.0f, -1.0f,    1.0f,  1.0f };
+    static const GLfloat g_vertex_buffer_data[] = { -1.0f, -1.0f,    -1.0f,  1.0f,    1.0f, -1.0f,    1.0f,  1.0f };
     static const GLushort g_element_buffer_data[] = { 0, 1, 2, 3 };
 
     // VBO
@@ -65,7 +64,6 @@ void RenderWidget::initializeGL(){
 
     // Texture Input(0)
     QOpenGLTexture *m_tex_input;
-//    GLuint tex_input;
     glActiveTexture(GL_TEXTURE0);
     m_tex_input = new QOpenGLTexture(QOpenGLTexture::Target2D);
     m_tex_input->create();
@@ -79,7 +77,6 @@ void RenderWidget::initializeGL(){
 
     // Texture Output(1)
     QOpenGLTexture *m_tex_output;
-//    GLuint tex_output;
     glActiveTexture(GL_TEXTURE1);
     m_tex_output = new QOpenGLTexture(QOpenGLTexture::Target2D);
     m_tex_output->create();
@@ -138,8 +135,6 @@ void RenderWidget::initializeGL(){
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, accum);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
-
-
     // Seed (2)
     std::vector<QVector4D> seedDataBuffer;
     for (int i = 0; i < tex_w; i++) {
@@ -163,7 +158,6 @@ void RenderWidget::initializeGL(){
     //--------------------------------------------------
     //                 Model Data
     //--------------------------------------------------
-
     // Model Data
     std::vector<float> radData;
     std::vector<QVector4D> posData;
@@ -259,17 +253,15 @@ void RenderWidget::initializeGL(){
     m_vao.release();
 }
 
-void RenderWidget::paintGL(){
+void RenderWidget::paintGL() {
     // compute
     m_computeProgram->bind();
-
     if(frame == 0){
         m_renderProgram->setUniformValue(0, qDegreesToRadians(yRot));
         m_renderProgram->setUniformValue(1, qDegreesToRadians(xRot));
         m_renderProgram->setUniformValue(2, cameraDistance);
         m_renderProgram->setUniformValue(3, RenderMode);
     }
-
     glDispatchCompute(tex_w, tex_h ,1);
     glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
@@ -284,8 +276,7 @@ void RenderWidget::paintGL(){
     qDebug() << "Rendering:" <<  ++frame;
 }
 
-void RenderWidget::changeRenderMode(const int mode)
-{
+void RenderWidget::changeRenderMode(const int mode) {
     accumN = 1;
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, accum);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(unsigned), &accumN, GL_DYNAMIC_COPY);
@@ -296,24 +287,20 @@ void RenderWidget::changeRenderMode(const int mode)
     update();
 }
 
-void RenderWidget::saveImage()
-{
+void RenderWidget::saveImage() {
     rendering = false;
     QString fileName = QFileDialog::getSaveFileName(this, "", "Untitled.png");
     if (!fileName.isEmpty()) grabFramebuffer().save(fileName);
 }
 
 void RenderWidget::resizeGL(int w, int h){
-
 }
 
 // Slots
-void RenderWidget::stopRendering()
-{
+void RenderWidget::stopRendering() {
     rendering = false;
 }
-void RenderWidget::startRendering()
-{
+void RenderWidget::startRendering() {
     rendering = true;
     update();
     qDebug() << "Rendering:" <<  ++frame;

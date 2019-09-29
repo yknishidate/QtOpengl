@@ -7,5 +7,11 @@
         <file>resource/Render.png</file>
         <file>resource/Oplane.png</file>
         <file>resource/icon_white_64.png</file>
+        <file>resource/cube_NX.png</file>
+        <file>resource/cube_NY.png</file>
+        <file>resource/cube_NZ.png</file>
+        <file>resource/cube_PX.png</file>
+        <file>resource/cube_PY.png</file>
+        <file>resource/cube_PZ.png</file>
     </qresource>
 </RCC>
