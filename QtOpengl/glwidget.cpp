@@ -3,6 +3,7 @@
 #include "ui_mainwindow.h"
 #include <QWheelEvent>
 #include <typeinfo>
+#include <QtMath>
 
 
 GLWidget::GLWidget(QWidget *parent)
@@ -165,7 +166,7 @@ void GLWidget::paintGL(){
 
 void GLWidget::resizeGL(int w, int h){
     proj.setToIdentity();
-    proj.perspective(53.13f, GLfloat(w)/h, 0.01f, 1000.0f);
+    proj.perspective(/* (atan(1/2)*2) = */ 53.13f, GLfloat(w)/h, 0.01f, 1000.0f);
 }
 
 // Window Size
@@ -208,8 +209,7 @@ void GLWidget::setDepthTest(bool arg){
     update();
 }
 
-void GLWidget::changeMeterialType(int t)
-{
+void GLWidget::changeMeterialType(int t){
     models[selectedModelIndex]->setMaterialType(t);
     update();
 }
@@ -230,8 +230,7 @@ void GLWidget::setMaterialLightColor(QColor color){
     update();
 }
 
-void GLWidget::setMaterialIor(double i)
-{
+void GLWidget::setMaterialIor(double i){
     models[selectedModelIndex]->setMaterialIor(i);
     update();
 }
@@ -240,8 +239,7 @@ void GLWidget::setShininess(int shine){
     update();
 }
 
-void GLWidget::deleteModel(int id)
-{
+void GLWidget::deleteModel(int id){
     qDebug() << models.size();
     models.erase(models.begin() + id);
     delete(*(models.begin() + id));

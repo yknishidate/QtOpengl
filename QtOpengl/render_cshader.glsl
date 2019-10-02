@@ -362,16 +362,16 @@ void main() {
     vec3 camUp      = vec3( 0, 1, 0);
     vec3 camRight   = vec3(-1, 0, 0);
 
-    float a = 1.6; //イメージセンサーからレンズ中心までの距離
+    float a = 9; //イメージセンサーからレンズ中心までの距離
     float b; //レンズ中心からピントの合う平面までの距離
     float f; //焦点距離
     float lensRadius = 0.5;
-    vec3  lensCenter = camPos + a*camForward;
+    vec3  lensCenter = vec3(0, 0, _Distance);
 
 //    vec3  focusPoint = vec3(0, 0, 0);
 //    float cosine = dot(camForward, normalize(focusPoint - camPos));
 //    b = cosine * (focusPoint - camPos).length() - a;
-     b = _Distance-a;
+     b = _Distance;
      f = 1/(1/a + 1/b);
 
     // Sample Loop
@@ -387,18 +387,18 @@ void main() {
 //          _rays.direction = normalize( M1 * M2 * ((camPos + vec3(0, 0, -9)) - screen_position) );
 
         float aspect = 16.0/9.0;
-        float width = 3.1; // small -> zoom
+        float width = 16; // small -> zoom
         float height = width/aspect;
         if(Dof){
-            // Lens Model Rendering
-            screen_position.x = float(_WorkID.x) / _WorksN.x * - width + width/2.0;
-            screen_position.y = float(_WorkID.y) / _WorksN.y * - height + height/2.0;
-            screen_position.z = camPos.z ;
+            // Lens Model
+            screen_position.x = float(_WorkID.x) / _WorksN.x * (-width) + width/2.0;
+            screen_position.y = float(_WorkID.y) / _WorksN.y * (-height) + height/2.0;
+            screen_position.z = camPos.z+9;
 
             vec3 r  = normalize(lensCenter - screen_position);
             vec3 pf = screen_position + (a+b)/dot(camForward, r) * r;
 
-            // Sample Disk
+            // Sample Lens
             float x, y;
             float u1 = rand();
             float u2 = rand();

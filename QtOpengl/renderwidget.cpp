@@ -282,8 +282,9 @@ void RenderWidget::changeRenderMode(const int mode) {
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, accum);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(unsigned), &accumN, GL_DYNAMIC_COPY);
 
-    frame = 0;
     RenderMode = mode;
+
+    frame = 0;
     rendering = true;
     update();
 }
@@ -304,8 +305,6 @@ void RenderWidget::changeDof(const bool checked){
     frame = 0;
     rendering = true;
     update();
-
-    qDebug() << "DOF: " << checked;
 }
 
 void RenderWidget::resizeGL(int w, int h){
