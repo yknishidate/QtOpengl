@@ -15,17 +15,18 @@ RenderWindow::RenderWindow(QWidget *parent, float x, float y, float l, std::vect
     ui->renderWidget->setModels(m);
 }
 
-RenderWindow::~RenderWindow()
-{
+RenderWindow::~RenderWindow(){
     delete ui;
 }
 
-void RenderWindow::on_renderPassBox_currentIndexChanged(int index)
-{
+void RenderWindow::on_renderPassBox_currentIndexChanged(int index){
     ui->renderWidget->changeRenderMode(index);
 }
 
-void RenderWindow::on_saveButton_clicked()
-{
+void RenderWindow::on_saveButton_clicked(){
     ui->renderWidget->saveImage();
+}
+
+void RenderWindow::on_DofCheckBox_toggled(bool checked){
+    ui->renderWidget->changeDof(checked);
 }

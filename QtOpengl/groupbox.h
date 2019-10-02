@@ -4,8 +4,7 @@
 #include <QGroupBox>
 #include <QModelIndex>
 
-class GroupBox : public QGroupBox
-{
+class GroupBox : public QGroupBox{
     Q_OBJECT
 public:
     GroupBox(QWidget *parent = nullptr);

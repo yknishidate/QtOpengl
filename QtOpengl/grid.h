@@ -6,8 +6,7 @@
 #include <QOpenGLBuffer>
 #include "vertex.h"
 
-class Grid : protected QOpenGLFunctions
-{
+class Grid : protected QOpenGLFunctions{
 public:
     Grid();
     virtual ~Grid();

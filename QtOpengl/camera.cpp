@@ -1,13 +1,12 @@
 #include "camera.h"
 
-Camera::Camera( QVector3D cameraPos, QVector3D targetPos)
-{
+Camera::Camera(QVector3D cameraPos, QVector3D targetPos){
     this->cameraPos = cameraPos;
     this->targetPos = targetPos;
     this->length = (targetPos - cameraPos).length();
 }
 
-void Camera::transform( int xRot, int yRot){
+void Camera::transform(int xRot, int yRot){
     QMatrix4x4 rotation;
     rotation.setToIdentity();
     rotation.rotate(xRot / 16.0f, 1, 0, 0);
@@ -19,7 +18,7 @@ void Camera::transform( int xRot, int yRot){
     matrix.lookAt(cameraPos, targetPos, QVector3D(0, 1, 0));
 }
 
-void Camera::dolly( int degree ){
+void Camera::dolly(int degree){
     length -= degree/10;
 }
 

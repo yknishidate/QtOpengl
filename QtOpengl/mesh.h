@@ -17,8 +17,7 @@ enum ModelType{
     SPHERE       = 3
 };
 
-class Mesh : protected QOpenGLFunctions
-{
+class Mesh : protected QOpenGLFunctions{
 public:
     Mesh();
     Mesh(const QString& fileName);

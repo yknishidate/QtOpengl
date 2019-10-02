@@ -4,8 +4,7 @@
 #include "stb_image_write.h"
 #include <iostream>
 
-RenderWidget::RenderWidget(QWidget *parent)
-{
+RenderWidget::RenderWidget(QWidget *parent){
     qDebug()  << "---Render Widget Contractor---";
 
     QSurfaceFormat format;
@@ -14,8 +13,7 @@ RenderWidget::RenderWidget(QWidget *parent)
     setFormat(format);
 }
 
-RenderWidget::~RenderWidget()
-{
+RenderWidget::~RenderWidget(){
     makeCurrent();
     delete m_computeShader;
     delete m_vertexShader;
@@ -171,6 +169,7 @@ void RenderWidget::initializeGL(){
 
     // Load Models
     for(int i =0; i < models.size(); i++){
+        // Load Sphere or Plane
         if(models[i]->getType() == ModelType::SPHERE){
             radData.push_back(models[i]->getRadius());
             posData.push_back(QVector4D(models[i]->getPosition(), 1));
@@ -178,6 +177,7 @@ void RenderWidget::initializeGL(){
             radData.push_back(10000);
             posData.push_back(QVector4D((QVector3D(0, -10000, 0) + models[i]->getPosition()), 1));
         }
+        // Load Material Data
         meterialTypeData.push_back(models[i]->getMaterialType());
         materialDiffColorData.push_back(QVector4D(models[i]->getMaterialDiffColorF(), 1));
         materialSpecColorData.push_back(QVector4D(models[i]->getMaterialSpecColorF(), 1));
@@ -254,18 +254,19 @@ void RenderWidget::initializeGL(){
 }
 
 void RenderWidget::paintGL() {
-    // compute
+    // Compute Pathtracing
     m_computeProgram->bind();
     if(frame == 0){
         m_renderProgram->setUniformValue(0, qDegreesToRadians(yRot));
         m_renderProgram->setUniformValue(1, qDegreesToRadians(xRot));
         m_renderProgram->setUniformValue(2, cameraDistance);
         m_renderProgram->setUniformValue(3, RenderMode);
+        m_renderProgram->setUniformValue(4, Dof);
     }
     glDispatchCompute(tex_w, tex_h ,1);
     glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
-    // draw
+    // Draw
     m_renderProgram->bind();
     m_vao.bind();
     glDrawElements(GL_TRIANGLE_STRIP,4,GL_UNSIGNED_SHORT,0);
@@ -291,6 +292,20 @@ void RenderWidget::saveImage() {
     rendering = false;
     QString fileName = QFileDialog::getSaveFileName(this, "", "Untitled.png");
     if (!fileName.isEmpty()) grabFramebuffer().save(fileName);
+}
+
+void RenderWidget::changeDof(const bool checked){
+    accumN = 1;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, accum);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(unsigned), &accumN, GL_DYNAMIC_COPY);
+
+    Dof = checked;
+
+    frame = 0;
+    rendering = true;
+    update();
+
+    qDebug() << "DOF: " << checked;
 }
 
 void RenderWidget::resizeGL(int w, int h){

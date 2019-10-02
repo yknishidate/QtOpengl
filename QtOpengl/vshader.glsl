@@ -13,10 +13,8 @@ uniform mat3 normalMatrix;
 out vec4 P;
 out vec3 N;
 out vec2 vTexcoord;
-//----------Test----------
 out vec3 w_Position;
 out vec3 w_Normal;
-//----------Test----------
 
 void main(){
   w_Position = (modelMatrix * vec4(position, 1.0)).xyz;

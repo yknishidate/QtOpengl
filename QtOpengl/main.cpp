@@ -15,9 +15,9 @@ int main(int argc, char *argv[])
     format.setVersion(2, 0);
     QSurfaceFormat::setDefaultFormat(format);
 
-
     MainWindow w;
 
+    // Setup Dark GUI
     qApp->setStyle(QStyleFactory::create("Fusion"));
     QPalette darkPalette;
     QColor darkColor = QColor(77,77,77);

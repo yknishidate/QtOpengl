@@ -17,8 +17,7 @@ TreeView::TreeView(QWidget *parent)
   this->expandAll() ;
 }
 
-void TreeView::keyPressEvent(QKeyEvent *event)
-{
+void TreeView::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_Delete){
         QModelIndex index_selected = currentIndex();
         int row = index_selected.row();

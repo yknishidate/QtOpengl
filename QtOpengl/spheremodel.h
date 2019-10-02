@@ -2,8 +2,7 @@
 #define SPHEREMODEL_H
 #include "model.h"
 
-class SphereModel :public Model
-{
+class SphereModel :public Model{
 public:
     SphereModel(float r, int st, int sl);
     void change(float r, int st, int sl);

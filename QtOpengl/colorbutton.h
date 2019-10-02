@@ -2,8 +2,7 @@
 #define COLORBUTTON_H
 #include <QPushButton>
 
-class ColorButton : public QPushButton
-{
+class ColorButton : public QPushButton{
     Q_OBJECT
 public:
     ColorButton(QWidget *parent = nullptr);

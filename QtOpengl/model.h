@@ -4,8 +4,7 @@
 #include "mesh.h"
 #include "material.h"
 
-class Model
-{
+class Model{
 public:
     Model();
     Model(const QString& fileName);

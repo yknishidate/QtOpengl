@@ -12,8 +12,7 @@
 #include "camera.h"
 #include "model.h"
 
-class RenderWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_3_Core
-{
+class RenderWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_3_Core{
     Q_OBJECT
 
     QOpenGLVertexArrayObject m_vao;
@@ -39,6 +38,7 @@ public:
     void setModels(std::vector<Model *> m){models = m;}
     void changeRenderMode(const int mode);
     void saveImage();
+    void changeDof(const bool checked);
 
 protected:
     void initializeGL();
@@ -57,6 +57,7 @@ private:
     float cameraDistance;
 
     int RenderMode = 0;
+    bool Dof = 0;
     int PassLimit = 100;
 
     std::vector<Model *> models;

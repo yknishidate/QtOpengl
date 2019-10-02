@@ -26,6 +26,7 @@ layout(std430, binding = 0) buffer AccumN {
     uint _AccumN;
 };
 
+// Sphere Date
 layout(std430, binding = 1) buffer SphereRadius {
     float rad[];
 };
@@ -33,11 +34,10 @@ layout(std430, binding = 2) buffer SpherePosition {
     vec4 pos[];
 };
 
+// Material Data
 layout(std430, binding = 3) buffer MaterialType {
     int materialType[];
 };
-
-//---------------------Test-------------------------
 layout(std430, binding = 4) buffer MaterialDiffColor {
     vec4 materialDiffColor[];
 };
@@ -53,13 +53,14 @@ layout(std430, binding = 7) buffer MaterialLightColor {
 layout(std430, binding = 8) buffer MaterialIor {
     float materialIor[];
 };
-//---------------------Test-------------------------
 
 // Camera
 layout(location = 0) uniform float _Theta;
 layout(location = 1) uniform float _Phi;
 layout(location = 2) uniform float _Distance;
 layout(location = 3) uniform int RenderMode;
+layout(location = 4) uniform bool Dof;
+//layout(location = 4) uniform int Dof;
 
 // Structs
 struct ray {
@@ -99,8 +100,7 @@ bool hit_sphere(in sphere s, in ray r, inout hit h) {
     float discriminant = pow2(b) - a * c; //解の公式のD
     float t;
 
-    if (discriminant > 0) //D > 0
-    {
+    if (discriminant > 0) { //D > 0
         t = (-b - sqrt(discriminant)) / a; //small t
         if (0 < t && t < h.t)
         {
@@ -111,8 +111,7 @@ bool hit_sphere(in sphere s, in ray r, inout hit h) {
     }
 
     t = (-b + sqrt(discriminant)) / a; //big t
-    if (0 < t && t < h.t)
-    {
+    if (0 < t && t < h.t){
       h.t = t;
       h.pos = r.origin + t * r.direction;
       h.nor = normalize(h.pos - s.center);
@@ -134,14 +133,12 @@ float rand() {
 }
 
 // ToneMap
-vec4 ToneMap(in vec4 Color, in float White)
-{
+vec4 ToneMap(in vec4 Color, in float White){
     return clamp(Color * (1 + Color / White) / (1 + Color), 0, 1);
 }
 
 //Gamma Correction
-vec4 GammaCorrect(in vec4 Color, in float Gamma)
-{
+vec4 GammaCorrect(in vec4 Color, in float Gamma){
     vec4 Result;
     float G = 1 / Gamma;
     Result.r = pow(Color.r, G);
@@ -230,16 +227,14 @@ void mat_glass(inout ray r, in hit h, vec4 color, float ior)
     if (dot(-r.direction, h.nor) > 0) {
         n = 1.0 / n;
         N = h.nor;
-    }
-    else {
+    }else {
         n = n / 1.0;
         N = -h.nor;
     }
     if (rand() < fresnel(n, dot(-r.direction, N))) {
         r.origin = h.pos + N * 0.001f;
         r.direction = 2 * dot(-r.direction, N) * N + r.direction;
-    }
-    else {
+    }else {
         r.origin = h.pos - N * 0.001f;
         float t = dot(-r.direction, N);
         r.direction = n * r.direction +
@@ -301,7 +296,6 @@ void mat_depth(inout ray r, in hit h) {
 // Normal
 void mat_nor(inout ray r, in hit h) {
     r.depth = DEPTH;
-//    r.scatter = r.scatter * vec3(h.nor);
     r.emission = vec3(h.nor)/2.0 + vec3(0.5);
 }
 
@@ -364,8 +358,6 @@ void main() {
 
     vec3 screen_position;
     vec3 camPos = vec3(0, 0, _Distance);
-
-    //--------------------Test--------------------------
     vec3 camForward = vec3( 0, 0,-1);
     vec3 camUp      = vec3( 0, 1, 0);
     vec3 camRight   = vec3(-1, 0, 0);
@@ -381,12 +373,9 @@ void main() {
 //    b = cosine * (focusPoint - camPos).length() - a;
      b = _Distance-a;
      f = 1/(1/a + 1/b);
-    //--------------------Test--------------------------
 
     // Sample Loop
-    for (int n = 0; n < SPP; n++)
-    {
-        //--------------------Test--------------------------
+    for (int n = 0; n < SPP; n++){
         // Pinhole Camera
 //          screen_position.x = float(_WorkID.x + rand()) / _WorksN.x * -16 + 8;
 //          screen_position.y = float(_WorkID.y + rand()) / _WorksN.y * -9 + 4.5;
@@ -397,12 +386,13 @@ void main() {
 //          _rays.origin = M1 * M2 * screen_position;
 //          _rays.direction = normalize( M1 * M2 * ((camPos + vec3(0, 0, -9)) - screen_position) );
 
-        // Lens Camera
-
-        bool dof = true;
-        if(dof){
-            screen_position.x = float(_WorkID.x/* + rand()*/) / _WorksN.x * -2 + 1;
-            screen_position.y = float(_WorkID.y/* + rand()*/) / _WorksN.y * -1.125 + 1.125/2;
+        float aspect = 16.0/9.0;
+        float width = 3.1; // small -> zoom
+        float height = width/aspect;
+        if(Dof){
+            // Lens Model Rendering
+            screen_position.x = float(_WorkID.x) / _WorksN.x * - width + width/2.0;
+            screen_position.y = float(_WorkID.y) / _WorksN.y * - height + height/2.0;
             screen_position.z = camPos.z ;
 
             vec3 r  = normalize(lensCenter - screen_position);
@@ -431,13 +421,11 @@ void main() {
             _rays.direction = normalize( M1 * M2 * (screen_position - camPos));
         }
 
-        //--------------------Test--------------------------
         _rays.scatter  = vec3(1);
         _rays.emission = vec3(0);
         _rays.depth = 0;
 
-        while (_rays.depth < DEPTH)
-        {
+        while (_rays.depth < DEPTH){
             h.t = 10000;
             h.pos = vec3(0);
             h.nor = vec3(0);

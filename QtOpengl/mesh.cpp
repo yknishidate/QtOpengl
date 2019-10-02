@@ -6,20 +6,17 @@
 
 
 Mesh::Mesh()
-    : ibo(QOpenGLBuffer::IndexBuffer)
-{
+    : ibo(QOpenGLBuffer::IndexBuffer){
 }
 
 Mesh::Mesh(const QString& fileName)
-    : ibo(QOpenGLBuffer::IndexBuffer)
-{
+    : ibo(QOpenGLBuffer::IndexBuffer){
     init(OBJModel(fileName.toStdString()).ToIndexedModel());
 }
 
 // Primitives
 Mesh::Mesh(const int type)
-    : ibo(QOpenGLBuffer::IndexBuffer)
-{
+    : ibo(QOpenGLBuffer::IndexBuffer){
     IndexedModel indexModel;
     float size = 5.0f;
     float radius = 5.0f;
@@ -176,12 +173,10 @@ Mesh::Mesh(const int type)
     case SPHERE:
         indexModel.name = "Sphere";
         // Position, TexCoord, Normal
-        for (int j = 0; j <= stacks; ++j)
-        {
+        for (int j = 0; j <= stacks; ++j){
             const float t(static_cast<float>(j) / static_cast<float>(stacks));
             const float y(cos(M_PI * t) * radius), r(sin(M_PI * t) * radius);
-            for (int i = 0; i <= slices; ++i)
-            {
+            for (int i = 0; i <= slices; ++i){
                 const float s(static_cast<float>(i) / static_cast<float>(slices));
                 const float z(r * cos(M_PI * 2 * s)), x(r * sin(M_PI * 2 * s));
                 indexModel.positions.push_back(QVector3D(x, y, z));
@@ -190,11 +185,9 @@ Mesh::Mesh(const int type)
             }
         }
         // Index
-        for (int j = 0; j < stacks; ++j)
-        {
+        for (int j = 0; j < stacks; ++j){
             const int k((slices + 1) * j);
-            for (int i = 0; i < slices; ++i)
-            {
+            for (int i = 0; i < slices; ++i){
                 // 頂点のインデックス
                 const GLuint k0(k + i);
                 const GLuint k1(k0 + 1);
@@ -242,23 +235,19 @@ Mesh::Mesh(const int type)
 
 
 
-Mesh::~Mesh()
-{
+Mesh::~Mesh(){
     vbo.destroy();
     ibo.destroy();
     qDebug() << "Mesh Deleted";
 }
 
-void Mesh::createSphere(float radius, int stacks, int slices)
-{
+void Mesh::createSphere(float radius, int stacks, int slices){
     indexModel.name = "Sphere";
     // Position, TexCoord, Normal
-    for (int j = 0; j <= stacks; ++j)
-    {
+    for (int j = 0; j <= stacks; ++j){
         const float t(static_cast<float>(j) / static_cast<float>(stacks));
         const float y(cos(M_PI * t) * radius), r(sin(M_PI * t) * radius);
-        for (int i = 0; i <= slices; ++i)
-        {
+        for (int i = 0; i <= slices; ++i){
             const float s(static_cast<float>(i) / static_cast<float>(slices));
             const float z(r * cos(M_PI * 2 * s)), x(r * sin(M_PI * 2 * s));
             indexModel.positions.push_back(QVector3D(x, y, z));
@@ -267,11 +256,9 @@ void Mesh::createSphere(float radius, int stacks, int slices)
         }
     }
     // Index
-    for (int j = 0; j < stacks; ++j)
-    {
+    for (int j = 0; j < stacks; ++j){
         const int k((slices + 1) * j);
-        for (int i = 0; i < slices; ++i)
-        {
+        for (int i = 0; i < slices; ++i){
             // 頂点のインデックス
             const GLuint k0(k + i);
             const GLuint k1(k0 + 1);
@@ -290,21 +277,17 @@ void Mesh::createSphere(float radius, int stacks, int slices)
     init(indexModel);
 }
 
-void Mesh::changeSphere(float radius, int stacks, int slices)
-{
-//    indexModel.name = "Sphere";
+void Mesh::changeSphere(float radius, int stacks, int slices){
     // Position, TexCoord, Normal
     indexModel.positions.clear();
     indexModel.texCoords.clear();
     indexModel.normals.clear();
     indexModel.indices.clear();
 
-    for (int j = 0; j <= stacks; ++j)
-    {
+    for (int j = 0; j <= stacks; ++j){
         const float t(static_cast<float>(j) / static_cast<float>(stacks));
         const float y(cos(M_PI * t) * radius), r(sin(M_PI * t) * radius);
-        for (int i = 0; i <= slices; ++i)
-        {
+        for (int i = 0; i <= slices; ++i){
             const float s(static_cast<float>(i) / static_cast<float>(slices));
             const float z(r * cos(M_PI * 2 * s)), x(r * sin(M_PI * 2 * s));
             indexModel.positions.push_back(QVector3D(x, y, z));
@@ -313,11 +296,9 @@ void Mesh::changeSphere(float radius, int stacks, int slices)
         }
     }
     // Index
-    for (int j = 0; j < stacks; ++j)
-    {
+    for (int j = 0; j < stacks; ++j){
         const int k((slices + 1) * j);
-        for (int i = 0; i < slices; ++i)
-        {
+        for (int i = 0; i < slices; ++i){
             // 頂点のインデックス
             const GLuint k0(k + i);
             const GLuint k1(k0 + 1);
@@ -336,8 +317,7 @@ void Mesh::changeSphere(float radius, int stacks, int slices)
     change(indexModel);
 }
 
-void Mesh::init(const IndexedModel& model)
-{
+void Mesh::init(const IndexedModel& model){
     qDebug() << "---initMesh()---";
     initializeOpenGLFunctions();
 
@@ -371,8 +351,7 @@ void Mesh::init(const IndexedModel& model)
     qDebug() << "ibo ID        :" << ibo.bufferId();
 }
 
-void Mesh::change(const IndexedModel &model)
-{
+void Mesh::change(const IndexedModel &model){
     qDebug() << "---Change Mesh---";
     vbo.destroy();
     ibo.destroy();
@@ -400,8 +379,7 @@ void Mesh::change(const IndexedModel &model)
 
 
 
-void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture, int materialType)
-{
+void Mesh::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, QOpenGLTexture *texture, int materialType){
     if(displayMode == GL_LINE_STRIP){
         glLineWidth(0.8f);
         shader_program->setUniformValue("textureSample", 0);

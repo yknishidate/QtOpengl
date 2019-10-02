@@ -6,8 +6,7 @@
 #include <QVBoxLayout>
 #include "model.h"
 
-class TreeView : public QTreeView
-{
+class TreeView : public QTreeView{
     Q_OBJECT
 public:
     TreeView(QWidget *parent = nullptr);

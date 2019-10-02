@@ -163,6 +163,13 @@
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
+           <widget class="QCheckBox" name="DofCheckBox">
+            <property name="text">
+             <string>Enable DOF</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <layout class="QFormLayout" name="formLayout">
             <property name="formAlignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -216,7 +223,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1256</width>
+     <width>1280</width>
      <height>20</height>
     </rect>
    </property>

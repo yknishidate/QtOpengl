@@ -24,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->openGLWidget, SIGNAL(sphereSelected(bool)), ui->sphereWidget, SLOT(setVisible(bool)));
 //    connect(ui->openGLWidget, SIGNAL(cubeSelected()), ui->sphereWidget, SLOT(setVisibleFalse()));
 
-
     // Coordinates
     // Spinbox -> Model
     connect(ui->doubleSpinBox_px, SIGNAL(valueChanged(double)), ui->openGLWidget, SLOT(changeModelPositionX(double)));
@@ -65,7 +64,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lightColorButton->setPalette(pal);
     connect(ui->openGLWidget, SIGNAL(setLightColorButton(QColor)), ui->lightColorButton, SLOT(setColor(QColor)));
 
-
     // Texture
     connect(ui->toolButton, SIGNAL(clicked()), ui->openGLWidget, SLOT(openTexture()));
     connect(ui->openGLWidget, SIGNAL(loadedTexture(QString)), ui->lineEdit, SLOT(setText(QString)));
@@ -90,13 +88,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->openGLWidget, SIGNAL(setSphereSegSpinBox(int)), ui->segBox, SLOT(setValue(int)));
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow(){
     delete ui;
 }
 
-void MainWindow::on_colorButton_clicked()
-{
+void MainWindow::on_colorButton_clicked(){
     QColor chosenColor = QColorDialog::getColor();
     if(chosenColor.isValid()){
         QPalette pal = ui->colorButton->palette();
@@ -106,8 +102,7 @@ void MainWindow::on_colorButton_clicked()
         ui->openGLWidget->setMaterialDiffColor(chosenColor);
     }
 }
-void MainWindow::on_colorButton_2_clicked()
-{
+void MainWindow::on_colorButton_2_clicked(){
     QColor chosenColor = QColorDialog::getColor();
     if(chosenColor.isValid()){
         QPalette pal = ui->colorButton_2->palette();
@@ -118,8 +113,7 @@ void MainWindow::on_colorButton_2_clicked()
     }
 }
 
-void MainWindow::on_transColorButton_clicked()
-{
+void MainWindow::on_transColorButton_clicked(){
     QColor chosenColor = QColorDialog::getColor();
     if(chosenColor.isValid()){
         QPalette pal = ui->transColorButton->palette();
@@ -130,8 +124,7 @@ void MainWindow::on_transColorButton_clicked()
     }
 }
 
-void MainWindow::on_lightColorButton_clicked()
-{
+void MainWindow::on_lightColorButton_clicked(){
     QColor chosenColor = QColorDialog::getColor();
     if(chosenColor.isValid()){
         QPalette pal = ui->lightColorButton->palette();
@@ -145,8 +138,7 @@ void MainWindow::on_lightColorButton_clicked()
 
 
 // Open Render Window
-void MainWindow::on_actionRender_triggered()
-{
+void MainWindow::on_actionRender_triggered(){
     qDebug() << "---Render Triggered---";
     renderwindow = new RenderWindow(this,
                                     ui->openGLWidget->getXRot()/16.0f,
@@ -159,9 +151,9 @@ void MainWindow::on_actionRender_triggered()
 
 // Create Primitives
 void MainWindow::on_actionCube_triggered(){   ui->openGLWidget->createPrimitive(ModelType::CUBE); }
-//void MainWindow::on_actionSphere_triggered(){ ui->openGLWidget->createPrimitive(ModelType::SPHERE); }
-void MainWindow::on_actionSphere_triggered(){ui->openGLWidget->createSphere(5, 16, 32);}
+void MainWindow::on_actionSphere_triggered(){ ui->openGLWidget->createSphere(5, 16, 32);}
 void MainWindow::on_actionPlane_triggered(){  ui->openGLWidget->createPrimitive(ModelType::PLANE); }
+//void MainWindow::on_actionSphere_triggered(){ ui->openGLWidget->createPrimitive(ModelType::SPHERE); }
 
 // Options
 void MainWindow::on_actionWireframe_toggled(bool arg1) { ui->openGLWidget->setDisplayMode(arg1);}
@@ -169,8 +161,7 @@ void MainWindow::on_actionBackface_Culling_toggled(bool arg1){ ui->openGLWidget-
 void MainWindow::on_actionDepth_Testing_toggled(bool arg1){ ui->openGLWidget->setDepthTest(arg1);}
 
 
-void MainWindow::on_materialTypeComboBox_currentIndexChanged(int index)
-{
+void MainWindow::on_materialTypeComboBox_currentIndexChanged(int index){
     switch (index) {
     case 0: // Diff
         ui->label_7->show();    ui->colorButton->show();
@@ -212,12 +203,10 @@ void MainWindow::on_materialTypeComboBox_currentIndexChanged(int index)
 }
 
 
-void MainWindow::on_radSpinBox_valueChanged(double arg1)
-{
+void MainWindow::on_radSpinBox_valueChanged(double arg1){
     ui->openGLWidget->changeSphereRad(arg1);
 }
 
-void MainWindow::on_segBox_valueChanged(int arg1)
-{
+void MainWindow::on_segBox_valueChanged(int arg1){
     ui->openGLWidget->changeSphereSeg(arg1);
 }

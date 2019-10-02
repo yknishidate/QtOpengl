@@ -1,7 +1,6 @@
 #include "spheremodel.h"
 
-SphereModel::SphereModel(float r, int st, int sl):Model()
-{
+SphereModel::SphereModel(float r, int st, int sl):Model(){
     rad = r;
     stacks = st;
     slices = sl;
@@ -28,7 +27,6 @@ SphereModel::SphereModel(float r, int st, int sl):Model()
     material.ior = 1.5f;
 }
 
-void SphereModel::change(float r, int st, int sl)
-{
+void SphereModel::change(float r, int st, int sl){
     mesh->changeSphere(r, st, sl);
 }

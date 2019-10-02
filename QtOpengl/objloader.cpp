@@ -12,19 +12,16 @@ static inline QVector<std::string> SplitString(const std::string &s, char delim)
 
 
 
-OBJModel::OBJModel(const std::string& fileName)
-{
+OBJModel::OBJModel(const std::string& fileName){
     hasUVs = false;
     hasNormals = false;
     std::ifstream file;
     file.open(fileName.c_str());
 
     std::string line;
-    if(file.is_open())
-    {
+    if(file.is_open()){
         std::cout << "Seccess: Open file" << std::endl;
-        while(file.good())
-        {
+        while(file.good()){
             //1行取り出して"line"で受け取る
             getline(file, line);
 
@@ -39,8 +36,7 @@ OBJModel::OBJModel(const std::string& fileName)
             const char* lineCStr = line.c_str();
 
             //vertexかfaceかによって処理を分岐
-            switch(lineCStr[0])
-            {
+            switch(lineCStr[0]){
                 //vertex
                 case 'v':
                     //texture coordinate
@@ -52,29 +48,29 @@ OBJModel::OBJModel(const std::string& fileName)
                     //position
                     else if(lineCStr[1] == ' ' || lineCStr[1] == '\t')
                         this->vertices.push_back(ParseOBJVec3(line));
-                break;
+                    break;
+
                 //face
                 case 'f':
                     CreateOBJFace(line);
-                break;
+                    break;
+
                 case 'o':
                     this->name = line.substr(2);
-                break;
+                    break;
+
                 //それ以外は無視
                 default: break;
             };
         }
     }
-    else
-    {
+    else{
         std::cerr << "Unable to load mesh: " << fileName << std::endl;
     }
 }
 
-void IndexedModel::CalcNormals()
-{
-    for(unsigned int i = 0; i < indices.size(); i += 3)
-    {
+void IndexedModel::CalcNormals(){
+    for(unsigned int i = 0; i < indices.size(); i += 3){
         int i0 = indices[i];
         int i1 = indices[i + 1];
         int i2 = indices[i + 2];
@@ -89,13 +85,11 @@ void IndexedModel::CalcNormals()
         normals[i2] += normal;
     }
 
-    for(unsigned int i = 0; i < positions.size(); i++)
-        //normals[i] = (normals[i]).normalized();
+    for(int i = 0; i < positions.size(); i++)
         normals[i].normalize();
 }
 
-IndexedModel OBJModel::ToIndexedModel()
-{
+IndexedModel OBJModel::ToIndexedModel(){
     IndexedModel result;
     IndexedModel normalModel;
 
@@ -111,8 +105,7 @@ IndexedModel OBJModel::ToIndexedModel()
     std::map<OBJIndex, unsigned int> normalModelIndexMap;
     std::map<unsigned int, unsigned int> indexMap;
 
-    for(unsigned int i = 0; i < numIndices; i++)
-    {
+    for(unsigned int i = 0; i < numIndices; i++){
         OBJIndex* currentIndex = &OBJIndices[i];
 
         QVector3D currentPosition = vertices[currentIndex->vertexIndex];
@@ -134,8 +127,7 @@ IndexedModel OBJModel::ToIndexedModel()
 
         //Create model to properly generate normals on
         std::map<OBJIndex, unsigned int>::iterator it = normalModelIndexMap.find(*currentIndex);
-        if(it == normalModelIndexMap.end())
-        {
+        if(it == normalModelIndexMap.end()){
             normalModelIndex = normalModel.positions.size();
 
             normalModelIndexMap.insert(std::pair<OBJIndex, unsigned int>(*currentIndex, normalModelIndex));
@@ -149,8 +141,7 @@ IndexedModel OBJModel::ToIndexedModel()
         //Create model which properly separates texture coordinates
         unsigned int previousVertexLocation = FindLastVertexIndex(indexLookup, currentIndex, result);
 
-        if(previousVertexLocation == (unsigned int)-1)
-        {
+        if(previousVertexLocation == (unsigned int)-1){
             resultModelIndex = result.positions.size();
 
             result.positions.push_back(currentPosition);
@@ -165,8 +156,7 @@ IndexedModel OBJModel::ToIndexedModel()
         indexMap.insert(std::pair<unsigned int, unsigned int>(resultModelIndex, normalModelIndex));
     }
 
-    if(!hasNormals)
-    {
+    if(!hasNormals){
         normalModel.CalcNormals();
 
         for(unsigned int i = 0; i < result.positions.size(); i++)
@@ -177,23 +167,19 @@ IndexedModel OBJModel::ToIndexedModel()
     return result;
 };
 
-unsigned int OBJModel::FindLastVertexIndex(const QVector<OBJIndex*>& indexLookup, const OBJIndex* currentIndex, const IndexedModel& result)
-{
+unsigned int OBJModel::FindLastVertexIndex(const QVector<OBJIndex*>& indexLookup, const OBJIndex* currentIndex, const IndexedModel& result){
     unsigned int start = 0;
     unsigned int end = indexLookup.size();
     unsigned int current = (end - start) / 2 + start;
     unsigned int previous = start;
 
-    while(current != previous)
-    {
+    while(current != previous){
         OBJIndex* testIndex = indexLookup[current];
 
-        if(testIndex->vertexIndex == currentIndex->vertexIndex)
-        {
+        if(testIndex->vertexIndex == currentIndex->vertexIndex){
             unsigned int countStart = current;
 
-            for(unsigned int i = 0; i < current; i++)
-            {
+            for(unsigned int i = 0; i < current; i++){
                 OBJIndex* possibleIndex = indexLookup[current - i];
 
                 if(possibleIndex == currentIndex)
@@ -205,8 +191,7 @@ unsigned int OBJModel::FindLastVertexIndex(const QVector<OBJIndex*>& indexLookup
                 countStart--;
             }
 
-            for(unsigned int i = countStart; i < indexLookup.size() - countStart; i++)
-            {
+            for(unsigned int i = countStart; i < indexLookup.size() - countStart; i++){
                 OBJIndex* possibleIndex = indexLookup[current + i];
 
                 if(possibleIndex == currentIndex)
@@ -215,8 +200,8 @@ unsigned int OBJModel::FindLastVertexIndex(const QVector<OBJIndex*>& indexLookup
                 if(possibleIndex->vertexIndex != currentIndex->vertexIndex)
                     break;
                 else if((!hasUVs || possibleIndex->uvIndex == currentIndex->uvIndex)
-                    && (!hasNormals || possibleIndex->normalIndex == currentIndex->normalIndex))
-                {
+                    && (!hasNormals || possibleIndex->normalIndex == currentIndex->normalIndex)){
+
                     QVector3D currentPosition = vertices[currentIndex->vertexIndex];
                     QVector2D currentTexCoord;
                     QVector3D currentNormal;
@@ -231,12 +216,10 @@ unsigned int OBJModel::FindLastVertexIndex(const QVector<OBJIndex*>& indexLookup
                     else
                         currentNormal = QVector3D(0,0,0);
 
-                    for(unsigned int j = 0; j < result.positions.size(); j++)
-                    {
+                    for(unsigned int j = 0; j < result.positions.size(); j++){
                         if(currentPosition == result.positions[j]
                             && ((!hasUVs || currentTexCoord == result.texCoords[j])
-                            && (!hasNormals || currentNormal == result.normals[j])))
-                        {
+                            && (!hasNormals || currentNormal == result.normals[j]))){
                             return j;
                         }
                     }
@@ -245,8 +228,7 @@ unsigned int OBJModel::FindLastVertexIndex(const QVector<OBJIndex*>& indexLookup
 
             return -1;
         }
-        else
-        {
+        else{
             if(testIndex->vertexIndex < currentIndex->vertexIndex)
                 start = current;
             else
@@ -260,24 +242,21 @@ unsigned int OBJModel::FindLastVertexIndex(const QVector<OBJIndex*>& indexLookup
     return -1;
 }
 
-void OBJModel::CreateOBJFace(const std::string& line)
-{
+void OBJModel::CreateOBJFace(const std::string& line){
     QVector<std::string> tokens = SplitString(line, ' ');
 
     this->OBJIndices.push_back(ParseOBJIndex(tokens[1], &this->hasUVs, &this->hasNormals));
     this->OBJIndices.push_back(ParseOBJIndex(tokens[2], &this->hasUVs, &this->hasNormals));
     this->OBJIndices.push_back(ParseOBJIndex(tokens[3], &this->hasUVs, &this->hasNormals));
 
-    if((int)tokens.size() > 4)
-    {
+    if(static_cast<int>(tokens.size()) > 4){
         this->OBJIndices.push_back(ParseOBJIndex(tokens[1], &this->hasUVs, &this->hasNormals));
         this->OBJIndices.push_back(ParseOBJIndex(tokens[3], &this->hasUVs, &this->hasNormals));
         this->OBJIndices.push_back(ParseOBJIndex(tokens[4], &this->hasUVs, &this->hasNormals));
     }
 }
 
-OBJIndex OBJModel::ParseOBJIndex(const std::string& token, bool* hasUVs, bool* hasNormals)
-{
+OBJIndex OBJModel::ParseOBJIndex(const std::string& token, bool* hasUVs, bool* hasNormals){
     unsigned int tokenLength = token.length();
     const char* tokenString = token.c_str();
 
@@ -310,15 +289,13 @@ OBJIndex OBJModel::ParseOBJIndex(const std::string& token, bool* hasUVs, bool* h
     return result;
 }
 
-QVector3D OBJModel::ParseOBJVec3(const std::string& line)
-{
+QVector3D OBJModel::ParseOBJVec3(const std::string& line){
     unsigned int tokenLength = line.length();
     const char* tokenString = line.c_str();
 
     unsigned int vertIndexStart = 2;
 
-    while(vertIndexStart < tokenLength)
-    {
+    while(vertIndexStart < tokenLength){
         if(tokenString[vertIndexStart] != ' ')
             break;
         vertIndexStart++;
@@ -343,15 +320,13 @@ QVector3D OBJModel::ParseOBJVec3(const std::string& line)
     //QVector3D(atof(tokens[1].c_str()), atof(tokens[2].c_str()), atof(tokens[3].c_str()))
 }
 
-QVector2D OBJModel::ParseOBJVec2(const std::string& line)
-{
+QVector2D OBJModel::ParseOBJVec2(const std::string& line){
     unsigned int tokenLength = line.length();
     const char* tokenString = line.c_str();
 
     unsigned int vertIndexStart = 3;
 
-    while(vertIndexStart < tokenLength)
-    {
+    while(vertIndexStart < tokenLength){
         if(tokenString[vertIndexStart] != ' ')
             break;
         vertIndexStart++;
@@ -369,16 +344,13 @@ QVector2D OBJModel::ParseOBJVec2(const std::string& line)
     return QVector2D(x,y);
 }
 
-static bool CompareOBJIndexPtr(const OBJIndex* a, const OBJIndex* b)
-{
+static bool CompareOBJIndexPtr(const OBJIndex* a, const OBJIndex* b){
     return a->vertexIndex < b->vertexIndex;
 }
 
-static inline unsigned int FindNextChar(unsigned int start, const char* str, unsigned int length, char token)
-{
+static inline unsigned int FindNextChar(unsigned int start, const char* str, unsigned int length, char token){
     unsigned int result = start;
-    while(result < length)
-    {
+    while(result < length){
         result++;
         if(str[result] == token)
             break;
@@ -387,18 +359,15 @@ static inline unsigned int FindNextChar(unsigned int start, const char* str, uns
     return result;
 }
 
-static inline unsigned int ParseOBJIndexValue(const std::string& token, unsigned int start, unsigned int end)
-{
+static inline unsigned int ParseOBJIndexValue(const std::string& token, unsigned int start, unsigned int end){
     return atoi(token.substr(start, end - start).c_str()) - 1;
 }
 
-static inline float ParseOBJFloatValue(const std::string& token, unsigned int start, unsigned int end)
-{
+static inline float ParseOBJFloatValue(const std::string& token, unsigned int start, unsigned int end){
     return atof(token.substr(start, end - start).c_str());
 }
 
-static inline QVector<std::string> SplitString(const std::string &s, char delim)
-{
+static inline QVector<std::string> SplitString(const std::string &s, char delim){
     QVector<std::string> elems;
 
     const char* cstr = s.c_str();
@@ -406,10 +375,8 @@ static inline QVector<std::string> SplitString(const std::string &s, char delim)
     unsigned int start = 0;
     unsigned int end = 0;
 
-    while(end <= strLength)
-    {
-        while(end <= strLength)
-        {
+    while(end <= strLength){
+        while(end <= strLength){
             if(cstr[end] == delim)
                 break;
             end++;

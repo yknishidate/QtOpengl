@@ -15,7 +15,7 @@
 #include "spheremodel.h"
 
 
-class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
+class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions{
     Q_OBJECT
 
 public:
@@ -23,6 +23,7 @@ public:
     QSize minimumSizeHint() const override;
     QSize sizeHint() const override;
     GLenum displayMode;
+
     QMatrix4x4 getViewMatrix(){return camera.matrix;}
     Camera* getCamera(){return &camera;}
     int getXRot(){return xRot;}
@@ -67,14 +68,12 @@ public slots:
     void changeSphereRad(float r);
     void changeSphereSeg(int st);
 
-
     void changeMeterialType(int t);
     void setMaterialDiffColor(QColor color);
     void setMaterialSpecColor(QColor color);
     void setMaterialTransColor(QColor color);
     void setShininess(int shine);
     void setMaterialLightColor(QColor color);
-
     void setMaterialIor(double i);
 
     void deleteModel(int id);
@@ -107,14 +106,12 @@ signals:
     void setIorSpinBox(double i);
 
     void setTextureName(QString s);
-    //----------Test----------
     void setSphereRadSpinBox(double r);
     void setSphereSegSpinBox(int st);
     void sphereSelected(bool arg);
     void cubeSelected(bool arg);
 
     void setMeterialIor(float i);
-    //----------Test----------
 
 private:
     int xRot;
@@ -143,7 +140,6 @@ private:
     int frame;
     int selectedModelIndex = -1;
 
-    //----------Test----------
     GLuint textureGL;
 
 };

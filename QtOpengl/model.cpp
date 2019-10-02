@@ -1,10 +1,8 @@
 #include "model.h"
 
 Model::Model(){
-
 }
-Model::Model(const QString& fileName)
-{
+Model::Model(const QString& fileName){
     mesh = new Mesh(fileName);
     name = mesh->getName();
     type = POLYGONMODEL;
@@ -62,8 +60,7 @@ void Model::setTexture(QString fileName){
     texture->setWrapMode(QOpenGLTexture::Repeat);
 }
 
-void Model::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, bool outline)
-{
+void Model::draw(QOpenGLShaderProgram *shader_program, GLenum displayMode, bool outline){
     shader_program->setUniformValue("Kamb", material.ambient);
     shader_program->setUniformValue("Kdiff", material.diffuse);
     shader_program->setUniformValue("Kspec", material.specular);
@@ -78,8 +75,7 @@ QString Model::getTextureName(){
     return textureName;
 }
 
-void Model::setMaterialType(int type)
-{
+void Model::setMaterialType(int type){
     material.type = type;
 }
 
@@ -100,8 +96,7 @@ void Model::setMaterialTransColor(QColor color){
    material.transparentColor[2] = color.blue()/255.0f;
 }
 
-void Model::setMaterialIor(float i)
-{
+void Model::setMaterialIor(float i){
     material.ior = i;
 }
 void Model::setMaterialLightColor(QColor color){

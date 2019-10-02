@@ -3,12 +3,10 @@
 #include <QVector2D>
 #include <QVector3D>
 
-Grid::Grid()
-{
+Grid::Grid(){
 }
 
-Grid::~Grid()
-{
+Grid::~Grid(){
     vbo.destroy();
 }
 
@@ -17,7 +15,7 @@ void Grid::init(){
     vbo.create();
 
     QVector<Vertex> grids;
-    for (int i = 0;i <= 100; i++) {
+    for (int i = 0;i <= 100; i++){
         grids.push_back(Vertex(QVector3D(      500.0f, 0.0f, i*10-500.0f)));
         grids.push_back(Vertex(QVector3D(     -500.0f, 0.0f, i*10-500.0f)));
         grids.push_back(Vertex(QVector3D( i*10-500.0f, 0.0f,      500.0f)));

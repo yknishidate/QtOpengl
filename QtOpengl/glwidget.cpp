@@ -33,28 +33,24 @@ void GLWidget::createPrimitive(int type){
     update();
 }
 
+// Sphere Prim
 void GLWidget::createSphere(float r, int st, int sl){
     models.push_back(new SphereModel(r, st, sl));
     emit loadedModel(models[modelCount]);
     modelCount++;
     update();
 }
-
-void GLWidget::changeSphere(float r, int st, int sl)
-{
+void GLWidget::changeSphere(float r, int st, int sl){
     models[selectedModelIndex]->change(r, st, sl);
     models[selectedModelIndex]->setRadius(r);
     update();
 }
-void GLWidget::changeSphereRad(float r)
-{
+void GLWidget::changeSphereRad(float r){
     models[selectedModelIndex]->change(r, models[selectedModelIndex]->getStacks(), models[selectedModelIndex]->getSlices());
     models[selectedModelIndex]->setRadius(r);
     update();
 }
-
-void GLWidget::changeSphereSeg(int st)
-{
+void GLWidget::changeSphereSeg(int st){
     models[selectedModelIndex]->change(models[selectedModelIndex]->getRadius(), st, st*2);
     models[selectedModelIndex]->setStacks(st);
     models[selectedModelIndex]->setSlices(st*2);
@@ -64,51 +60,45 @@ void GLWidget::changeSphereSeg(int st)
 void GLWidget::openTexture(){
     QString fileName = QFileDialog::getOpenFileName(this);
     qDebug() << "---openTexture()---";
-    if(fileName != ""){
-        if(selectedModelIndex != -1)
-        {
-            models[selectedModelIndex]->setTexture(fileName);
-            emit loadedTexture(fileName);
-            update();
-        }
+    if(fileName != "" && selectedModelIndex != -1){
+        models[selectedModelIndex]->setTexture(fileName);
+        emit loadedTexture(fileName);
+        update();
     }
 }
 
 void GLWidget::selectedModel(QModelIndex modelIndex){
     selectedModelIndex = modelIndex.row();
-    //----------Test----------
+
+    // Sphere Selected
     if(typeid(*models[selectedModelIndex]) == typeid(SphereModel)){
         emit sphereSelected(true);
         emit setSphereRadSpinBox(models[selectedModelIndex]->getRadius());
         emit setSphereSegSpinBox(models[selectedModelIndex]->getStacks());
-    }
-    else {
+    }else {
         emit sphereSelected(false);
     }
-    //----------Test----------
 
+    // Set Coordinates Data to GUI
     emit setSpinboxPositionX(models[selectedModelIndex]->getPosition().x());
     emit setSpinboxPositionY(models[selectedModelIndex]->getPosition().y());
     emit setSpinboxPositionZ(models[selectedModelIndex]->getPosition().z());
-    emit setSpinboxScaleX(models[selectedModelIndex]->getScale().x());
-    emit setSpinboxScaleY(models[selectedModelIndex]->getScale().y());
-    emit setSpinboxScaleZ(models[selectedModelIndex]->getScale().z());
+    emit setSpinboxScaleX(   models[selectedModelIndex]->getScale().x());
+    emit setSpinboxScaleY(   models[selectedModelIndex]->getScale().y());
+    emit setSpinboxScaleZ(   models[selectedModelIndex]->getScale().z());
     emit setSpinboxRotationX(models[selectedModelIndex]->getRotation().x());
     emit setSpinboxRotationY(models[selectedModelIndex]->getRotation().y());
     emit setSpinboxRotationZ(models[selectedModelIndex]->getRotation().z());
 
-    emit setTextureName(models[selectedModelIndex]->getTextureName());
-
-    emit setMeterialType(models[selectedModelIndex]->getMaterialType());
-
-    emit setColorButton(models[selectedModelIndex]->getMaterialDiffColor());
-    emit setColorButton_2(models[selectedModelIndex]->getMaterialSpecColor());
-    emit setTransColorButton(models[selectedModelIndex]->getMaterialTransColor());
-    emit setLightColorButton(models[selectedModelIndex]->getMaterialLightColor());
-
+    // Set Material Data to GUI
+    emit setTextureName(         models[selectedModelIndex]->getTextureName());
+    emit setMeterialType(        models[selectedModelIndex]->getMaterialType());
+    emit setColorButton(         models[selectedModelIndex]->getMaterialDiffColor());
+    emit setColorButton_2(       models[selectedModelIndex]->getMaterialSpecColor());
+    emit setTransColorButton(    models[selectedModelIndex]->getMaterialTransColor());
+    emit setLightColorButton(    models[selectedModelIndex]->getMaterialLightColor());
     emit setShininessSlider(sqrt(models[selectedModelIndex]->getShininess()));
-    emit setIorSpinBox(models[selectedModelIndex]->getMaterialIor());
-
+    emit setIorSpinBox(          models[selectedModelIndex]->getMaterialIor());
 }
 
 
@@ -119,13 +109,8 @@ void GLWidget::initializeGL(){
     qDebug() << "GLSL version:" << QLatin1String(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION)));
 
     shader.init();
-
     grid.init();
     modelMatrix.setToIdentity();
-
-
-    //----------Test----------
-
 
     frame = 0;
 }
@@ -146,7 +131,6 @@ void GLWidget::paintGL(){
     modelMatrix.setToIdentity();
     shader.update(proj, camera.matrix);
 
-    // Draw Grid
     grid.draw(shader.program);
 
     // Draw Models
@@ -161,7 +145,7 @@ void GLWidget::paintGL(){
         shader.program->setUniformValue("cameraPosition", camera.getCameraPos());
         models[i]->draw(shader.program, displayMode, false);
 
-        //---------Outline--------
+        // Draw Outline
         if(selectedModelIndex == i){
             glEnable(GL_CULL_FACE);
             glFrontFace(GL_CW);
@@ -172,7 +156,6 @@ void GLWidget::paintGL(){
             glFrontFace(GL_CCW);
         }
     }
-
 //    qDebug() << ++frame;
 }
 

@@ -1,8 +1,6 @@
 #include "colorbutton.h"
 
-ColorButton::ColorButton(QWidget *parent)
-{
-
+ColorButton::ColorButton(QWidget *parent){
 }
 
 void ColorButton::setColor(QColor color){

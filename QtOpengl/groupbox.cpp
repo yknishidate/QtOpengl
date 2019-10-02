@@ -1,8 +1,6 @@
 #include "groupbox.h"
 
-GroupBox::GroupBox(QWidget *parent)
-{
-
+GroupBox::GroupBox(QWidget *parent){
 }
 
 void GroupBox::setVisibleTrue(QModelIndex modelIndex){

@@ -7,8 +7,7 @@
 #include <QVector3D>
 #include <string>
 
-struct OBJIndex
-{
+struct OBJIndex{
     unsigned int vertexIndex;
     unsigned int uvIndex;
     unsigned int normalIndex;
@@ -17,8 +16,7 @@ struct OBJIndex
 };
 
 
-class IndexedModel
-{
+class IndexedModel{
 public:
     QVector<QVector3D> positions;
     QVector<QVector2D> texCoords;
@@ -29,8 +27,7 @@ public:
     void CalcNormals();
 };
 
-class OBJModel
-{
+class OBJModel{
 public:
     QVector<OBJIndex> OBJIndices;
     QVector<QVector3D> vertices;

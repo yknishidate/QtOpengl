@@ -3,8 +3,7 @@
 #include <QtOpenGL>
 
 
-class Shader
-{
+class Shader{
 public:
     Shader();
     void init();

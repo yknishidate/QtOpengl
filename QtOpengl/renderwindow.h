@@ -11,8 +11,7 @@ namespace Ui {
 class RenderWindow;
 }
 
-class RenderWindow : public QMainWindow
-{
+class RenderWindow : public QMainWindow{
     Q_OBJECT
 
 public:
@@ -24,6 +23,8 @@ private slots:
     void on_renderPassBox_currentIndexChanged(int index);
 
     void on_saveButton_clicked();
+
+    void on_DofCheckBox_toggled(bool checked);
 
 private:
     Ui::RenderWindow *ui;
